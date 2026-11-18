@@ -263,7 +263,7 @@ Sürüm öncesi: `bash tools/deps.sh audit` (pip-audit, `requirements.lock`'taki
 `ruff check --select F,E9 nfizyo tests tools` – ayrıntı `docs/GUVENLIK.md`. GitHub'da bunları `.github/workflows/tests.yml`
 her push'ta kendisi yapar (Python 3.12 ve 3.13). Kurulum ve güncelleme paketleri sadece `requirements.lock`'tan (sha256 kontrolüyle) kurar.
 
-717 test: muayenehaneler arası veri ayrımı (4 ekran + hasta uygulaması + fatura/HIN/import + kasa, sigorta cevapları,
+719 test: muayenehaneler arası veri ayrımı (4 ekran + hasta uygulaması + fatura/HIN/import + kasa, sigorta cevapları,
 Kostengutsprache, online randevu, dışa aktarma, takvim, MTT, video, boşalan randevu, firma faturaları, izinler, ev programı kütüphanesi),
 firma faturaları, bexio, bağlantı testi, ekran ayrımı ve roller, tedavi ekibi ve vekâlet, mimari kuralları,
 kilitli kayıtlar (fatura, makbuz, gün sonu), fatura akışı, XML 5.0 (resmî şema), QR-fatura, camt.054, hatırlatma, özel fatura ve KDV,

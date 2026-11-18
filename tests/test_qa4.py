@@ -1017,3 +1017,46 @@ def test_deploy_workflow_and_bootstrap_stay_narrow():
     assert "printf 'restrict %s\\n'" in boot                                      # Schlüssel ohne Terminal/Weiterleitung
     assert 'NOPASSWD: /usr/local/sbin/n-fizyo-deploy ""' in boot                  # sudo nur dieses Programm, ohne Argumente
     assert "update.sh\" --force" in boot and "install.sh\" --demo --no-ai" in boot
+
+
+async def test_public_site_only_on_demo_server(aiohttp_client, app, tmp_path):
+    """nfizyo.ch zeigt Besuchern die Vorstellungsseite; angemeldet geht es weiter in die Praxis.
+    Eine echte Praxis (kein Demo) zeigt unter «/» nie eine Werbeseite, sondern die Anmeldung."""
+    from conftest import login
+
+    c = await aiohttp_client(app)
+    r = await c.get("/", allow_redirects=False)
+    html = await r.text()
+    assert r.status == 200 and "Mehr Therapie." in html and 'href="/login"' in html and "fiktive Daten" in html
+    assert "noindex" not in html and "<script" not in html
+    await c.get("/lang/fr?next=/")
+    html = await (await c.get("/")).text()
+    assert 'lang="fr"' in html and "Plus de thérapie." in html and "heute-fr.webp" in html
+    await login(c, "therapie@demo.n-fizyo.ch")
+    r = await c.get("/", allow_redirects=False)
+    assert r.status == 302 and r.headers["Location"].startswith("/therapie")
+
+    real = create_app(load_settings(None, data_dir=tmp_path / "echt", secret_key=b"t" * 32, demo=False), start_workers=False)
+    c2 = await aiohttp_client(real)
+    r = await c2.get("/", allow_redirects=False)
+    assert r.status == 302 and r.headers["Location"].startswith("/login")
+    off = create_app(load_settings(None, data_dir=tmp_path / "aus", secret_key=b"t" * 32, demo=True, public_site=False), start_workers=False)
+    r = await (await aiohttp_client(off)).get("/", allow_redirects=False)
+    assert r.status == 302
+
+
+def test_site_texts_complete_and_without_superlatives():
+    from nfizyo.core.site_content import SITE
+
+    def shape(d):
+        return {k: (shape(v) if isinstance(v, dict) else len(v) if isinstance(v, list) else None) for k, v in d.items()}
+
+    assert shape(SITE["de"]) == shape(SITE["fr"])
+    blob = repr(SITE).lower()
+    for word in ("erste ", "einzige", "premier logiciel", "seul ", "unique ", "le seul", "beste", "meilleur", "garantiert"):
+        assert word not in blob, word
+    root = Path(__file__).resolve().parents[1] / "nfizyo" / "web" / "static" / "img"
+    for lang in SITE:
+        for f in SITE[lang]["features"]:
+            assert (root / "site" / f"{f['img']}-{lang}.webp").is_file()
+    assert (root / "n.svg").is_file()

@@ -14,6 +14,7 @@ from .auth import MIN_PASSWORD, STAFF_SESSION_DAYS, authenticate, create_session
 from .i18n import PATIENT_LANGS, STAFF_LANGS
 from .keys import DB, SETTINGS, THROTTLE
 from .screens import SCREENS, screen_page, screens_for
+from .site_content import SITE, site_texts
 from .security import hash_password, sign, token_hash, unsign, verify_password
 from .tenant import practice_scope
 from .web import (LANG_COOKIE, PATIENT_COOKIE, SCREEN_COOKIE, STAFF_COOKIE, client_ip, login_required, redirect_with_flash,
@@ -61,6 +62,12 @@ def home_for(user, last_screen: str | None = None) -> str:
 
 
 async def index(request: web.Request) -> web.StreamResponse:
+    # Demo-Server: Besucher ohne Anmeldung sehen die Vorstellungsseite. Eine echte Praxis zeigt hier immer die Anmeldung.
+    if request.get("user") is None and request.app[SETTINGS].public_site:
+        lang = request.get("lang", "de")
+        lang = lang if lang in SITE else "de"
+        return await render(request, "core/site.html", {"s": site_texts(lang), "site_lang": lang,
+                                                        "site_contact": request.app[SETTINGS].site_contact})
     raise web.HTTPFound(home_for(request.get("user"), request.cookies.get(SCREEN_COOKIE)))
 
 

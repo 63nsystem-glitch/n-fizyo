@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="{{ site_lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0C0C0E">
+<meta name="description" content="{{ s.description }}">
+<title>{{ s.title }}</title>
+<link rel="icon" href="{{ static('img/icon.svg') }}" type="image/svg+xml">
+<link rel="preload" href="{{ static('fonts/roboto-latin-700-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{ static('css/site.css') }}">
+</head>
+<body class="site">
+
+<header class="s-top">
+  <div class="s-wrap s-top-in">
+    <a class="s-logo" href="/" aria-label="N-Fizyo">
+      <img src="{{ static('img/n.svg') }}" alt="" width="30" height="30"><span>N-Fizyo</span>
+    </a>
+    <nav class="s-nav" aria-label="{{ s.nav.features }}">
+      <a href="#funktionen">{{ s.nav.features }}</a>
+      <a href="#datenschutz">{{ s.nav.privacy }}</a>
+      <a href="#pilot">{{ s.nav.pilot }}</a>
+    </nav>
+    <div class="s-top-act">
+      <span class="s-lang">{% for code in ('de', 'fr') %}<a href="/lang/{{ code }}?next=/"{% if code == site_lang %} aria-current="true"{% endif %}>{{ code | upper }}</a>{% endfor %}</span>
+      <a class="s-btn s-btn-ghost s-hide-sm" href="/login">{{ s.nav.login }}</a>
+      <a class="s-btn" href="/login">{{ s.nav.demo }}</a>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="s-hero">
+  <div class="s-wrap s-hero-in">
+    <div class="s-hero-text">
+      <p class="s-eyebrow"><span class="s-dots" aria-hidden="true"><i></i><i></i><i></i></span>{{ s.hero.eyebrow }}</p>
+      <h1>{{ s.hero.title[0] }}<br><span>{{ s.hero.title[1] }}</span></h1>
+      <p class="s-lead">{{ s.hero.lead }}</p>
+      <div class="s-cta">
+        <a class="s-btn s-btn-lg" href="/login">{{ s.hero.cta }} <span aria-hidden="true">→</span></a>
+        <a class="s-btn s-btn-lg s-btn-ghost" href="#pilot">{{ s.hero.cta2 }}</a>
+      </div>
+      <p class="s-note">{{ s.hero.note }}</p>
+    </div>
+    <div class="s-hero-art" aria-hidden="true">
+      <figure class="s-screen s-screen-hero"><div class="s-bar"><i></i><i></i><i></i><span>nfizyo.ch/therapie/heute</span></div>
+        <img src="{{ static('img/site/heute-' ~ site_lang ~ '.webp') }}" alt="" width="1600" height="1003" fetchpriority="high"></figure>
+      <figure class="s-phone s-phone-hero"><img src="{{ static('img/site/app-de-heute.webp') }}" alt="" width="585" height="1266"></figure>
+    </div>
+  </div>
+  <div class="s-wrap">
+    <ul class="s-stats">
+      {% for num, label in s.stats %}<li><strong>{{ num }}</strong><span>{{ label }}</span></li>{% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="s-features" id="funktionen">
+  <div class="s-wrap">
+    <h2 class="s-h2">{{ s.features_title }}</h2>
+    {% for f in s.features %}
+    <article class="s-feature{% if loop.index is even %} s-rev{% endif %}" id="{{ f.id }}">
+      <div class="s-f-text">
+        <p class="s-kicker c{{ loop.index0 % 3 }}">{{ '%02d' % loop.index }} · {{ f.kicker }}</p>
+        <p class="s-quote">{{ f.quote }}</p>
+        <h3>{{ f.title }}</h3>
+        <ul class="s-points">{% for p in f.points %}<li>{{ p }}</li>{% endfor %}</ul>
+      </div>
+      <figure class="s-screen"><div class="s-bar"><i></i><i></i><i></i></div>
+        <img src="{{ static('img/site/' ~ f.img ~ '-' ~ site_lang ~ '.webp') }}" alt="{{ f.kicker }} – {{ f.title }}" width="1600" height="1003" loading="lazy"></figure>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="s-app">
+  <div class="s-wrap s-app-in">
+    <div class="s-app-phones">
+      {% for img, alt in s.app.imgs %}<figure class="s-phone"><img src="{{ static('img/site/' ~ img ~ '.webp') }}" alt="{{ alt }}" width="585" height="1266" loading="lazy"></figure>{% endfor %}
+    </div>
+    <div class="s-app-text">
+      <p class="s-kicker c2">{{ s.app.kicker }}</p>
+      <p class="s-hello" dir="auto">{{ s.app.hello }}</p>
+      <h2 class="s-h2">{{ s.app.title }}</h2>
+      <p class="s-lead">{{ s.app.lead }}</p>
+      <dl class="s-dl">{% for title, text in s.app.points %}<div><dt>{{ title }}</dt><dd>{{ text }}</dd></div>{% endfor %}</dl>
+    </div>
+  </div>
+</section>
+
+<section class="s-privacy" id="datenschutz">
+  <div class="s-wrap">
+    <p class="s-kicker c0">{{ s.privacy.kicker }}</p>
+    <h2 class="s-h2">{{ s.privacy.title }}</h2>
+    <div class="s-cards">
+      {% for title, text in s.privacy.cards %}<div class="s-card"><h3>{{ title }}</h3><p>{{ text }}</p></div>{% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="s-reasons">
+  <div class="s-wrap">
+    <h2 class="s-h2">{{ s.reasons.title }}</h2>
+    <ol class="s-grid">
+      {% for title, text in s.reasons.list %}<li><span class="s-num c{{ loop.index0 % 3 }}">{{ loop.index }}</span><h3>{{ title }}</h3><p>{{ text }}</p></li>{% endfor %}
+    </ol>
+  </div>
+</section>
+
+<section class="s-pilot" id="pilot">
+  <div class="s-wrap s-pilot-in">
+    <div>
+      <p class="s-kicker c1">{{ s.pilot.kicker }}</p>
+      <h2 class="s-h2">{{ s.pilot.title }}</h2>
+      <p class="s-lead">{{ s.pilot.lead }}</p>
+      <ol class="s-steps">{% for when, what in s.pilot.steps %}<li><strong>{{ when }}</strong><span>{{ what }}</span></li>{% endfor %}</ol>
+    </div>
+    <aside class="s-contact">
+      <img src="{{ static('img/n.svg') }}" alt="" width="56" height="56">
+      <p class="s-kicker">{{ s.pilot.contact }}</p>
+      {% if site_contact %}<p class="s-contact-line">{{ site_contact }}</p>{% endif %}
+      <p>{{ s.pilot.demo_box }}</p>
+      <a class="s-btn s-btn-lg" href="/login">{{ s.hero.cta }} <span aria-hidden="true">→</span></a>
+      <p class="s-small">{{ s.footer.company }}</p>
+    </aside>
+  </div>
+</section>
+</main>
+
+<footer class="s-foot">
+  <div class="s-wrap s-foot-in">
+    <a class="s-logo" href="/"><img src="{{ static('img/n.svg') }}" alt="" width="24" height="24"><span>N-Fizyo</span></a>
+    <p>{{ s.footer.company }}</p>
+    <p>{{ s.footer.fictional }}</p>
+    <p><a href="/login">{{ s.nav.login }}</a></p>
+  </div>
+</footer>
+</body>
+</html>

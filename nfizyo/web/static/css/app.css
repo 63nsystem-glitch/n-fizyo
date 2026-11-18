@@ -551,7 +551,7 @@ mark.ok { background: var(--ok-container); }
 .auth { min-height: 100vh; min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 24px 16px; background: var(--surface-low); }
 .auth-card { width: min(440px, 100%); background: var(--surface-card); border-radius: 28px; padding: 32px 28px; box-shadow: var(--elev-1); }
 .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-.brand-mark { width: 44px; height: 44px; border-radius: 12px; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; }
+.brand-mark { width: 44px; height: 44px; border-radius: 12px; background: #0C0C0E url("../img/n.svg") center / 56% no-repeat; color: transparent; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; overflow: hidden; }
 .brand-name { font-size: 22px; font-weight: 500; }
 
 @media print {

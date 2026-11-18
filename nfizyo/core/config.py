@@ -37,6 +37,9 @@ class Settings:
     port: int = 8080
     base_url: str = "http://127.0.0.1:8080"
     demo: bool = False
+    # Öffentliche Vorstellungsseite unter «/» (nur Demo-Server; eine echte Praxis zeigt dort die Anmeldung)
+    public_site: bool = False
+    site_contact: str = ""
     default_lang: str = "de"
     stt_engine: str = "none"
     stt_model: str = "large-v3-turbo"
@@ -214,6 +217,8 @@ def load_settings(env_file: str | Path | None = None, **overrides) -> Settings:
         port=int(get("NFIZYO_PORT", "8080") or 8080),
         base_url=base_url.rstrip("/"),
         demo=demo,
+        public_site=demo and _flag(get("NFIZYO_PUBLIC_SITE"), True),
+        site_contact=(get("NFIZYO_SITE_CONTACT", "") or "")[:200],
         default_lang=(get("NFIZYO_DEFAULT_LANG", "de") or "de")[:2],
         stt_engine=get("NFIZYO_STT", "none") or "none",
         stt_model=get("NFIZYO_STT_MODEL", "large-v3-turbo") or "large-v3-turbo",
