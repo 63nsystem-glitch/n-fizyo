@@ -1053,7 +1053,7 @@ def test_site_texts_complete_and_without_superlatives():
 
     assert shape(SITE["de"]) == shape(SITE["fr"])
     blob = repr(SITE).lower()
-    for word in ("erste ", "einzige", "premier logiciel", "seul ", "unique ", "le seul", "beste", "meilleur", "garantiert"):
+    for word in ("erste ", "einzige", "premier logiciel", "seul ", "unique ", "le seul", "beste", "meilleur", "garantiert", "pilotprojekt", "pilotpraxis", "projet pilote", "cabinet pilote"):
         assert word not in blob, word
     root = Path(__file__).resolve().parents[1] / "nfizyo" / "web" / "static" / "img"
     for lang in SITE:

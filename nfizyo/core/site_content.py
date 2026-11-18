@@ -11,7 +11,7 @@ SITE: dict[str, dict] = {
         "title": "N-Fizyo – Praxissoftware für Physiotherapie",
         "description": "Agenda, Dokumentation, Verordnungen, Abrechnung und Patienten-App für Physiotherapie-Praxen in der Schweiz. "
                        "Mit lokaler KI – Diktat, Texterkennung und Übersetzung laufen in der Praxis.",
-        "nav": {"features": "Funktionen", "privacy": "Datenschutz", "pilot": "Pilotprojekt", "demo": "Demo ansehen",
+        "nav": {"features": "Funktionen", "privacy": "Datenschutz", "pilot": "Kontakt", "demo": "Demo ansehen",
                 "login": "Anmelden"},
         "hero": {
             "eyebrow": "Praxissoftware für Physiotherapie",
@@ -19,7 +19,7 @@ SITE: dict[str, dict] = {
             "lead": "N-Fizyo nimmt Ihrem Team jeden Tag Schreibarbeit ab – von der Agenda über die Verlaufsnotiz bis zur Rechnung. "
                     "Die KI läuft auf einem Rechner in Ihrer Praxis.",
             "cta": "Demo ausprobieren",
-            "cta2": "Pilotpraxis werden",
+            "cta2": "Funktionen ansehen",
             "note": "Demo und Bildschirmfotos mit fiktiven Daten.",
         },
         "stats": [
@@ -96,13 +96,9 @@ SITE: dict[str, dict] = {
                       ("Sanfter Umstieg", "Patienten, Termine und Verordnungen werden übernommen.")],
         },
         "pilot": {
-            "kicker": "Pilotprojekt 2027",
-            "title": "Werden Sie Pilotpraxis.",
-            "lead": "Sie gestalten mit: Ihre Rückmeldungen fliessen direkt in die Weiterentwicklung. Die Konditionen besprechen wir gerne persönlich.",
-            "steps": [("November", "Kennenlernen, Abläufe aufnehmen."),
-                      ("Dezember", "Einrichten, Daten übernehmen, Probelauf."),
-                      ("Anfang Januar", "Schulung vor Ort für das ganze Team."),
-                      ("11. Januar 2027", "Start – mit enger Begleitung.")],
+            "kicker": "Kontakt",
+            "title": "Lernen Sie N-Fizyo kennen.",
+            "lead": "Wir zeigen Ihnen N-Fizyo gerne persönlich – in Ihrer Praxis oder online. Und beim Umstieg übernehmen wir Patienten, Termine und Verordnungen aus Ihrem bisherigen Programm.",
             "contact": "Reden wir darüber",
             "demo_box": "Schauen Sie sich zuerst in Ruhe um: Die Demo-Praxis ist mit fiktiven Daten gefüllt.",
         },
@@ -112,7 +108,7 @@ SITE: dict[str, dict] = {
         "title": "N-Fizyo – Logiciel de cabinet pour la physiothérapie",
         "description": "Agenda, documentation, prescriptions, facturation et app patients pour les cabinets de physiothérapie en Suisse. "
                        "Avec une IA locale – dictée, reconnaissance de texte et traduction tournent au cabinet.",
-        "nav": {"features": "Fonctions", "privacy": "Protection des données", "pilot": "Projet pilote", "demo": "Voir la démo",
+        "nav": {"features": "Fonctions", "privacy": "Protection des données", "pilot": "Contact", "demo": "Voir la démo",
                 "login": "Connexion"},
         "hero": {
             "eyebrow": "Logiciel de cabinet pour la physiothérapie",
@@ -120,7 +116,7 @@ SITE: dict[str, dict] = {
             "lead": "N-Fizyo allège chaque jour le travail administratif de votre équipe – de l'agenda à la note de suivi jusqu'à la facture. "
                     "L'IA tourne sur un ordinateur de votre cabinet.",
             "cta": "Essayer la démo",
-            "cta2": "Devenir cabinet pilote",
+            "cta2": "Découvrir les fonctions",
             "note": "Démo et captures d'écran avec des données fictives.",
         },
         "stats": [
@@ -197,13 +193,9 @@ SITE: dict[str, dict] = {
                       ("Transition en douceur", "Patients, rendez-vous et prescriptions sont repris.")],
         },
         "pilot": {
-            "kicker": "Projet pilote 2027",
-            "title": "Devenez cabinet pilote.",
-            "lead": "Vous participez à la conception : vos retours alimentent directement le développement. Nous discutons volontiers des conditions en personne.",
-            "steps": [("Novembre", "Faire connaissance, relever les processus."),
-                      ("Décembre", "Installation, reprise des données, essai."),
-                      ("Début janvier", "Formation sur place pour toute l'équipe."),
-                      ("11 janvier 2027", "Démarrage – avec un accompagnement étroit.")],
+            "kicker": "Contact",
+            "title": "Découvrez N-Fizyo.",
+            "lead": "Nous vous présentons volontiers N-Fizyo en personne – au cabinet ou en ligne. Lors du changement, nous reprenons patients, rendez-vous et prescriptions de votre programme actuel.",
             "contact": "Parlons-en",
             "demo_box": "Faites d'abord le tour tranquillement : le cabinet de démo est rempli de données fictives.",
         },

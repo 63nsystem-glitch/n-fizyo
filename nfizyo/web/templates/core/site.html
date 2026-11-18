@@ -20,7 +20,7 @@
     <nav class="s-nav" aria-label="{{ s.nav.features }}">
       <a href="#funktionen">{{ s.nav.features }}</a>
       <a href="#datenschutz">{{ s.nav.privacy }}</a>
-      <a href="#pilot">{{ s.nav.pilot }}</a>
+      <a href="#kontakt">{{ s.nav.pilot }}</a>
     </nav>
     <div class="s-top-act">
       <span class="s-lang">{% for code in ('de', 'fr') %}<a href="/lang/{{ code }}?next=/"{% if code == site_lang %} aria-current="true"{% endif %}>{{ code | upper }}</a>{% endfor %}</span>
@@ -39,7 +39,7 @@
       <p class="s-lead">{{ s.hero.lead }}</p>
       <div class="s-cta">
         <a class="s-btn s-btn-lg" href="/login">{{ s.hero.cta }} <span aria-hidden="true">→</span></a>
-        <a class="s-btn s-btn-lg s-btn-ghost" href="#pilot">{{ s.hero.cta2 }}</a>
+        <a class="s-btn s-btn-lg s-btn-ghost" href="#funktionen">{{ s.hero.cta2 }}</a>
       </div>
       <p class="s-note">{{ s.hero.note }}</p>
     </div>
@@ -108,13 +108,12 @@
   </div>
 </section>
 
-<section class="s-pilot" id="pilot">
+<section class="s-pilot" id="kontakt">
   <div class="s-wrap s-pilot-in">
     <div>
       <p class="s-kicker c1">{{ s.pilot.kicker }}</p>
       <h2 class="s-h2">{{ s.pilot.title }}</h2>
       <p class="s-lead">{{ s.pilot.lead }}</p>
-      <ol class="s-steps">{% for when, what in s.pilot.steps %}<li><strong>{{ when }}</strong><span>{{ what }}</span></li>{% endfor %}</ol>
     </div>
     <aside class="s-contact">
       <img src="{{ static('img/n.svg') }}" alt="" width="56" height="56">
