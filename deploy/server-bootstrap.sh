@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # N-Fizyo – neuen Server EINMALIG für das automatische Einspielen über GitHub vorbereiten (als root).
 #
-#   sudo bash server-bootstrap.sh --pubkey "ssh-ed25519 AAAA… github-deploy-fizyo" --domain fizyo.nsystem.ch --demo
+#   sudo bash server-bootstrap.sh --pubkey "ssh-ed25519 AAAA… github-deploy-fizyo" --domain nfizyo.ch --demo
 #
 # --pubkey   ÖFFENTLICHER Teil des neuen Deploy-Schlüssels (nicht geheim). Der private Teil kommt nur in GitHub Secrets.
 # --genkey   statt --pubkey: Schlüssel hier erzeugen; der private Teil wird einmal angezeigt und gleich gelöscht.
@@ -41,7 +41,7 @@ fi
 [[ "$PUBKEY" =~ ^ssh-ed25519\ [A-Za-z0-9+/]{68}(=){0,2}(\ [A-Za-z0-9._@-]{1,64})?$ ]] \
   || { echo "--pubkey fehlt oder ist kein ed25519-Schlüssel (eine Zeile «ssh-ed25519 AAAA… name»)." >&2; exit 1; }
 [[ "$DOMAIN" =~ ^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)+$ ]] \
-  || { echo "--domain fehlt oder ist ungültig (z. B. fizyo.nsystem.ch)." >&2; exit 1; }
+  || { echo "--domain fehlt oder ist ungültig (z. B. nfizyo.ch)." >&2; exit 1; }
 grep -q 'VERSION_ID="24.04"' /etc/os-release || echo "Warnung: getestet ist Ubuntu 24.04." >&2
 
 echo "==> Benutzer deploy"

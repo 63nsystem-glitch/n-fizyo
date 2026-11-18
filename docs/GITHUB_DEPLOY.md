@@ -7,7 +7,7 @@ N-Gastro'dan tamamen ayrı: ayrı depo, ayrı sunucu, ayrı SSH anahtarı, ayrı
 
 ## En kısa yol: anahtarı sunucu üretsin
 
-`ssh root@<IP>` ile gir ve `server-bootstrap.sh`'ı `--genkey --domain fizyo.nsystem.ch --demo` ile çalıştır.
+`ssh root@<IP>` ile gir ve `server-bootstrap.sh`'ı `--genkey --domain nfizyo.ch --demo` ile çalıştır.
 Sonunda üç Secret'ın içeriğini yazar (`FIZYO_SSH_HOST`, `FIZYO_SSH_KNOWN_HOSTS`, `FIZYO_SSH_KEY`). Özel anahtar
 sadece bir kez ekranda görünür ve hemen silinir. Onu sadece GitHub Secrets'a yapıştır, başka hiçbir yere koyma.
 Bu yolu seçersen aşağıdaki Windows adımlarına gerek yok.
@@ -26,7 +26,7 @@ ssh-keygen -t ed25519 -C "github-deploy-fizyo" -f "$HOME\.ssh\fizyo_deploy"
 
 ```bash
 scp deploy/server-bootstrap.sh root@<IP>:
-ssh root@<IP> 'bash server-bootstrap.sh --pubkey "<fizyo_deploy.pub içeriği>" --domain fizyo.nsystem.ch --demo'
+ssh root@<IP> 'bash server-bootstrap.sh --pubkey "<fizyo_deploy.pub içeriği>" --domain nfizyo.ch --demo'
 ```
 
 Betik: «deploy» kullanıcısı (şifresiz, sadece bu anahtarla, terminal/yönlendirme yok), `/usr/local/sbin/n-fizyo-deploy`
@@ -43,7 +43,7 @@ Sonunda `FIZYO_SSH_KNOWN_HOSTS` için gereken satırı yazar.
 
 ## Bir kez: DNS
 
-`fizyo.nsystem.ch` için A kaydı → sunucunun IP'si (nsystem.ch'nin DNS'i neredeyse orada). Kayıt yokken de kurulum
+`nfizyo.ch` için A kaydı → sunucunun IP'si (Hostpoint › Domains › DNS); nfizyo.ch için AAAA kaydını sil. Kayıt yokken de kurulum
 yapılır, sertifika kayıt gelince kendiliğinden alınır.
 
 ## Sunucu ne yapar
