@@ -5,6 +5,13 @@ Her `main` yüklemesinde GitHub önce testleri çalıştırır (`Tests`). Testle
 
 N-Gastro'dan tamamen ayrı: ayrı depo, ayrı sunucu, ayrı SSH anahtarı, ayrı Secrets.
 
+## En kısa yol: anahtarı sunucu üretsin
+
+`ssh root@<IP>` ile gir ve `server-bootstrap.sh`'ı `--genkey --domain fizyo.nsystem.ch --demo` ile çalıştır.
+Sonunda üç Secret'ın içeriğini yazar (`FIZYO_SSH_HOST`, `FIZYO_SSH_KNOWN_HOSTS`, `FIZYO_SSH_KEY`). Özel anahtar
+sadece bir kez ekranda görünür ve hemen silinir. Onu sadece GitHub Secrets'a yapıştır, başka hiçbir yere koyma.
+Bu yolu seçersen aşağıdaki Windows adımlarına gerek yok.
+
 ## Bir kez: anahtar (Windows, PowerShell)
 
 ```powershell

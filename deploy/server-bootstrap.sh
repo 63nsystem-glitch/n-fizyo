@@ -4,6 +4,7 @@
 #   sudo bash server-bootstrap.sh --pubkey "ssh-ed25519 AAAA… github-deploy-fizyo" --domain fizyo.nsystem.ch --demo
 #
 # --pubkey   ÖFFENTLICHER Teil des neuen Deploy-Schlüssels (nicht geheim). Der private Teil kommt nur in GitHub Secrets.
+# --genkey   statt --pubkey: Schlüssel hier erzeugen; der private Teil wird einmal angezeigt und gleich gelöscht.
 # --domain   öffentlicher Name des Servers (DNS-A-Eintrag muss auf diesen Server zeigen, sonst kein Zertifikat)
 # --demo     Demo-Praxis mit fiktiven Daten, ohne KI (--demo --no-ai). Ohne --demo: echte Praxis – nur mit KI-Grafikkarte!
 #
@@ -17,17 +18,26 @@
 set -euo pipefail
 [[ $EUID -eq 0 ]] || { echo "Bitte als root ausführen." >&2; exit 1; }
 
-PUBKEY=""; DOMAIN=""; DEMO=0
+PUBKEY=""; DOMAIN=""; DEMO=0; GENKEY=0
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --pubkey) PUBKEY="${2:-}"; shift ;;
+    --genkey) GENKEY=1 ;;
     --domain) DOMAIN="${2:-}"; shift ;;
     --demo) DEMO=1 ;;
-    -h|--help) sed -n '2,17p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,18p' "$0"; exit 0 ;;
     *) echo "Unbekannte Option: $1" >&2; exit 1 ;;
   esac
   shift
 done
+KEYDIR=""
+if [[ "$GENKEY" == 1 ]]; then
+  # Schlüssel hier erzeugen: der private Teil wird EINMAL angezeigt (für GitHub Secrets) und danach gelöscht.
+  KEYDIR="$(mktemp -d)"; chmod 700 "$KEYDIR"
+  trap 'rm -rf "$KEYDIR"' EXIT
+  ssh-keygen -q -t ed25519 -N "" -C "github-deploy-fizyo" -f "$KEYDIR/k"
+  PUBKEY="$(cat "$KEYDIR/k.pub")"
+fi
 [[ "$PUBKEY" =~ ^ssh-ed25519\ [A-Za-z0-9+/]{68}(=){0,2}(\ [A-Za-z0-9._@-]{1,64})?$ ]] \
   || { echo "--pubkey fehlt oder ist kein ed25519-Schlüssel (eine Zeile «ssh-ed25519 AAAA… name»)." >&2; exit 1; }
 [[ "$DOMAIN" =~ ^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)+$ ]] \
@@ -109,9 +119,21 @@ visudo -cf /etc/sudoers.d/n-fizyo-deploy >/dev/null
 
 if command -v ufw >/dev/null && ufw status | grep -q "Status: active"; then ufw allow OpenSSH >/dev/null; fi
 
+IP="$(hostname -I | awk '{print $1}')"
 echo
-echo "Fertig. Für GitHub Secrets (FIZYO_SSH_KNOWN_HOSTS) diese Zeile verwenden:"
+echo "Fertig. Jetzt in GitHub › Settings › Secrets and variables › Actions › New repository secret:"
+echo
+echo "== FIZYO_SSH_HOST =="
+echo "$IP"
+echo
+echo "== FIZYO_SSH_KNOWN_HOSTS =="
 for f in /etc/ssh/ssh_host_ed25519_key.pub; do
-  [[ -f "$f" ]] && echo "  $(hostname -I | awk '{print $1}') $(cut -d' ' -f1,2 "$f")"
+  [[ -f "$f" ]] && echo "$IP $(cut -d' ' -f1,2 "$f")"
 done
+if [[ -n "$KEYDIR" ]]; then
+  echo
+  echo "== FIZYO_SSH_KEY == (alles von BEGIN bis END kopieren – nur in GitHub, nie in den Chat; wird jetzt gelöscht)"
+  cat "$KEYDIR/k"
+fi
+echo
 echo "Danach in GitHub: Actions › Deploy › Run workflow (oder ein Push auf main)."
