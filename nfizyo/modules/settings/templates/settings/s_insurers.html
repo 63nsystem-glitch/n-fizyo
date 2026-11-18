@@ -1,0 +1,60 @@
+{% extends "ui/settings.html" %}
+{% block settings %}
+<div class="grid-main-side">
+  <section class="card flush">
+    <div class="list">
+      {% for i in insurers %}
+      <details class="list-item-details"{% if not i.active %} style="opacity:.6"{% endif %}>
+        <summary class="list-item">
+          <span class="lead avatar">{{ icon('apartment', 20) }}</span>
+          <span class="body"><span class="title">{{ i.name }}</span><br><span class="sub">{{ (i.law | law) or '–' }} · {{ t('billing_tiers.' ~ i.tiers) }}{% if i.gln %} · GLN {{ i.gln }}{% endif %}{% if i.tp_group %} · {{ t('settings.tpg.' ~ i.tp_group) }}{% endif %}</span></span>
+          <span class="trail">{% if not i.gln or not i.zip %}<span class="pill-label warn">{{ t('settings.ins_incomplete') }}</span>{% endif %}
+            {% if md.directory and md.directory.count and i.gln %}{% set r = md.reach.get(i.gln) %}
+            {% if r and r.listed %}<span class="pill-label {{ 'ok' if r.v50 else 'warn' }}" title="{{ t('settings.md_versions', v50=t('common.yes') if r.v50 else t('common.no'), v45=t('common.yes') if r.v45 else t('common.no')) }}">{{ t('settings.md_reach_ok') if r.v50 else t('settings.md_reach_no50') }}</span>
+            {% else %}<span class="pill-label error">{{ t('settings.md_reach_none') }}</span>{% endif %}{% endif %}{{ icon('keyboard_arrow_down', 20) }}</span>
+        </summary>
+        <form method="post" class="form" style="padding:0 16px 16px 72px">
+          {% if md.directory and md.directory.count and i.gln %}{% set r = md.reach.get(i.gln) %}
+          <p class="small{{ '' if r and r.listed else ' muted' }}">{% if r and r.listed %}{{ t('settings.md_detail', name=r.name, receiver=r.receiver) }}
+            · {{ t('settings.md_versions', v50=t('common.yes') if r.v50 else t('common.no'), v45=t('common.yes') if r.v45 else t('common.no')) }}
+            · {{ t('settings.md_tg', yes=t('common.yes') if r.tg_allowed else t('common.no')) }}{% if r.additional_costs %} · {{ t('settings.md_costs') }}{% endif %}
+            {% else %}{{ t('settings.md_not_listed') }}{% endif %}</p>{% endif %}
+          <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="id" value="{{ i.id }}">
+          {% set p = i %}{% include "settings/_insurer_fields.html" %}
+          <div class="row" style="gap:8px"><button class="btn" type="submit" name="do" value="update">{{ t('common.save') }}</button>
+            <button class="btn text" type="submit" name="do" value="toggle" formnovalidate>{{ t('settings.deactivate') if i.active else t('settings.activate') }}</button></div>
+        </form>
+      </details>
+      {% else %}<p class="muted" style="padding:16px">{{ t('settings.ins_none') }}</p>{% endfor %}
+    </div>
+  </section>
+  <div class="col stack">
+  {% if md.directory is not none %}
+  <section class="card stack-s">
+    <h2>{{ t('settings.md_title') }}</h2>
+    {% if md.directory.count %}<p class="small muted">{{ t('settings.md_loaded', n=md.directory.count, date=fmt_date(md.directory.fetched_at)) }}</p>
+    <form method="get" class="row" style="gap:8px"><input name="md" value="{{ md.q }}" maxlength="60" placeholder="{{ t('settings.md_search_ph') }}" aria-label="{{ t('settings.md_search_ph') }}" class="grow">
+      <button class="btn tonal" type="submit">{{ icon('search', 18) }}{{ t('settings.md_search') }}</button></form>
+    {% for r in md.results %}
+    <form method="post" class="stack-s" style="border-top:1px solid var(--outline-variant);padding-top:8px"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="add_md"><input type="hidden" name="gln" value="{{ r.gln }}">
+      <span class="small"><strong>{{ r.name }}</strong> · GLN {{ r.gln }}{% if r.receiver != r.gln %} ({{ t('settings.md_receiver') }} {{ r.receiver }}){% endif %}<br>
+        <span class="muted">{{ r.street or '' }} {{ r.zip or '' }} {{ r.town or '' }} · {{ r.laws | join(', ') or '–' }} · {{ t('settings.md_versions', v50=t('common.yes') if r.v50 else t('common.no'), v45=t('common.yes') if r.v45 else t('common.no')) }}</span></span>
+      <div class="row" style="gap:8px;flex-wrap:wrap"><select name="law" aria-label="{{ t('settings.ins_law') }}">{% for l in ('KVG', 'UVG', 'IVG', 'MVG', 'VVG') %}<option value="{{ l }}"{% if r.laws and r.laws[0] == l %} selected{% endif %}>{{ l | law }}</option>{% endfor %}</select>
+        <select name="tiers" aria-label="{{ t('settings.ins_tiers') }}">{% for v in ('payant', 'garant') %}<option value="{{ v }}">{{ t('billing_tiers.' ~ v) }}</option>{% endfor %}</select>
+        <button class="btn text sm" type="submit">{{ icon('add', 16) }}{{ t('settings.md_take') }}</button></div>
+    </form>
+    {% else %}{% if md.q %}<p class="small muted">{{ t('settings.md_no_result') }}</p>{% endif %}{% endfor %}
+    {% else %}<p class="small muted">{{ t('settings.md_empty') }}</p>{% endif %}
+  </section>
+  {% endif %}
+  <section class="card">
+    <h2 style="margin-bottom:4px">{{ t('settings.ins_add') }}</h2>
+    <p class="small muted" style="margin-bottom:16px">{{ t('settings.ins_hint') }}</p>
+    <form method="post" class="form"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="add">
+      {% set p = {} %}{% include "settings/_insurer_fields.html" %}
+      <div class="form-actions"><button class="btn" type="submit">{{ icon('add', 18) }}{{ t('settings.ins_add') }}</button></div>
+    </form>
+  </section>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "central/layout.html" %}
+{% block content %}
+<section class="card" style="max-width:420px;margin:48px auto">
+  <h1 style="margin-bottom:4px">NSystem Übersicht</h1>
+  <p class="small muted" style="margin-bottom:16px">Nur für NSystem-Personal. Keine Patientendaten.</p>
+  {% if error %}<div class="banner error" style="margin-bottom:12px">{{ icon('error', 20) }}<span>{{ error }}</span></div>{% endif %}
+  <form method="post" class="form"><input type="hidden" name="_csrf" value="{{ csrf }}">
+    <div class="field"><label for="e">E-Mail</label><input id="e" name="email" type="email" required autocomplete="username" autofocus></div>
+    <div class="field"><label for="p">Passwort</label><input id="p" name="password" type="password" required autocomplete="current-password"></div>
+    <button class="btn block" type="submit">Weiter</button></form>
+</section>
+{% endblock %}

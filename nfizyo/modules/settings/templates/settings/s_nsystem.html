@@ -1,0 +1,75 @@
+{% extends "ui/settings.html" %}
+{% block settings %}
+<div class="grid-main-side">
+  <div class="col stack">
+    <section class="card stack-s" id="support">
+      <h2>{{ t('nsystem.support.title') }}</h2>
+      {% if support.open %}
+      <div class="banner warn" role="status">{{ icon('lock', 20) }}<div>
+        <strong>{{ t('nsystem.support.open_until', date=fmt_date(support.until_iso), time=fmt_time(support.until_iso)) }}</strong><br>
+        <span class="small">{{ t('nsystem.support.remaining') }} <span class="mono" data-countdown="{{ support.remaining }}">{{ (support.remaining // 3600) }}:{{ '%02d' % (support.remaining % 3600 // 60) }}:{{ '%02d' % (support.remaining % 60) }}</span></span></div></div>
+      <p class="small">{{ t('nsystem.support.open_text') }}</p>
+      <form method="post" data-confirm="{{ t('nsystem.support.close_confirm') }}"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="support_close">
+        <button class="btn" type="submit">{{ icon('close', 18) }}{{ t('nsystem.support.close') }}</button></form>
+      {% elif pending %}
+      <div class="banner info" role="status">{{ icon('timer', 20) }}<span>{{ t('nsystem.support.pending', n=pending.hours) }}</span></div>
+      {% elif not support_configured %}
+      <div class="banner info">{{ icon('info', 20) }}<span>{{ t('nsystem.support.not_configured') }}</span></div>
+      {% elif not support_allowed %}
+      <div class="banner info">{{ icon('info', 20) }}<span>{{ t('nsystem.support.not_allowed') }}</span></div>
+      {% else %}
+      {% if last_failed %}<div class="banner error">{{ icon('error', 20) }}<span>{{ t('nsystem.support.failed') }}</span></div>{% endif %}
+      {% if not support.runner %}<div class="banner warn">{{ icon('warning', 20) }}<span>{{ t('nsystem.support.no_runner') }}</span></div>{% endif %}
+      <p class="small">{{ t('nsystem.support.closed_text') }}</p>
+      <form method="post" class="form"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="support_open">
+        <div class="row" style="gap:12px;align-items:flex-end;flex-wrap:wrap">
+          <div class="field"><label for="sup-h">{{ t('nsystem.support.duration') }}</label><select id="sup-h" name="hours">
+            {% for h in hours_options %}<option value="{{ h }}"{% if h == default_hours %} selected{% endif %}>{{ t('nsystem.support.hours', n=h) }}</option>{% endfor %}</select></div>
+          <button class="btn" type="submit">{{ icon('key', 18) }}{{ t('nsystem.support.open') }}</button>
+        </div>
+      </form>
+      {% endif %}
+      <p class="small muted">{{ t('nsystem.support.consent') }}</p>
+    </section>
+    <section class="card stack-s">
+      <h2>{{ t('nsystem.title') }}</h2>
+      {% if configured %}
+      <p class="row" style="gap:8px">{{ icon('cloud_sync', 20) }}<span>{% if last and last.value %}{{ t('nsystem.last', date=fmt_date(last.value), time=fmt_time(last.value)) }}{% else %}{{ t('nsystem.never') }}{% endif %}</span></p>
+      {% if error and error.value %}<div class="banner warn">{{ icon('warning', 20) }}<span>{{ t('nsystem.error', error=error.value) }}</span></div>{% endif %}
+      {% else %}<div class="banner info">{{ icon('info', 20) }}<span>{{ t('nsystem.off') }}</span></div>{% endif %}
+    </section>
+    <section class="card flush">
+      <h2 style="padding:16px 16px 8px">{{ t('nsystem.actions') }}</h2>
+      {% if commands %}
+      <div class="table-wrap"><table class="table"><thead><tr><th>{{ t('nsystem.when') }}</th><th>{{ t('nsystem.who') }}</th><th>{{ t('nsystem.what') }}</th><th>{{ t('nsystem.status') }}</th></tr></thead><tbody>
+      {% for c in commands %}<tr><td>{{ fmt_date(c.received_at) }} {{ fmt_time(c.received_at) }}</td><td>{{ c.issued_by }}</td><td>{{ labels.get(c.action, c.action) }}</td>
+        <td><span class="pill-label {{ {'done': 'ok', 'failed': 'error', 'rejected': 'error', 'queued': 'info', 'running': 'warn'}.get(c.status, '') }}">{{ t('nsystem.st.' ~ c.status) }}</span>
+          {% if c.reason and c.status == 'rejected' %}<br><span class="small muted">{{ t('nsystem.reason.' ~ c.reason) }}</span>{% endif %}</td></tr>{% endfor %}
+      </tbody></table></div>
+      {% else %}<p class="muted" style="padding:0 16px 16px">{{ t('nsystem.none') }}</p>{% endif %}
+    </section>
+    <section class="card flush">
+      <h2 style="padding:16px 16px 8px">{{ t('nsystem.log.title') }}</h2>
+      {% if events %}
+      <div class="table-wrap"><table class="table"><thead><tr><th>{{ t('nsystem.when') }}</th><th>{{ t('nsystem.log.who') }}</th><th>{{ t('nsystem.what') }}</th></tr></thead><tbody>
+      {% for e in events %}<tr><td>{{ fmt_date(e.at) }} {{ fmt_time(e.at) }}</td>
+        <td class="small">{% if e.user_name %}{{ e.user_name }}{% elif e.kind.startswith('support_ssh') or e.kind.startswith('service_') or e.kind == 'support_command' or e.kind == 'support_tunnel_up' %}NSystem{% elif e.practice_id and e.practice_id != practice.id %}{{ t('nsystem.log.other_practice') }}{% else %}{{ t('nsystem.log.server') }}{% endif %}</td>
+        <td class="small">{{ t('nsystem.ev.' ~ e.kind) }}{% if e.data.hours %} · {{ t('nsystem.support.hours', n=e.data.hours) }}{% endif %}{% if e.data.reason %} · {{ t('nsystem.close.' ~ e.data.reason) if e.kind == 'support_closed' else t('nsystem.reason.' ~ e.data.reason) }}{% endif %}{% if e.data.error %} · {{ t('nsystem.support_err.' ~ e.data.error) }}{% endif %}{% if e.kind == 'service_action' %}: {{ t('nsystem.service_act.' ~ e.data.action) }} · {{ t('nsystem.service_res.' ~ e.data.result) }}{% if e.data.version %} · {{ e.data.version }}{% endif %}{% endif %}{% if e.data.cmd %}: <span class="mono">{{ e.data.cmd }}</span>{% endif %}{% if e.data.area %} · {{ t('support.areas.' ~ e.data.area) }}{% endif %}</td></tr>{% endfor %}
+      </tbody></table></div>
+      {% else %}<p class="muted" style="padding:0 16px 16px">{{ t('nsystem.log.none') }}</p>{% endif %}
+    </section>
+  </div>
+  <div class="col stack">
+    <section class="card stack-s">
+      <h2>{{ t('nsystem.can_title') }}</h2>
+      <ul class="small stack-s" style="padding-inline-start:18px">{% for k, v in labels.items() %}<li>{{ v }}</li>{% endfor %}</ul>
+      <h2 style="margin-top:8px">{{ t('nsystem.support.can_title') }}</h2>
+      <p class="small">{{ t('nsystem.support.can') }}</p>
+      <h2 style="margin-top:8px">{{ t('nsystem.cannot_title') }}</h2>
+      <p class="small">{{ t('nsystem.cannot') }}</p>
+      <p class="small muted">{{ t('nsystem.sent') }}</p>
+    </section>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ static('js/countdown.js') }}" defer></script>{% endblock %}

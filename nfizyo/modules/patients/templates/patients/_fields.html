@@ -1,0 +1,42 @@
+{% macro err(name) %}{% if name in errors %}<span class="err">{{ t('form.required') }}</span>{% endif %}{% endmacro %}
+<input type="hidden" name="_csrf" value="{{ csrf }}">
+<section class="card"><h2 style="margin-bottom:16px">{{ t('patients.person') }}</h2>
+<div class="form-grid">
+  <div class="field{% if 'first_name' in errors %} invalid{% endif %}"><label for="first_name">{{ t('patients.first_name') }} *</label><input id="first_name" name="first_name" value="{{ p.first_name or '' }}" required autocomplete="off">{{ err('first_name') }}</div>
+  <div class="field{% if 'last_name' in errors %} invalid{% endif %}"><label for="last_name">{{ t('patients.last_name') }} *</label><input id="last_name" name="last_name" value="{{ p.last_name or '' }}" required autocomplete="off">{{ err('last_name') }}</div>
+  <div class="field{% if 'birthdate' in errors %} invalid{% endif %}"><label for="birthdate">{{ t('patients.birthdate') }}</label><input id="birthdate" name="birthdate" type="date" value="{{ p.birthdate or '' }}"></div>
+  <div class="field"><label for="sex">{{ t('patients.sex') }}</label><select id="sex" name="sex"><option value="">–</option>{% for s in ('f', 'm', 'x') %}<option value="{{ s }}"{% if p.sex == s %} selected{% endif %}>{{ t('patients.sex_' ~ s) }}</option>{% endfor %}</select></div>
+  <div class="field{% if 'phone' in errors %} invalid{% endif %}"><label for="phone">{{ t('patients.phone') }}</label><input id="phone" name="phone" type="tel" value="{{ p.phone or '' }}" autocomplete="off" maxlength="40">{% if 'phone' in errors %}<span class="err">{{ t('patients.phone_invalid') }}</span>{% elif p.phone and p.phone | landline %}<span class="small muted">{{ t('patients.phone_landline') }}</span>{% endif %}</div>
+  <div class="field"><label for="email">{{ t('patients.email') }}</label><input id="email" name="email" type="email" value="{{ p.email or '' }}" autocomplete="off">
+    <label class="check small"><input type="checkbox" name="email_ok" value="1"{% if p.email_ok_at %} checked{% endif %}>{{ t('patients.email_ok') }}</label></div>
+  <div class="field"><label for="rch">{{ t('patients.reminder_channel') }}</label><select id="rch" name="reminder_channel">{% for c in ('sms', 'email', 'both', 'none') %}<option value="{{ c }}"{% if (p.reminder_channel or 'sms') == c %} selected{% endif %}>{{ t('patients.reminder_' ~ c) }}</option>{% endfor %}</select></div>
+  <div class="field"><label for="address">{{ t('patients.address') }}</label><input id="address" name="address" value="{{ p.address or '' }}"></div>
+  <div class="field"><label for="zip">{{ t('patients.zip_city') }}</label><div class="row" style="flex-wrap:nowrap"><input id="zip" name="zip" value="{{ p.zip or '' }}" style="max-width:110px" inputmode="numeric"><input name="city" value="{{ p.city or '' }}" aria-label="{{ t('patients.city') }}"></div></div>
+</div></section>
+
+<section class="card"><h2 style="margin-bottom:4px">{{ t('patients.language_section') }}</h2>
+<p class="muted small" style="margin-bottom:16px">{{ t('patients.language_hint') }}</p>
+<div class="form-grid">
+  <div class="field"><label for="spoken_lang">{{ t('patients.spoken_language') }}</label><select id="spoken_lang" name="spoken_lang"><option value="">–</option>{% for l in spoken_languages %}<option value="{{ l.code }}"{% if p.spoken_lang == l.code %} selected{% endif %}>{% set nm = l.fr if lang == 'fr' else l.de %}{{ nm[:1] | upper }}{{ nm[1:] }}{% if l.native and l.native | lower != nm | lower %} · {{ l.native }}{% endif %}</option>{% endfor %}</select></div>
+  <div class="field"><label for="plang">{{ t('patients.app_language') }}</label><select id="plang" name="lang">{% for code in patient_langs %}<option value="{{ code }}"{% if (p.lang or 'de') == code %} selected{% endif %}>{{ LANG_NAMES[code] }}</option>{% endfor %}</select></div>
+  <label class="check" style="align-self:end"><input type="checkbox" name="needs_interpreter" value="1"{% if p.needs_interpreter %} checked{% endif %}>{{ t('patients.interpreter_needed_long') }}</label>
+</div></section>
+
+<section class="card"><h2 style="margin-bottom:16px">{{ t('patients.insurance') }}</h2>
+<div class="form-grid">
+  <div class="field"><label for="law">{{ t('patients.law') }}</label><select id="law" name="law"><option value="">–</option>{% for l in laws %}<option value="{{ l }}"{% if p.law == l %} selected{% endif %}>{{ l | law }}</option>{% endfor %}</select></div>
+  <div class="field"><label for="insurer_id">{{ t('patients.insurer') }}</label><select id="insurer_id" name="insurer_id"><option value="">–</option>{% for i in insurers %}<option value="{{ i.id }}"{% if p.insurer_id == i.id %} selected{% endif %}>{{ i.name }}</option>{% endfor %}</select></div>
+  <div class="field"><label for="insured_number">{{ t('patients.insured_number') }}</label><input id="insured_number" name="insured_number" value="{{ p.insured_number or '' }}" autocomplete="off"></div>
+  <div class="field{% if 'ahv_number' in errors %} invalid{% endif %}"><label for="ahv_number">{{ t('patients.ahv_number') }}</label><input id="ahv_number" name="ahv_number" value="{{ format_ahv(p.ahv_number) if p.ahv_number else (p.ahv_input or '') }}" placeholder="756.0000.0000.00" inputmode="numeric" autocomplete="off">{% if 'ahv_number' in errors %}<span class="err">{{ t('patients.ahv_invalid') }}</span>{% else %}<p class="hint">{{ t('patients.ahv_hint') }}</p>{% endif %}</div>
+  <div class="field"><label for="case_number">{{ t('patients.case_number') }}</label><input id="case_number" name="case_number" value="{{ p.case_number or '' }}"></div>
+  <div class="field"><label for="accident_date">{{ t('patients.accident_date') }}</label><input id="accident_date" name="accident_date" type="date" value="{{ p.accident_date or '' }}"></div>
+  <div class="field"><label for="employer">{{ t('patients.employer') }}</label><input id="employer" name="employer" value="{{ p.employer or '' }}"></div>
+</div></section>
+
+<section class="card"><h2 style="margin-bottom:16px">{{ t('patients.treatment') }}</h2>
+<div class="form-grid">
+  <div class="field span-all"><label for="referrer_id">{{ t('patients.referrer') }}</label><select id="referrer_id" name="referrer_id"><option value="">–</option>{% for r in referrers %}<option value="{{ r.id }}"{% if p.referrer_id == r.id %} selected{% endif %}>{{ r.name }}{% if r.practice_name %} · {{ r.practice_name }}{% endif %}</option>{% endfor %}</select></div>
+  <div class="field"><label for="therapist_id">{{ t('patients.main_therapist') }}</label><select id="therapist_id" name="therapist_id"><option value="">–</option>{% for u in therapists %}<option value="{{ u.id }}"{% if p.therapist_id == u.id %} selected{% endif %}>{{ u.name }}</option>{% endfor %}</select></div>
+</div>
+<div class="field" style="margin-top:16px"><label for="admin_note">{{ t('patients.admin_note') }}</label><textarea id="admin_note" name="admin_note" rows="2" data-autogrow>{{ p.admin_note or '' }}</textarea></div>
+</section>

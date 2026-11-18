@@ -1,0 +1,53 @@
+<section class="card" id="rechnungen" aria-labelledby="h-r-inv">
+  <div class="card-head"><h2 id="h-r-inv">{{ t('billing.tab') }}</h2></div>
+  {% if ctx.unbilled %}
+  <div class="row-between" style="margin-bottom:8px"><span class="small">{{ t('billing.n_unbilled', n=ctx.unbilled) }}</span>
+    {% if ctx.tariff %}<form method="post" action="{{ S }}/abrechnung"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="create"><input type="hidden" name="patient_id" value="{{ ctx.patient.id }}">
+      <button class="btn tonal sm" type="submit">{{ icon('receipt_long', 18) }}{{ t('billing.create') }}</button></form>
+    {% else %}<span class="pill-label warn">{{ t('billing.no_tariff', law=t('billing.law.' ~ ctx.patient.law) if ctx.patient.law else '–') }}</span>{% endif %}</div>
+  {% endif %}
+  {% for i in ctx.invoices %}
+  <a class="list-item" style="padding-inline:0" href="{{ S }}/rechnungen/{{ i.id }}"><span class="lead">{{ icon('receipt_long', 20) }}</span>
+    <span class="body"><span class="title">{{ i.number or t('billing.status.draft') }}</span><br><span class="sub">{{ date_range(i.period_from, i.period_to) }}</span></span>
+    <span class="trail"><span class="mono small">{{ chf(i.total_chf) }}</span><span class="pill-label {{ {'draft': 'warn', 'final': 'ok', 'cancelled': 'error'}[i.status] }}">{{ t('billing.status.' ~ i.status) }}</span></span></a>
+  {% else %}{% if not ctx.unbilled %}<p class="muted small">{{ t('billing.none') }}</p>{% endif %}{% endfor %}
+  <div id="kostengutsprache" class="stack-s" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--outline-variant)">
+    <h3 class="small">{{ t('billing.kogu.title') }}</h3>
+    {% if ctx.patient.law == 'KVG' %}
+    <p class="small{% if ctx.kvg_sessions > ctx.kvg_free %} text-error{% endif %}">{{ t('billing.kogu.kvg_count', n=ctx.kvg_sessions, max=ctx.kvg_free) }}</p>
+    {% endif %}
+    {% for a in ctx.approvals %}
+    {% set pill = {'requested': 'info', 'approved': 'ok', 'partial': 'warn', 'rejected': 'error'}[a.status] %}
+    <div class="stack-s" style="padding:4px 0">
+      <div class="row" style="gap:8px;flex-wrap:wrap;align-items:center"><span class="pill-label {{ pill }}">{{ t('billing.kogu.st_' ~ a.status) }}</span>
+        <span class="small">{{ t('billing.kogu.requested_on', date=fmt_date(a.requested_on)) }}{% if a.sessions_requested %} · {{ t('billing.kogu.n_sessions', n=a.sessions_requested) }}{% endif %}
+          {% if a.sessions_approved is not none and a.status in ('approved', 'partial') %} · {{ t('billing.kogu.approved_n', n=a.sessions_approved) }}{% endif %}
+          {% if a.valid_until %} · {{ t('billing.kogu.until', date=fmt_date(a.valid_until)) }}{% endif %}{% if a.reference %} · {{ a.reference }}{% endif %}</span></div>
+      {% if a.note %}<p class="small muted">{{ a.note }}</p>{% endif %}
+      <details><summary class="disclose">{{ t('billing.kogu.decide') }}</summary>
+        <form method="post" action="{{ S }}/abrechnung/kostengutsprache" class="form" style="margin-top:6px">
+          <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="decide"><input type="hidden" name="patient_id" value="{{ ctx.patient.id }}"><input type="hidden" name="approval_id" value="{{ a.id }}">
+          <div class="row" style="gap:8px;flex-wrap:wrap">
+            <div class="field"><label for="ks{{ a.id }}">{{ t('billing.kogu.status') }}</label><select id="ks{{ a.id }}" name="status">{% for st in ('requested', 'approved', 'partial', 'rejected') %}<option value="{{ st }}"{% if a.status == st %} selected{% endif %}>{{ t('billing.kogu.st_' ~ st) }}</option>{% endfor %}</select></div>
+            <div class="field" style="width:110px"><label for="ka{{ a.id }}">{{ t('billing.kogu.sessions') }}</label><input id="ka{{ a.id }}" name="sessions_approved" type="number" min="0" max="500" value="{{ a.sessions_approved if a.sessions_approved is not none else '' }}"></div>
+            <div class="field"><label for="ku{{ a.id }}">{{ t('billing.kogu.valid_until') }}</label><input id="ku{{ a.id }}" name="valid_until" type="date" value="{{ a.valid_until or '' }}"></div>
+          </div>
+          <div class="field"><label for="kr{{ a.id }}">{{ t('billing.kogu.reference') }}</label><input id="kr{{ a.id }}" name="reference" maxlength="200" value="{{ a.reference or '' }}"></div>
+          <button class="btn tonal sm" type="submit">{{ t('common.save') }}</button>
+        </form></details>
+    </div>
+    {% else %}<p class="small muted">{{ t('billing.kogu.none') }}</p>{% endfor %}
+    <details><summary class="disclose">{{ t('billing.kogu.add') }}</summary>
+      <form method="post" action="{{ S }}/abrechnung/kostengutsprache" class="form" style="margin-top:6px">
+        <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="add"><input type="hidden" name="patient_id" value="{{ ctx.patient.id }}">
+        <div class="row" style="gap:8px;flex-wrap:wrap">
+          <div class="field"><label for="kreq">{{ t('billing.kogu.requested') }}</label><input id="kreq" name="requested_on" type="date" value="{{ ctx.today }}" required></div>
+          <div class="field" style="width:110px"><label for="kn">{{ t('billing.kogu.sessions') }}</label><input id="kn" name="sessions_requested" type="number" min="1" max="500" placeholder="9"></div>
+        </div>
+        <div class="field"><label for="kref">{{ t('billing.kogu.reference') }}</label><input id="kref" name="reference" maxlength="200" placeholder="{{ t('billing.kogu.reference_ph') }}"></div>
+        <div class="field"><label for="knote">{{ t('billing.kogu.note') }}</label><input id="knote" name="note" maxlength="200"></div>
+        <button class="btn tonal sm" type="submit">{{ t('common.save') }}</button>
+      </form></details>
+    <p class="small muted">{{ t('billing.kogu.hint') }}</p>
+  </div>
+</section>

@@ -1,0 +1,8 @@
+{
+  "p": {
+    "mail": {
+      "invoice_subject": "Fatura {number}",
+      "invoice_body": "Përshëndetje {name}\n\nNë shtojcë gjeni faturën {number} prej CHF {amount}. Ju lutemi paguajeni me pjesën e pagesës QR deri më {due}.\n\nMe respekt\n{practice}"
+    }
+  }
+}

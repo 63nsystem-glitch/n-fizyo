@@ -1,0 +1,58 @@
+{
+  "messages": {
+    "title": "Messages",
+    "tab": "Messages",
+    "subtitle": "Messages et signalements depuis l'app patient",
+    "none": "Aucun message pour l'instant.",
+    "empty_thread": "Aucun message avec cette personne.",
+    "reply": "Réponse",
+    "reads": "lit en {language}",
+    "translate_to": "Traduire automatiquement en {language} (l'original est joint)",
+    "no_translate": "Lit {language}. Votre réponse ne sera pas traduite automatiquement – la traduction automatique n’est pas encore configurée. Merci d’écrire court et simple.",
+    "no_advice_hint": "Pas de diagnostic via l'app. En cas de signal d'alarme, prendre contact par téléphone.",
+    "sent": "Message envoyé",
+    "handled": "Marqué comme traité",
+    "mark_handled": "Traité",
+    "problem": "Problème signalé",
+    "sent_as": "envoyé traduit automatiquement : {language}",
+    "from_app": "Message de l'app patient",
+    "problem_from_app": "Problème signalé dans l'app",
+    "answer": "Répondre",
+    "auto_translated": "traduit automatiquement de : {language}",
+    "demo_translation": "traduction d'exemple (démo)",
+    "check_numbers": "Merci de vérifier les chiffres dans l'original",
+    "show_original": "Afficher l'original",
+    "from_practice": "Cabinet :",
+    "problem_preview": "Problème signalé",
+    "yesterday": "hier",
+    "description": "Messages avec les patient·e·s (avec traduction)"
+  },
+  "p": {
+    "msg": {
+      "title": "Messages",
+      "empty": "Aucun message pour l'instant.",
+      "write": "Votre message",
+      "write_ph": "Écrivez dans votre langue.",
+      "reply_time": "Le cabinet répond en général dans un délai d'un jour ouvrable. Pas d'urgences via l'app.",
+      "too_many": "Vous avez envoyé beaucoup de messages en peu de temps. Veuillez réessayer plus tard ou appeler le cabinet.",
+      "sent": "Message envoyé.",
+      "report_sent": "Signalement envoyé. Le cabinet le verra à la prochaine ouverture.",
+      "problem": "Problème signalé",
+      "machine": "Afficher l'original (traduction automatique)",
+      "reply": {
+        "same_day": "Le cabinet répond en général le jour ouvrable même.",
+        "next_day": "Le cabinet répond en général d'ici le jour ouvrable suivant.",
+        "two_days": "Le cabinet répond en général dans un délai de deux jours ouvrables.",
+        "three_days": "Le cabinet répond en général dans un délai de trois jours ouvrables.",
+        "week": "Le cabinet répond en général dans un délai d'une semaine."
+      },
+      "no_emergency": "Pas d'urgences via l'app."
+    },
+    "report": {
+      "title": "Signaler un problème",
+      "what": "Que s'est-il passé ?",
+      "what_ph": "p. ex. genou gonflé après les escaliers",
+      "send": "Envoyer"
+    }
+  }
+}

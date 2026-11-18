@@ -1,0 +1,33 @@
+{
+  "p": {
+    "progress": {
+      "title": "تقدّمك",
+      "hint": "شاركه معك أخصائي العلاج الطبيعي. إذا كانت لديك أسئلة، تحدّث عنها في موعدك القادم.",
+      "from_to": "{first} في {first_on} ← {last} في {last_on}",
+      "goal": "الهدف {goal}",
+      "kind": {
+        "flexion": "الثني",
+        "extension": "المدّ",
+        "abduction": "الرفع إلى الجانب",
+        "external_rotation": "الدوران إلى الخارج",
+        "internal_rotation": "الدوران إلى الداخل",
+        "elevation": "رفع الذراع",
+        "pain_vas": "الألم (0–10)"
+      },
+      "joint": {
+        "knee": "الركبة",
+        "shoulder": "الكتف",
+        "hip": "الورك",
+        "elbow": "المرفق",
+        "ankle": "الكاحل",
+        "wrist": "الرسغ",
+        "cervical": "الرقبة",
+        "lumbar": "أسفل الظهر"
+      },
+      "side": {
+        "l": "يسار",
+        "r": "يمين"
+      }
+    }
+  }
+}

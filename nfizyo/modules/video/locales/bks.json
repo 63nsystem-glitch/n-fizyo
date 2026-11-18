@@ -1,0 +1,28 @@
+{
+  "p": {
+    "sms": {
+      "video": "{practice}: Vaš video termin {when}. Ulaz od 15 minuta ranije: {url} – nije za hitne slučajeve, u hitnom slučaju 144."
+    },
+    "video": {
+      "title": "Video termin",
+      "card_title": "Video termin",
+      "open_now": "otvoreno sada",
+      "invalid": "Ovaj link nije važeći. Molimo nazovite ordinaciju.",
+      "cancelled": "Ovaj termin je otkazan.",
+      "over": "Ovaj video termin je završen.",
+      "consent_title": "Prije ulaska",
+      "c_server": "Video ide preko servera ordinacije u Švicarskoj.",
+      "c_record": "Ništa se ne snima.",
+      "c_place": "Molimo pronađite mirno mjesto gdje niko ne sluša.",
+      "c_agree": "Slažem se sa video sesijom.",
+      "need_consent": "Molimo prvo potvrdite svoju saglasnost.",
+      "early": "Možete ući od {time}.",
+      "save_consent": "Spremi saglasnost",
+      "not_ready": "Video soba još nije spremna. Molimo nazovite ordinaciju.",
+      "camera_hint": "U sljedećem koraku uređaj traži kameru i mikrofon – molimo dozvolite.",
+      "join": "Uđi u video termin",
+      "call": "Problemi? Nazovite nas:",
+      "emergency": "Video sesija nije za hitne slučajeve. U hitnom slučaju nazovite 144."
+    }
+  }
+}

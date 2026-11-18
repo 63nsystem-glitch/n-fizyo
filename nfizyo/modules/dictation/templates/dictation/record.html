@@ -1,0 +1,42 @@
+{% extends "layouts/staff.html" %}
+{% import "dictation/_recorder.html" as r with context %}
+{% block back %}<a class="icon-btn" href="{{ S }}/patienten/{{ patient.id }}" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('dictation.title_session') }}{% endblock %}
+{% block subtitle %}{{ patient.first_name }} {{ patient.last_name }} · {{ fmt_time(start) }}{% if a.room_name %} · {{ a.room_name }}{% endif %}{% if session %} · {{ t('agenda.session_of', n=session[0], total=session[1]) }}{% endif %}{% endblock %}
+{% block content %}
+<div class="grid-main-side">
+  <div class="col">
+    {% if note %}
+    <div class="banner {{ 'ok' if note.status == 'approved' else 'info' }}">{{ icon('check_circle' if note.status == 'approved' else 'edit_note') }}
+      <span class="grow">{{ t('dictation.note_exists_' ~ note.status) }}</span><a class="btn text" href="{{ S }}/notizen/{{ note.id }}">{{ t('dictation.open') }}</a></div>
+    {% endif %}
+    <section class="card">
+      {% if not stt and stt_state != 'checking' %}<div class="banner {{ 'info' if demo_stt else 'warn' }}" style="margin-bottom:8px">{{ icon('info') }}<span>{{ t('dictation.demo_stt') if demo_stt else (t('dictation.stt_down') if stt_state == 'down' else t('dictation.no_stt')) }}</span></div>{% endif %}
+      {{ r.recorder(patient=patient, appointment=a) }}
+      <p class="ai-note" style="justify-content:center">{% if ai_cloud %}{{ icon('cloud_sync', 16) }}{{ t('ai.cloud_demo', host=ai_cloud) }}{% else %}{{ icon('lock', 16) }}{{ t('dictation.remote_only') if ai_remote else t('dictation.local_only') }}{% endif %}</p>
+    </section>
+    <details class="card"{% if not stt and not demo_stt and stt_state != 'checking' %} open{% endif %}>
+      <summary class="btn text">{{ icon('keyboard', 18) }}{{ t('dictation.type_instead') }}</summary>
+      <form method="post" action="{{ S }}/diktat/text" class="form" style="margin-top:12px">
+        <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="patient_id" value="{{ patient.id }}"><input type="hidden" name="appointment_id" value="{{ a.id }}"><input type="hidden" name="back" value="{{ S }}/diktat/termin/{{ a.id }}">
+        <div class="field"><label for="text">{{ t('dictation.free_text') }}</label><textarea id="text" name="text" rows="6" data-autogrow placeholder="{{ t('dictation.free_text_ph') }}"></textarea></div>
+        <div class="form-actions"><button class="btn tonal" type="submit">{{ icon('edit_note', 18) }}{{ t('dictation.make_draft') }}</button></div>
+      </form>
+    </details>
+    {% if recordings %}
+    <section class="card"><h2 style="margin-bottom:8px">{{ t('dictation.recordings') }}</h2>
+      {% for rec in recordings %}<div class="queue-item"><span class="pill-label {{ 'ok' if rec.status in ('drafted', 'approved') else ('error' if rec.status == 'failed' else 'warn') }}">{{ t('dictation.st.' ~ rec.status) }}</span><span class="grow small">{{ fmt_time(rec.created_at) }}</span><a class="btn text" href="{{ S }}/diktat/{{ rec.id }}">{{ t('dictation.open') }}</a></div>{% endfor %}
+    </section>
+    {% endif %}
+  </div>
+  <div class="col">
+    <section class="card {{ 'error' if restrictions else 'tonal' }}">
+      <h2 style="margin-bottom:8px">{{ icon('warning', 20) }}{{ t('patients.restrictions') }}</h2>
+      {% for f in restrictions %}<p style="margin-bottom:6px">{{ f.title }}{% if f.until %} <span class="small">· {{ t('patients.until') }} {{ fmt_date(f.until) }}</span>{% endif %}</p>{% else %}<p class="small">{{ t('patients.no_restrictions') }}</p>{% endfor %}
+    </section>
+    <section class="card"><h2 style="margin-bottom:8px">{{ t('dictation.tips') }}</h2>
+      <p class="small muted">{{ t('dictation.tips_text') }}</p></section>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ static('js/dictation.js') }}" defer></script>{% endblock %}

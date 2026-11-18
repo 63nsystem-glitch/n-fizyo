@@ -1,0 +1,23 @@
+{% extends "layouts/patient.html" %}
+{% block title %}{{ t('p.appt.title') }}{% endblock %}
+{% block content %}
+{% if closures %}{% set dates %}{% for c in closures %}{{ fmt_date(c['from']) }}{% if c['to'] != c['from'] %} – {{ fmt_date(c['to']) }}{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}{% endset %}
+<div class="banner info" role="status" data-closures>{{ icon('event_busy', 20) }}<span>{{ t('p.appt.closure', dates=dates | trim) }}</span></div>{% endif %}
+<section class="card">
+  <div class="list">
+    {% for r in rows %}
+    <div class="list-item"><span class="lead avatar">{{ icon('event', 20) }}</span>
+      <span class="body"><span class="title">{{ fmt_long_date(r.start.date()) }}{{ '، ' if lang == 'ar' else ', ' }}<bdi>{{ fmt_time(r.start) }}</bdi></span><br><span class="sub">{{ r.a.location_name or '' }}{% if r.a.room_name %} · {{ r.a.room_name }}{% endif %} · {{ r.a.therapist_name }}</span></span></div>
+    {% else %}<p class="muted">{{ t('p.appt.none') }}</p>{% endfor %}
+  </div>
+  <p class="small muted" style="margin-top:8px">{{ t('p.appt.cancel_hint') }}{% if practice.phone %} <a href="tel:{{ practice.phone }}">{{ practice.phone | phone }}</a>{% endif %}</p>
+</section>
+<section class="card">
+  <h2 style="margin-bottom:8px">{{ t('p.appt.request') }}</h2>
+  <form method="post" class="form"><input type="hidden" name="_csrf" value="{{ csrf }}">
+    <div class="field"><label for="wish">{{ t('p.appt.wish') }}</label><input id="wish" name="wish" dir="auto" placeholder="{{ t('p.appt.wish_ph') }}"></div>
+    <div class="field"><label for="preferred">{{ t('p.appt.preferred') }}</label><input id="preferred" name="preferred" dir="auto" placeholder="{{ t('p.appt.preferred_ph') }}"></div>
+    <button class="btn block" type="submit">{{ icon('send', 18) }}{{ t('p.appt.send') }}</button>
+  </form>
+</section>
+{% endblock %}

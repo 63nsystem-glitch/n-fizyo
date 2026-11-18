@@ -1,0 +1,46 @@
+{% extends "ui/settings.html" %}
+{% block settings %}
+{% macro ref_form(f=None) %}
+<form method="post" class="form">
+  <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="{{ 'update' if f else 'add' }}">{% if f %}<input type="hidden" name="id" value="{{ f.id }}">{% endif %}
+  <div class="field"><label>{{ t('settings.name') }}</label><input name="name" value="{{ f.name if f else '' }}" required maxlength="120" placeholder="Dr. med. …"></div>
+  <div class="field"><label>{{ t('settings.ref_practice') }}</label><input name="practice_name" value="{{ f.practice_name or '' if f else '' }}" maxlength="200"></div>
+  <div class="field"><label>{{ t('settings.specialty') }}</label><input name="specialty" value="{{ f.specialty or '' if f else '' }}" maxlength="120"></div>
+  <div class="field"><label>{{ t('settings.address') }}</label><textarea name="address" rows="2" data-autogrow>{{ f.address or '' if f else '' }}</textarea></div>
+  <div class="row" style="gap:12px;flex-wrap:wrap">
+    <div class="field grow"><label>{{ t('settings.hin') }}</label><input name="hin_email" value="{{ f.hin_email or '' if f else '' }}" type="email"></div>
+    <div class="field"><label>{{ t('settings.phone') }}</label><input name="phone" value="{{ f.phone or '' if f else '' }}" inputmode="tel" style="width:160px"></div>
+  </div>
+  <div class="row" style="gap:12px;flex-wrap:wrap">
+    <div class="field grow"><label>GLN</label><input name="gln" value="{{ f.gln or '' if f else '' }}" maxlength="13" inputmode="numeric"></div>
+    <div class="field"><label>ZSR</label><input name="zsr" value="{{ f.zsr or '' if f else '' }}" maxlength="20" style="width:110px"></div>
+    <div class="field"><label>{{ t('settings.corr_lang') }}</label><select name="lang">{% for c, n in (('de', 'Deutsch'), ('fr', 'Français'), ('it', 'Italiano'), ('en', 'English')) %}<option value="{{ c }}"{% if f and f.lang == c %} selected{% endif %}>{{ n }}</option>{% endfor %}</select></div>
+  </div>
+  <div class="form-actions"><button class="btn" type="submit">{{ t('common.save') if f else t('settings.add') }}</button></div>
+</form>
+{% endmacro %}
+<div class="grid-main-side">
+  <section class="card flush">
+    <div class="list">
+      {% for f in referrers %}
+      <details class="list-item-details"{% if not f.active %} style="opacity:.6"{% endif %}>
+        <summary class="list-item">
+          <span class="lead avatar">{{ icon('stethoscope', 20) }}</span>
+          <span class="body"><span class="title">{{ f.name }}</span><br><span class="sub">{{ f.practice_name or '' }}{% if f.specialty %} · {{ f.specialty }}{% endif %} · {{ f.lang | upper }}</span></span>
+          <span class="trail">{% if not f.active %}<span class="pill-label error">{{ t('settings.inactive') }}</span>{% endif %}{{ icon('keyboard_arrow_down', 20) }}</span>
+        </summary>
+        <div style="padding:0 16px 16px 72px">
+          {{ ref_form(f) }}
+          <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="toggle"><input type="hidden" name="id" value="{{ f.id }}">
+            <button class="btn text sm" type="submit">{{ t('settings.deactivate') if f.active else t('settings.activate') }}</button></form>
+        </div>
+      </details>
+      {% else %}<div class="empty"><p>{{ t('settings.no_referrers') }}</p></div>{% endfor %}
+    </div>
+  </section>
+  <section class="card">
+    <h2 style="margin-bottom:16px">{{ t('settings.add_referrer') }}</h2>
+    {{ ref_form() }}
+  </section>
+</div>
+{% endblock %}

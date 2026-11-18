@@ -1,0 +1,6 @@
+{# Stand der Benachrichtigung an die Patientin / den Patienten (aus notify.api.status_for). #}
+{% macro line(st) %}{% if st %}<span class="small muted notify-st" style="display:inline-flex;align-items:center;gap:4px">
+{%- if st.status == 'sent' -%}{{ icon('notifications', 14) }}{{ t('notify.st.sent', channel=t('notify.ch.' ~ st.channel), when=fmt_date(st.at, year=False) ~ ' ' ~ fmt_time(st.at)) }}
+{%- elif st.status == 'pending' -%}{{ icon('schedule', 14) }}{{ t('notify.st.pending', channel=t('notify.ch.' ~ (st.channel or 'sms')), when=fmt_date(st.at, year=False) ~ ' ' ~ fmt_time(st.at)) }}
+{%- else -%}{{ icon('block', 14) }}{{ t('notify.st.skipped', reason=t('notify.reason.' ~ (st.reason or 'off'))) }}{%- endif -%}
+</span>{% endif %}{% endmacro %}

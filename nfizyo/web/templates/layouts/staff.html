@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block body_class %}screen-{{ screen.key if screen else 'none' }}{% endblock %}
+{% block body %}
+{# Untere Leiste (Telefon): höchstens fünf Reiter – vier Bereiche und «Mehr» mit allen übrigen (auch Bildschirm wechseln, Konto). #}
+{% set phone_items = (nav | selectattr('phone') | list) or (nav | selectattr('rail') | list) %}
+{% if phone_items | length > 5 or (nav | length) > (phone_items | length) %}{% set bar = phone_items[:4] %}{% else %}{% set bar = phone_items %}{% endif %}
+{% set more = nav | reject('in', bar) | list %}
+{% set more_badge = more | sum(attribute='badge') %}
+<div class="app">
+  <nav class="rail" aria-label="{{ t('nav.main') }}">
+    {% if screen and screen.fab and module_on('dictation') %}
+    <a class="rail-fab" href="{{ S }}{{ screen.fab }}" aria-label="{{ t('nav.quick_dictation') }}" title="{{ t('nav.quick_dictation') }}">{{ icon('mic') }}</a>
+    {% else %}<div class="rail-mark">{{ icon(screen.icon if screen else 'home', 22) }}<span>{{ t(screen.title_key) if screen else 'N-Fizyo' }}</span></div>{% endif %}
+    <div class="rail-items">
+      {% for item in nav if item.rail %}
+      <a class="nav" href="{{ item.href }}"{% if item.active %} aria-current="page"{% endif %}>
+        <span class="pill">{{ icon(item.icon) }}{% if item.badge %}<span class="nav-badge">{{ item.badge }}</span>{% endif %}</span>
+        <span>{{ t(item.label_key) }}</span>
+      </a>
+      {% endfor %}
+    </div>
+    <div class="rail-bottom">
+      {% if my_screens | length > 1 %}<a class="icon-btn" href="/start" title="{{ t('screen.switch') }}" aria-label="{{ t('screen.switch') }}">{{ icon('devices') }}</a>{% endif %}
+      <a class="avatar" href="{{ S }}/konto" title="{{ user.name }} · {{ t('account.title') }}" aria-label="{{ t('account.title') }}">{{ user.initials }}</a>
+    </div>
+  </nav>
+
+  <div class="main">
+    {% if demo %}<div class="demo-strip">{{ t('common.demo_ribbon') }}{% if ai_cloud %} · {{ t('ai.cloud_strip', host=ai_cloud) }}{% endif %}</div>{% endif %}
+    <header class="topbar">
+      {% block back %}{% endblock %}
+      {% block lead %}{% endblock %}
+      <div class="titles">
+        <h1>{% block title %}{% endblock %}</h1>
+        {% if self.subtitle() | trim %}<p class="subtitle">{% block subtitle %}{% endblock %}</p>{% endif %}
+      </div>
+      <a class="icon-btn only-compact topbar-account" href="{{ S }}/konto" aria-label="{{ t('account.title') }}">{{ icon('account_circle') }}</a>
+      <div class="actions">{% block actions %}{% endblock %}</div>
+    </header>
+    {% block tabs %}{% endblock %}
+    <main class="content" id="main">
+      {% if ai_missing %}<div class="banner warn" role="status" style="margin-bottom:16px">{{ icon('warning', 20) }}<div>{{ t('ai.not_ready', parts=ai_missing) }}</div></div>{% endif %}
+      {% for n in nsystem_notices %}<div class="banner info nsystem-notice" role="status" style="margin-bottom:16px">{{ icon('campaign', 20) }}<div class="grow">{{ n.text }}</div>
+        <form method="post" action="{{ S }}/hinweise/{{ n.id }}/ausblenden" style="margin:0;align-self:flex-start"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="next" value="{{ request.path_qs }}">
+          <button class="icon-btn" type="submit" aria-label="{{ t('notice.dismiss') }}" title="{{ t('notice.dismiss') }}">{{ icon('close', 20) }}</button></form></div>{% endfor %}
+      {% if nsystem_support and not path.endswith('/einstellungen/nsystem') %}<div class="banner warn" role="status" style="margin-bottom:16px">{{ icon('lock', 20) }}<div class="grow">{{ t('notice.support_open', date=fmt_date(nsystem_support.until_iso), time=fmt_time(nsystem_support.until_iso)) }}
+        <a href="/leitung/einstellungen/nsystem#support">{{ t('notice.support_manage') }}</a></div></div>{% endif %}
+      {% block content %}{% endblock %}</main>
+  </div>
+</div>
+
+<nav class="bottom-nav" aria-label="{{ t('nav.main') }}">
+  {% for item in bar %}
+  <a href="{{ item.href }}"{% if item.active %} aria-current="page"{% endif %}>
+    <span class="pill">{{ icon(item.icon) }}{% if item.badge %}<span class="nav-badge">{{ item.badge }}</span>{% endif %}</span>
+    <span class="ellipsis">{{ t(item.short_key) }}</span>
+  </a>
+  {% endfor %}
+  {% if more %}
+  <button type="button" class="nav-more{{ ' on' if more | selectattr('active') | list else '' }}" data-dialog="dlg-more" aria-haspopup="dialog" data-nav-more>
+    <span class="pill">{{ icon('menu') }}{% if more_badge %}<span class="nav-badge">{{ more_badge }}</span>{% endif %}</span>
+    <span class="ellipsis">{{ t('nav.more') }}</span>
+  </button>
+  {% endif %}
+</nav>
+{% if more %}
+<dialog class="sheet-bottom" id="dlg-more" aria-labelledby="dlg-more-h">
+  <div class="sheet-grip" aria-hidden="true"></div>
+  <h2 id="dlg-more-h" class="sr-only">{{ t('nav.more_title') }}</h2>
+  <nav class="more-list" aria-labelledby="dlg-more-h">
+    {% for item in more %}
+    <a class="list-item" href="{{ item.href }}"{% if item.active %} aria-current="page"{% endif %}>
+      <span class="lead">{{ icon(item.icon) }}</span><span class="body">{{ t(item.label_key) }}</span>
+      {% if item.badge %}<span class="trail"><span class="pill-label error">{{ item.badge }}</span></span>{% endif %}
+    </a>
+    {% endfor %}
+    {% if my_screens | length > 1 %}<a class="list-item" href="/start"><span class="lead">{{ icon('devices') }}</span><span class="body">{{ t('screen.switch') }}</span></a>{% endif %}
+    <a class="list-item" href="{{ S }}/konto"><span class="lead">{{ icon('account_circle') }}</span><span class="body">{{ t('account.title') }}</span></a>
+  </nav>
+</dialog>
+{% endif %}
+{% endblock %}

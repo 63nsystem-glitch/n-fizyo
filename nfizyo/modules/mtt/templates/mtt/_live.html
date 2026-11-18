@@ -1,0 +1,27 @@
+{% import "mtt/_sugg.html" as sg with context %}
+<div class="grid-main-side" style="--side:minmax(280px,420px)">
+  <div class="col">
+    {% for r in rows %}
+    <section class="card mtt-live{{ ' alert' if r.max_pain is not none and r.max_pain >= 5 else '' }}">
+      <div class="row-between">
+        <h2><a href="{{ S }}/patienten/{{ r.v.patient_id }}/mtt">{{ r.v.first_name }} {{ r.v.last_name }}</a></h2>
+        <span class="small muted" style="display:inline-flex;gap:4px;align-items:center;white-space:nowrap">{{ t('mtt.since', time=fmt_time(r.started)) }}{% if r.v.source == 'qr' %}<span title="QR">{{ icon('qr_code', 14) }}</span>{% endif %}</span>
+      </div>
+      <div class="progress {{ 'ok' if r.n_items and r.done_items >= r.n_items else '' }}" style="margin:8px 0"><span style="width:{{ (100 * r.done_items / (r.n_items or 1)) | round(0) }}%"></span></div>
+      <p class="small">{{ t('mtt.items_done', done=r.done_items, total=r.n_items) }} · {{ t('mtt.n_sets', n=r.n_sets) }}
+        {% if r.max_effort is not none %} · {{ t('mtt.effort_short', n=r.max_effort) }}{% endif %}</p>
+      {% if r.last %}<p class="small muted">{{ t('mtt.last_set', machine=r.last_machine or '–', reps=r.last.reps or '–', load=dec(r.last.load) if r.last.load is not none else '–') }}</p>{% endif %}
+      {% if r.max_pain is not none and r.max_pain >= 5 %}<div class="rx-line act">{{ icon('warning', 18) }}<span>{{ t('mtt.pain_alert', n=r.max_pain) }}</span></div>{% endif %}
+      <div class="chips" style="margin-top:8px">{% for i in r['items'] %}<span class="chip{{ ' ok' if i.n >= (i.sets or 1) else (' info' if i.n else '') }}">{{ i.name }}{% if i.n %} · {{ i.n }}{% endif %}</span>{% endfor %}</div>
+    </section>
+    {% else %}
+    <div class="empty">{{ icon('fitness_center', 40) }}<p>{{ t('mtt.live_empty') }}</p></div>
+    {% endfor %}
+    {% if others %}<p class="small muted">{{ t('mtt.others', n=others) }}</p>{% endif %}
+  </div>
+  <section class="card">
+    <h2 style="margin-bottom:8px">{{ t('mtt.sugg_title') }}</h2>
+    {% for g in suggestions %}{{ sg.sugg(g, S ~ '/mtt', with_name=true) }}{% else %}<p class="small muted">{{ t('mtt.sugg_none') }}</p>{% endfor %}
+    <p class="small muted" style="margin-top:8px">{{ t('mtt.sugg_hint') }}</p>
+  </section>
+</div>

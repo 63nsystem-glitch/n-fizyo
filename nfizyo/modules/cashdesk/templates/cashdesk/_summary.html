@@ -1,0 +1,16 @@
+<dl class="facts">
+  {% for m in ('cash', 'twint', 'card', 'invoice') %}<dt>{{ t('cashdesk.method.' ~ m) }}</dt><dd class="mono">{{ chf(summary.by_method[m]) }}</dd>{% endfor %}
+  <dt>{{ t('cashdesk.sales_n') }}</dt><dd>{{ summary.sales }}</dd>
+</dl>
+{% if summary.refunds %}<p class="small">{{ t('cashdesk.corr.refunds_here') }}</p>
+<ul class="small" style="margin:0 0 0 18px">{% for r in summary.refunds %}<li>{{ r.number }} ({{ fmt_date(r.day) }}) · {{ t('cashdesk.method.' ~ r.method) }} <span class="mono">−{{ r.amount_chf | money }}</span></li>{% endfor %}</ul>{% endif %}
+{% if summary.corrections %}
+<div class="banner warn">{{ icon('rule', 20) }}<div><strong>{{ t('cashdesk.corr.after_close') }}</strong>
+  <ul class="small" style="margin:4px 0 0 18px">{% for c in summary.corrections %}<li>{{ fmt_date(c.created_at) }} · {{ c.creator_name }} ·
+    {% if c.kind == 'storno' %}{{ t('cashdesk.corr.kind_storno') }} {{ c.number }} ({{ t('cashdesk.method.' ~ c.method) }}) <span class="mono">−{{ c.amount_chf | money }}</span>{% if c.refund_day %} · {{ t('cashdesk.corr.refunded_short', date=fmt_date(c.refund_day)) }}{% endif %}
+    {% else %}{{ t('cashdesk.corr.kind_method') }} {{ c.number }}: {{ t('cashdesk.method.' ~ c.method) }} → {{ t('cashdesk.method.' ~ c.to_method) }} <span class="mono">{{ c.amount_chf | money }}</span>{% endif %}
+    · {{ c.reason }}</li>{% endfor %}</ul>
+  <dl class="facts" style="margin-top:8px">{% for m in ('cash', 'twint', 'card', 'invoice') %}<dt>{{ t('cashdesk.corr.net', method=t('cashdesk.method.' ~ m)) }}</dt><dd class="mono">{{ chf(summary.net_by_method[m]) }}</dd>{% endfor %}</dl>
+</div></div>
+{% endif %}
+<p class="small muted">{{ t('cashdesk.summary_hint') }}</p>

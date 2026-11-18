@@ -1,0 +1,44 @@
+{
+  "p": {
+    "mtt": {
+      "title": "Entrenamiento (MTT)",
+      "none": "Aún no hay un plan de entrenamiento aprobado.",
+      "running": "en curso",
+      "card_hint": "{n} aparatos – escanee el código QR del aparato.",
+      "left": "quedan {n} entradas",
+      "start": "Empezar el entrenamiento",
+      "continue": "Continuar el entrenamiento",
+      "start_hint": "O escanee el código QR del primer aparato. Con un abono, cuenta como una entrada.",
+      "qr_hint": "Escanee el código QR del aparato o toque un aparato.",
+      "minutes": "{n} minutos",
+      "end": "Terminar el entrenamiento",
+      "stop": "Pare si tiene dolor fuerte y avise a quien supervisa. En caso de emergencia, llame al 144.",
+      "setting": "Ajuste",
+      "last_time": "La última vez {date}",
+      "today": "Hoy",
+      "set_n": "Serie {n}",
+      "log_set": "Anotar la serie {n}",
+      "log_cardio": "Anotar",
+      "minutes_label": "Minutos",
+      "reps": "Repeticiones",
+      "load": "Peso (kg)",
+      "effort_q": "¿Qué tan duro fue?",
+      "effort": {
+        "light": "ligero",
+        "medium": "medio",
+        "hard": "duro",
+        "very_hard": "muy duro",
+        "max": "máximo"
+      },
+      "pain_q": "¿Dolor?",
+      "save_set": "Guardar",
+      "saved": "Guardado",
+      "started": "Entrenamiento iniciado – ¡ánimo!",
+      "ended": "Entrenamiento terminado – ¡bien hecho!",
+      "qr_unknown": "Este código QR es desconocido.",
+      "qr_no_plan": "Aún no tiene un plan de entrenamiento aprobado.",
+      "qr_not_in_plan": "Este aparato no está en su plan. Pregunte a quien supervisa.",
+      "to_plan": "A mi plan"
+    }
+  }
+}

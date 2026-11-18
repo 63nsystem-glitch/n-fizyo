@@ -1,0 +1,29 @@
+<section class="card" aria-labelledby="h-meas">
+  <div class="card-head"><h2 id="h-meas">{{ t('patients.measurements') }}</h2>
+    <button class="icon-btn" type="button" data-dialog="dlg-measure" aria-label="{{ t('patients.measure_add') }}" title="{{ t('patients.measure_add') }}">{{ icon('add') }}</button></div>
+  {% if ctx.series %}
+  <div class="stack-s">
+    {% for s in ctx.series %}
+    <div>
+      <div class="row-between"><span>{{ t('measure.' ~ s.kind) }}{% if s.joint %} · {{ t('joint.' ~ s.joint) }}{% endif %}{% if s.side %} {{ t('common.side.' ~ s.side) }}{% endif %}</span>
+        <strong class="mono">{{ s.last | num }}{{ s.unit }}</strong></div>
+      {{ s.svg | safe }}
+      <p class="small muted">{{ t('patients.measure_from', first=(s.first | num) ~ s.unit, n=s.count) }}{% if s.goal is not none %} · {{ t('patients.goal_value') }} {{ s.goal | num }}{{ s.unit }}{% endif %}</p>
+      {% if ctx.app_on %}
+      <form method="post" action="{{ S }}/patienten/{{ ctx.patient.id }}/messwerte/teilen" class="row" style="gap:6px;margin-top:2px">
+        <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="back" value="{{ request.path }}">
+        <input type="hidden" name="kind" value="{{ s.kind }}"><input type="hidden" name="joint" value="{{ s.joint or '' }}"><input type="hidden" name="side" value="{{ s.side or '' }}">
+        {% if s.shared %}
+        <span class="pill-label ok">{{ icon('mobile', 14) }} {{ t('patients.share_is_on') }}</span>
+        <button class="btn text sm" type="submit" name="on" value="0">{{ t('patients.share_off') }}</button>
+        {% else %}
+        <button class="btn text sm" type="submit" name="on" value="1"{% if s.count < 2 %} disabled title="{{ t('patients.share_need_two') }}"{% endif %}>{{ icon('mobile', 16) }}{{ t('patients.share_on') }}</button>
+        {% endif %}
+      </form>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% if ctx.app_on %}<p class="small muted" style="margin-top:8px">{{ t('patients.share_hint') }}</p>{% endif %}
+  {% else %}<p class="muted small">{{ t('patients.no_measurements') }}</p>{% endif %}
+</section>

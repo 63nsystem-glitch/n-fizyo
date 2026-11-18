@@ -1,0 +1,30 @@
+{
+  "p": {
+    "msg": {
+      "title": "Mensajes",
+      "empty": "Todavía no hay mensajes.",
+      "write": "Su mensaje",
+      "write_ph": "Escriba en su idioma.",
+      "reply_time": "La consulta suele responder en un día laborable. No use la app para emergencias.",
+      "too_many": "Ha enviado muchos mensajes en poco tiempo. Vuelva a intentarlo más tarde o llame a la consulta.",
+      "sent": "Mensaje enviado.",
+      "report_sent": "Aviso enviado. La consulta lo verá la próxima vez que abra.",
+      "problem": "Problema comunicado",
+      "machine": "Ver el original (traducción automática)",
+      "reply": {
+        "same_day": "La consulta suele responder el mismo día laborable.",
+        "next_day": "La consulta suele responder antes del siguiente día laborable.",
+        "two_days": "La consulta suele responder en dos días laborables.",
+        "three_days": "La consulta suele responder en tres días laborables.",
+        "week": "La consulta suele responder en una semana."
+      },
+      "no_emergency": "No use la app para emergencias."
+    },
+    "report": {
+      "title": "Comunicar un problema",
+      "what": "¿Qué ha pasado?",
+      "what_ph": "p. ej. rodilla hinchada después de subir escaleras",
+      "send": "Enviar"
+    }
+  }
+}

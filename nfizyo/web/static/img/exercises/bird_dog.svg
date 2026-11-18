@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <title>Vierfüssler diagonal</title>
+  <g id="fig" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 186 L300 186" stroke-width="3" opacity="0.3"/>
+    <path d="M169.6 134.3 L171.6 154.2 L172.6 181" stroke-width="10" opacity="0.45"/>
+    <path d="M122 139 L80 137.5 L40 136.1" stroke-width="10" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M40 136.1 L38.8 148" stroke-width="8" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M122 139 L170.6 127.3" stroke-width="13"/>
+    <path d="M170.6 127.3 L184 115.3" stroke-width="10"/>
+    <circle cx="184" cy="115.3" r="11" fill="currentColor" stroke="none"/>
+    <path d="M122 139 L122 181 L82 181" stroke-width="10"/>
+    <path d="M82 181 L69.4 182" stroke-width="8"/>
+    <path d="M169.6 134.3 L201.5 131.5 L230.4 129" stroke-width="10" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M200.4 107 L230.9 107" stroke-width="4" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M236.4 107 L227.5 111.6 L227.5 102.4 Z" stroke-width="2.5" style="fill:var(--ex-accent, #D9661F);stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M70 114.1 L39.5 114.1" stroke-width="4" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M34 114.1 L42.9 109.5 L42.9 118.8 Z" stroke-width="2.5" style="fill:var(--ex-accent, #D9661F);stroke:var(--ex-accent, #D9661F)"/>
+  </g>
+</svg>

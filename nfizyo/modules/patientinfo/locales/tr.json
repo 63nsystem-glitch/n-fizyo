@@ -1,0 +1,20 @@
+{
+  "p": {
+    "info": {
+      "title": "Terapinizden bilgi",
+      "intro": "Fizyoterapistinizin sizin için yazdıkları.",
+      "new": "yeni",
+      "home": "Evde neler yapabilirsiniz",
+      "contact": "Ne zaman bize haber vermelisiniz",
+      "original": "Orijinal",
+      "translation_soon": "Çeviri birazdan gelecek.",
+      "none": "Henüz bilgi yok.",
+      "card": "Terapinizden bilgi",
+      "card_hint": "Okuyun veya sesli dinleyin",
+      "not_translated": "Bu metin çevrilmedi. Anlamadığınız bir şey olursa bir sonraki randevunuzda sorun."
+    },
+    "nav": {
+      "info": "Bilgi"
+    }
+  }
+}

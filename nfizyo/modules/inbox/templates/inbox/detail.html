@@ -1,0 +1,61 @@
+{% extends "layouts/staff.html" %}
+{% import "ui/figure.html" as fig with context %}
+{% import "inbox/_suggestion.html" as sg with context %}
+{% block back %}<a class="icon-btn" href="{{ S }}/posteingang" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ doc.title or t('inbox.kind.' ~ doc.kind) }}{% endblock %}
+{% block subtitle %}{% if doc.sender %}{{ doc.sender }} · {% endif %}{% if doc.doc_date %}{{ fmt_date(doc.doc_date) }} · {% endif %}{{ t('inbox.src.' ~ doc.source) }}{% if doc.text_method %} · {{ t('inbox.method.' ~ doc.text_method) }}{% endif %}{% endblock %}
+{% block actions %}
+  {% if doc.path %}<a class="btn text" href="{{ S }}/posteingang/{{ doc.id }}/original">{{ icon('description', 18) }}<span>{{ t('inbox.original') }}</span></a>{% endif %}
+  {% if doc.status in ('review', 'failed') %}<form method="post" action="{{ S }}/posteingang/{{ doc.id }}/neu-lesen"><input type="hidden" name="_csrf" value="{{ csrf }}"><button class="icon-btn" type="submit" title="{{ t('inbox.reread') }}" aria-label="{{ t('inbox.reread') }}">{{ icon('refresh') }}</button></form>{% endif %}
+  {% if doc.status == 'review' %}<form method="post" action="{{ S }}/posteingang/{{ doc.id }}/erledigt" data-confirm="{{ t('inbox.done_confirm') }}"><input type="hidden" name="_csrf" value="{{ csrf }}"><button class="btn tonal" type="submit">{{ icon('task_alt', 18) }}<span>{{ t('inbox.mark_done') }}</span></button></form>{% endif %}
+{% endblock %}
+{% block content %}
+{% if pending %}
+<section class="card" data-poll="{{ S }}/posteingang/{{ doc.id }}/status" style="max-width:720px">
+  <h2 style="margin-bottom:12px">{{ t('inbox.reading') }}</h2><div class="progress"><span style="width:55%"></span></div>
+  <p class="small muted" style="margin-top:12px">{{ t('ai.cloud_demo', host=ai_cloud) if ai_cloud else (t('inbox.reading_hint_remote') if ai_remote else t('inbox.reading_hint')) }}</p>
+</section>
+{% else %}
+{% if doc.status == 'failed' %}<div class="banner warn" style="margin-bottom:16px">{{ icon('warning') }}<span>{{ t('inbox.err_' ~ (doc.error if doc.error == 'no_text' else 'other')) }}</span></div>{% endif %}
+<div class="grid-main-side" style="--side:minmax(300px,420px)">
+  <div class="col">
+    <section class="card">
+      <div class="card-head"><h2>{{ t('inbox.patient') }}</h2></div>
+      {% if doc.patient_id %}
+      <div class="row-between"><a href="{{ S }}/patienten/{{ doc.patient_id }}" class="row" style="text-decoration:none;color:inherit"><span class="avatar primary">{{ (doc.first_name[:1] ~ doc.last_name[:1]) | upper }}</span><span><strong style="font-weight:500">{{ doc.first_name }} {{ doc.last_name }}</strong><br><span class="small muted">{{ fmt_date(doc.patient_birthdate) if doc.patient_birthdate else '' }}</span></span></a>
+        {% if doc.extracted_name %}<span class="small muted">{{ t('inbox.read_as', name=doc.extracted_name, bd=(fmt_date(doc.extracted_birthdate) if doc.extracted_birthdate else '–')) }}</span>{% endif %}</div>
+      {% else %}
+      <p class="small" style="margin-bottom:12px">{% if doc.extracted_name %}{{ t('inbox.read_as', name=doc.extracted_name, bd=(fmt_date(doc.extracted_birthdate) if doc.extracted_birthdate else '–')) }}{% else %}{{ t('inbox.no_name') }}{% endif %}</p>
+      {% for c in candidates %}
+      <form method="post" action="{{ S }}/posteingang/{{ doc.id }}/patient" class="row" style="margin-bottom:8px"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="patient_id" value="{{ c.id }}">
+        <span class="grow">{{ c.first_name }} {{ c.last_name }} · {{ fmt_date(c.birthdate) if c.birthdate else '' }}</span><button class="btn tonal" type="submit">{{ t('inbox.assign_this') }}</button></form>
+      {% endfor %}
+      <form method="post" action="{{ S }}/posteingang/{{ doc.id }}/patient" class="row"><input type="hidden" name="_csrf" value="{{ csrf }}">
+        <select name="patient_id" class="input grow" required aria-label="{{ t('inbox.patient') }}"><option value="">{{ t('inbox.choose_patient') }}</option>{% for p in patients %}<option value="{{ p.id }}">{{ p.last_name }}, {{ p.first_name }}{% if p.birthdate %} · {{ fmt_date(p.birthdate) }}{% endif %}</option>{% endfor %}</select>
+        <button class="btn" type="submit">{{ t('inbox.assign') }}</button></form>
+      {% endif %}
+    </section>
+    <section class="card">
+      <div class="card-head"><h2>{{ t('inbox.suggestions') }}</h2>
+        {% if doc.patient_id and items | selectattr('status', 'eq', 'open') | list %}
+        <form method="post" action="{{ S }}/posteingang/{{ doc.id }}/alle"><input type="hidden" name="_csrf" value="{{ csrf }}"><button class="btn text" type="submit">{{ icon('done_all', 18) }}{{ t('inbox.accept_all') }}</button></form>{% endif %}</div>
+      <p class="small muted" style="margin-bottom:4px">{{ t('inbox.suggestions_hint') }}</p>
+      {% for w in warnings %}<div class="banner info" style="margin:8px 0">{{ icon('info') }}<span>{{ t('ai.warn.' ~ w) }}</span></div>{% endfor %}
+      {% if items | selectattr('kind', 'eq', 'red_flag') | selectattr('status', 'eq', 'open') | list %}<div class="banner error" style="margin:8px 0">{{ icon('emergency') }}<span>{{ t('inbox.red_flag_hint') }}</span></div>{% endif %}
+      {% for s in items %}{{ sg.row(s, S ~ '/posteingang/' ~ doc.id, can_decide=doc.patient_id) }}{% else %}<p class="muted">{{ t('inbox.no_suggestions') }}</p>{% endfor %}
+      {% if not doc.patient_id and items %}<p class="small" style="margin-top:8px;color:var(--error)">{{ t('inbox.need_patient') }}</p>{% endif %}
+    </section>
+  </div>
+  <div class="col">
+    <section class="card">
+      <div class="card-head"><h2>{{ t('inbox.on_body') }}</h2></div>
+      {{ fig.body_figure(marks, id='docfig', layer='skeleton') }}
+    </section>
+    <section class="card">
+      <div class="card-head"><h2>{{ t('inbox.original_text') }}</h2><span class="meta">{{ t('inbox.unchanged') }}</span></div>
+      <div class="doc-text">{{ marked }}</div>
+    </section>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

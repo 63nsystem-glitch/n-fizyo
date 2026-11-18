@@ -1,0 +1,99 @@
+{% extends "ui/settings.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/einstellungen/zahlung" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block settings %}
+<div class="grid-main-side" style="--side:minmax(300px,420px)">
+  <div class="col stack">
+    {% if md_other_practice %}<div class="banner info">{{ icon('info', 20) }}<span>{{ t('billing.md.other_practice') }}</span></div>{% endif %}
+    {% if md_configured %}
+    <section class="card stack-s">
+      <h2>{{ t('billing.md.notes_title') }}</h2>
+      {% for n in notes %}
+      <div class="banner {{ {'ERROR': 'error', 'WARNING': 'warn'}.get(n.severity, 'info') }}"{% if n.seen_at %} style="opacity:.6"{% endif %}>{{ icon('notifications', 20) }}<div class="stack-s grow">
+        <strong>{{ n.subject.get(lang) or n.subject.get('de') or n.error_code }}</strong>
+        <span class="small">{{ n.message.get(lang) or n.message.get('de') or '' }}</span>
+        {% if n.potential_reasons %}<span class="small">{{ t('billing.md.note_reasons') }}: {{ n.potential_reasons.get(lang) or n.potential_reasons.get('de') }}</span>{% endif %}
+        {% if n.possible_solutions %}<span class="small">{{ t('billing.md.note_solutions') }}: {{ n.possible_solutions.get(lang) or n.possible_solutions.get('de') }}</span>{% endif %}
+        <span class="small muted">{{ fmt_date(n.fetched_at) }} {{ fmt_time(n.fetched_at) }}{% if n.error_code %} · <span class="mono">{{ n.error_code }}</span>{% endif %}{% if n.mode %} · {{ n.mode }}{% endif %}</span>
+        <div class="row" style="gap:8px;flex-wrap:wrap">
+          {% if n.invoice_id %}<a class="btn text sm" href="{{ S }}/rechnungen/{{ n.invoice_id }}">{{ icon('receipt_long', 16) }}{{ t('billing.md.note_invoice') }}</a>{% endif %}
+          {% if not n.seen_at %}<form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="seen_note"><input type="hidden" name="id" value="{{ n.id }}">
+            <button class="btn text sm" type="submit">{{ icon('check', 16) }}{{ t('billing.md.note_seen') }}</button></form>{% endif %}
+        </div></div></div>
+      {% else %}<p class="small muted">{{ t('billing.md.notes_none') }}</p>{% endfor %}
+    </section>
+    {% if docs %}
+    <section class="card stack-s">
+      <h2>{{ t('billing.md.docs_title') }}</h2>
+      <p class="small muted">{{ t('billing.md.docs_hint') }}</p>
+      {% for d in docs %}
+      <div class="row-between small"{% if d.seen_at %} style="opacity:.6"{% endif %}><span>{{ fmt_date(d.fetched_at) }} · <span class="mono">{{ d.doc_type or '?' }}</span> · GLN {{ d.sender_gln or '–' }}{% if d.modus %} · {{ d.modus }}{% endif %}
+        {% if d.state == 'error' %}<br><span class="muted">{{ t('billing.md.doc_error', error=d.error) }}</span>{% elif d.error %}<br><span class="muted">{{ t('billing.' ~ d.error) if d.error.startswith('resp.err_') else d.error }}</span>{% endif %}</span>
+        <span class="row" style="gap:4px">{% if d.state == 'stored' %}<a class="icon-btn" href="{{ S }}/einstellungen/medidata/dokument/{{ d.id }}" aria-label="{{ t('billing.md.doc_download') }}" title="{{ t('billing.md.doc_download') }}">{{ icon('download', 18) }}</a>{% endif %}
+          {% if not d.seen_at %}<form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="seen_doc"><input type="hidden" name="id" value="{{ d.id }}">
+            <button class="btn text sm" type="submit">{{ t('billing.md.note_seen') }}</button></form>{% endif %}</span></div>
+      {% endfor %}
+    </section>
+    {% endif %}
+    {% endif %}
+    <section class="card stack">
+      <h2>{{ t('billing.md.sim_title') }}</h2>
+      <p class="small">{{ t('billing.md.sim_intro') }}</p>
+      {% if not sim_allowed %}
+      <div class="banner info">{{ icon('lock', 20) }}<span>{{ t('billing.md.sim_only_test') }}</span></div>
+      {% elif not md_configured %}
+      <div class="banner warn">{{ icon('warning', 20) }}<span>{{ t('billing.md.not_configured') }}</span></div>
+      {% else %}
+      {% if missing %}<div class="banner warn">{{ icon('warning', 20) }}<div>{{ t('billing.md.sim_missing') }}<ul style="margin:4px 0 0 18px">{% for m in missing %}<li>{{ t('billing.' ~ m) }}</li>{% endfor %}</ul></div></div>{% endif %}
+      <form method="post" class="stack">
+        <input type="hidden" name="_csrf" value="{{ csrf }}">
+        <input type="hidden" name="do" value="simulator">
+        <fieldset class="field" style="border:0;padding:0;margin:0"><legend class="small muted" style="margin-bottom:6px">{{ t('billing.md.sim_target') }}</legend>
+          {% for k, tg in targets.items() %}<label class="check"><input type="radio" name="target" value="{{ k }}"{% if loop.first %} checked{% endif %}><span>{{ t('billing.md.target_' ~ k) }} <span class="muted mono">GLN {{ tg.gln }}</span></span></label>{% endfor %}
+        </fieldset>
+        <div class="field"><label for="flag">{{ t('billing.md.sim_flag') }}</label>
+          <select id="flag" name="flag">{% for f in flags %}<option value="{{ f }}">{{ t('billing.md.flag_' ~ (f or 'none')) }}</option>{% endfor %}</select>
+          <p class="hint">{{ t('billing.md.flag_hint') }}</p></div>
+        <div class="banner info">{{ icon('info', 20) }}<span>{{ t('billing.md.v50_note') }}</span></div>
+        <div class="form-actions"><button class="btn" type="submit">{{ icon('send', 18) }}{{ t('billing.md.sim_send') }}</button></div>
+      </form>
+      {% endif %}
+    </section>
+    <section class="card stack-s">
+      <h2>{{ t('billing.md.sim_history') }}</h2>
+      {% for r in recent %}
+      <div class="row-between small"><span>{{ fmt_date(r.at) }} {{ fmt_time(r.at) }} · {{ t('billing.md.target_short_' ~ r.target) if r.target in targets else r.target }}{% if r.flag %} · <span class="mono">{{ r.flag }}</span>{% endif %}
+        · <span class="pill-label {{ {'sent': 'ok', 'failed': 'error', 'unknown': 'warn'}.get(r.status, 'info') }}">{{ t('billing.xml.st_' ~ r.status) if r.status in ('sent', 'failed', 'unknown') else r.status }}</span>
+        <span class="muted mono">{{ r.number }}{% if r.reference %} · {{ r.reference }}{% endif %}</span>{% if r.error %}<br><span class="muted">{{ r.error }}</span>{% endif %}</span></div>
+      {% else %}<p class="small muted">{{ t('billing.md.sim_none') }}</p>{% endfor %}
+      <p class="small muted">{{ t('billing.md.responses_hint') }}</p>
+    </section>
+  </div>
+  <div class="col stack grid-side">
+    <section class="card stack">
+      <h2>{{ t('billing.md.title') }}</h2>
+      <p class="small">{{ t('billing.xml.mode_' ~ md_mode) }}</p>
+      {% if md_configured %}
+      <h3>{{ t('billing.md.sync_title') }}</h3>
+      <p class="small muted">{{ t('billing.md.sync_hint') }}</p>
+      {% for x in sync %}
+      <div class="small"><strong>{{ t('billing.md.sync_' ~ x.kind) }}</strong> <span class="muted">({{ t('billing.md.sync_every', n=intervals[x.kind]) }})</span><br>
+        {% if x.last_ok_at %}{{ t('billing.md.sync_ok', date=fmt_date(x.last_ok_at), time=fmt_time(x.last_ok_at)) }}{% else %}<span class="muted">{{ t('billing.md.sync_never') }}</span>{% endif %}
+        {% if x.last_error %}<br><span class="pill-label error">{{ t('billing.md.sync_err', error=x.last_error) }}</span>{% endif %}</div>
+      {% endfor %}
+      <p class="small muted">{{ t('settings.md_loaded', n=directory.count, date=fmt_date(directory.fetched_at)) if directory.count else t('settings.md_empty') }}</p>
+      <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="sync">
+        <button class="btn tonal" type="submit">{{ icon('sync', 18) }}{{ t('billing.md.sync_btn') }}</button></form>
+      {% endif %}
+      <h3>{{ t('billing.md.cert_title') }}</h3>
+      {% if cert.state == 'off' %}<p class="small muted">{{ t('billing.md.cert_off') }}</p>
+      {% elif cert.state == 'ok' %}<div class="banner ok">{{ icon('verified_user', 20) }}<span>{{ t('billing.md.cert_ok', date=fmt_date(cert.valid_to), days=cert.days_left) }}</span></div>
+      {% elif cert.state == 'warn' %}<div class="banner warn">{{ icon('warning', 20) }}<span>{{ t('billing.md.cert_warn', date=fmt_date(cert.valid_to), days=cert.days_left) }}</span></div>
+      {% elif cert.state == 'check' %}<div class="banner warn">{{ icon('warning', 20) }}<span>{{ t('billing.md.cert_check', date=fmt_date(cert.valid_to)) }}</span></div>
+      {% elif cert.state == 'expired' %}<div class="banner error">{{ icon('error', 20) }}<span>{{ t('billing.md.cert_expired', date=fmt_date(cert.valid_to)) }}</span></div>
+      {% else %}<div class="banner error">{{ icon('error', 20) }}<span>{{ t('billing.md.cert_error') }}</span></div>{% endif %}
+      <p class="small muted">{{ t('billing.md.cert_rule') }}</p>
+      <p class="small">{{ t('staff.nsystem_contact') }}</p>
+    </section>
+  </div>
+</div>
+{% endblock %}

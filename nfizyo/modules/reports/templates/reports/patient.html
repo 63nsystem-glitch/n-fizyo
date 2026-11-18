@@ -1,0 +1,36 @@
+{% extends "patients/_file.html" %}
+{% block content %}
+<div class="grid-main-side" style="--side:minmax(340px,480px)">
+  <section class="card">
+    <div class="list">
+      {% for r in reports %}
+      <a class="list-item" href="{{ S }}/berichte/{{ r.id }}">
+        <span class="lead avatar">{{ icon('description', 20) }}</span>
+        <span class="body"><span class="title">{{ t('reports.kind.' ~ r.kind) }}</span><br>
+          <span class="sub">{{ r.referrer_name or t('reports.no_referrer') }} · {{ fmt_date(r.created_at) }} · {{ r.lang | upper }}</span></span>
+        <span class="trail"><span class="pill-label {{ {'draft': 'warn', 'final': 'info', 'sent': 'ok'}[r.status] }}">{{ t('reports.status.' ~ r.status) }}</span>{{ icon('chevron_right', 20, 'flip-rtl') }}</span>
+      </a>
+      {% else %}<div class="empty">{{ icon('description', 40) }}<p>{{ t('reports.none') }}</p></div>{% endfor %}
+    </div>
+  </section>
+  {% if can_write %}
+  <section class="card">
+    <h2 style="margin-bottom:4px">{{ t('reports.new') }}</h2>
+    <p class="muted small" style="margin-bottom:16px">{{ t('reports.new_hint') }}</p>
+    <form method="post" class="form">
+      <input type="hidden" name="_csrf" value="{{ csrf }}">
+      <div class="field"><label for="kind">{{ t('reports.kind_label') }}</label>
+        <select id="kind" name="kind">{% for k in kinds %}<option value="{{ k }}"{% if k == suggested_kind %} selected{% endif %}>{{ t('reports.kind.' ~ k) }}</option>{% endfor %}</select></div>
+      <div class="field"><label for="referrer_id">{{ t('reports.to') }}</label>
+        <select id="referrer_id" name="referrer_id">
+          <option value="">{{ t('reports.no_referrer') }}</option>
+          {% for f in referrers %}<option value="{{ f.id }}" data-lang="{{ f.lang }}"{% if f.id == default_ref %} selected{% endif %}>{{ f.name }}{% if f.practice_name %} · {{ f.practice_name }}{% endif %}</option>{% endfor %}
+        </select></div>
+      <div class="field"><label for="lang">{{ t('reports.language') }}</label>
+        <select id="lang" name="lang"><option value="">{{ t('reports.lang_auto') }}</option><option value="de">Deutsch</option><option value="fr">Français</option></select></div>
+      <div class="form-actions"><button class="btn" type="submit">{{ icon('note_add', 18) }}{{ t('reports.create') }}</button></div>
+    </form>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

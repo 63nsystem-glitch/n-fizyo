@@ -1,0 +1,89 @@
+{
+  "video": {
+    "title": "Séance vidéo",
+    "description": "Vidéo via le propre serveur Jitsi du cabinet en Suisse : salle par rendez-vous, lien par SMS, consentement, aucun enregistrement.",
+    "action": "Séance vidéo",
+    "action_open": "Vidéo",
+    "details": "Détails",
+    "not_configured": "Les séances vidéo ne sont pas encore configurées dans ce cabinet.",
+    "intro": "Mener ce rendez-vous en vidéo. La patiente / le patient reçoit un lien par SMS et peut entrer 15 minutes avant le début.",
+    "setup": "Configurer en séance vidéo",
+    "ready": "Séance vidéo configurée – envoyez maintenant le lien par SMS",
+    "status": "État",
+    "state": {
+      "early": "pas encore ouverte",
+      "open": "ouverte",
+      "over": "terminée",
+      "cancelled": "rendez-vous annulé"
+    },
+    "link": "Lien",
+    "sms_at": "envoyé par SMS {when}",
+    "no_sms": "pas encore envoyé",
+    "consent": "Consentement",
+    "consent_yes": "donné",
+    "consent_no": "manque encore (demandé avant d'entrer)",
+    "joined": "Entré·e",
+    "patient_in": "patient·e à {time}",
+    "start": "Démarrer la vidéo",
+    "sms": "Envoyer le lien par SMS",
+    "sms_again": "Envoyer un nouveau lien",
+    "sms_confirm": "L'ancien lien ne sera plus valable. Envoyer un nouveau lien ?",
+    "sms_sent": "Lien envoyé par SMS",
+    "no_phone": "Pas de numéro de portable dans la fiche.",
+    "not_now": "La salle n'est ouverte que de 30 minutes avant à 30 minutes après le rendez-vous.",
+    "window_hint": "La salle est ouverte de 30 minutes avant le début (patient·e : 15 minutes) jusqu'à 30 minutes après la fin. Ensuite, aucune clé n'est valable.",
+    "privacy_title": "Protection des données",
+    "privacy": {
+      "server": "Propre serveur du cabinet en Suisse – aucun service tiers (pas de Google, pas de jitsi.org).",
+      "record": "Rien n'est enregistré ni stocké. Son et image sont chiffrés.",
+      "key": "Accès seulement avec la clé de ce rendez-vous ; le nom de la salle est aléatoire.",
+      "consent": "La patiente / le patient donne son consentement avant la première fois.",
+      "billing": "Facturation : AA/AM/AI – position 25.310 « Traitement à distance » (par 5 min). LAMal : pas de position propre – à clarifier avant avec l'assureur."
+    },
+    "server": "Serveur vidéo",
+    "s": {
+      "url": "Adresse",
+      "secret": "Clé",
+      "secret_set": "saisie (jamais affichée)",
+      "secret_missing": "manquante",
+      "check": "Vérifier la connexion",
+      "how": "Installation",
+      "how_text": "Le cabinet reçoit son propre serveur vidéo en Suisse. Configuré par NSystem ; l’adresse et la clé apparaissent ensuite ici.",
+      "secret_rule": "Personne ne voit la clé – ni dans un chat, ni par e-mail, ni sur cette page."
+    },
+    "c": {
+      "configured": "Adresse et clé saisies",
+      "https": "Adresse en https",
+      "secret_strong": "Clé assez longue (au moins 32 caractères)",
+      "reachable": "Serveur joignable",
+      "privacy_config": "Réglages de protection des données de N-Fizyo actifs (aucun tiers, pas de pair-à-pair)",
+      "no_guests": "Pas d'invités sans clé"
+    }
+  },
+  "p": {
+    "sms": {
+      "video": "{practice} : votre rendez-vous vidéo du {when}. Entrée dès 15 minutes avant : {url} – pas pour les urgences, en cas d'urgence 144."
+    },
+    "video": {
+      "title": "Rendez-vous vidéo",
+      "card_title": "Rendez-vous vidéo",
+      "open_now": "ouvert maintenant",
+      "invalid": "Ce lien n'est pas valable. Veuillez appeler le cabinet.",
+      "cancelled": "Ce rendez-vous a été annulé.",
+      "over": "Ce rendez-vous vidéo est terminé.",
+      "consent_title": "Avant d'entrer",
+      "c_server": "La vidéo passe par le serveur du cabinet en Suisse.",
+      "c_record": "Rien n'est enregistré.",
+      "c_place": "Choisissez un endroit calme où personne n'écoute.",
+      "c_agree": "J'accepte la séance vidéo.",
+      "need_consent": "Veuillez d'abord confirmer votre accord.",
+      "early": "Vous pouvez entrer dès {time}.",
+      "save_consent": "Enregistrer mon accord",
+      "not_ready": "La salle vidéo n'est pas encore prête. Veuillez appeler le cabinet.",
+      "camera_hint": "À l'étape suivante, votre appareil demande la caméra et le micro – veuillez autoriser.",
+      "join": "Entrer dans le rendez-vous vidéo",
+      "call": "Un problème ? Appelez-nous :",
+      "emergency": "La séance vidéo n'est pas prévue pour les urgences. En cas d'urgence, appelez le 144."
+    }
+  }
+}

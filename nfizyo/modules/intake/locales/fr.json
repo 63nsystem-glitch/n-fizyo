@@ -1,0 +1,91 @@
+{
+  "intake": {
+    "title": "Mes douleurs",
+    "hello": "Bonjour, {name}",
+    "intro": "Décrivez vos douleurs – dans votre langue. Votre thérapeute le lira avant le traitement.",
+    "where": "Où avez-vous mal ?",
+    "where_hint": "Touchez les zones du corps (plusieurs possibles). « Face/Dos » pour changer de vue.",
+    "list_instead": "Liste au lieu de l'image",
+    "none_selected": "Aucune zone choisie",
+    "pain": "Quelle est l'intensité de la douleur ?",
+    "pain_0": "aucune",
+    "pain_2": "légère",
+    "pain_4": "modérée",
+    "pain_6": "forte",
+    "pain_8": "très forte",
+    "pain_10": "insupportable",
+    "since": "Depuis quand ?",
+    "since_opt": {
+      "days": "moins d'une semaine",
+      "weeks": "1 à 6 semaines",
+      "months": "plus de 6 semaines",
+      "years": "plus d'un an"
+    },
+    "worse": "Quand est-ce pire ?",
+    "worse_opt": {
+      "move": "en bougeant",
+      "rest": "au repos",
+      "night": "la nuit",
+      "sitting": "assis",
+      "standing": "debout",
+      "walking": "en marchant",
+      "stairs": "dans les escaliers",
+      "lifting": "en soulevant",
+      "morning": "le matin"
+    },
+    "goals": "Que souhaitez-vous pouvoir refaire ?",
+    "goal_opt": {
+      "sleep": "dormir sans douleur",
+      "walk": "marcher / se promener",
+      "stairs": "monter les escaliers",
+      "work": "travailler",
+      "sport": "faire du sport",
+      "lift": "soulever et porter",
+      "overhead": "lever le bras au-dessus de la tête",
+      "household": "tâches ménagères",
+      "drive": "conduire"
+    },
+    "text": "Avec vos propres mots",
+    "text_hint": "Écrivez ou parlez dans votre langue. Ce sera traduit pour le cabinet.",
+    "text_ph": "Que s'est-il passé ? Qu'est-ce qui aggrave ou soulage ?",
+    "voice": "Parler au lieu d'écrire",
+    "voice_stop": "Arrêter l'enregistrement",
+    "voice_busy": "Reconnaissance …",
+    "emergency": "En cas de douleurs fortes ou nouvelles et soudaines, contactez votre médecin. En cas d'urgence, appelez le 144.",
+    "privacy": "Vos indications restent sur le serveur du cabinet.",
+    "send": "Envoyer",
+    "sent_flash": "Merci ! Le cabinet a bien reçu vos indications.",
+    "text_hint_same": "Décrivez avec vos propres mots ce qui vous préoccupe. Vous pouvez écrire ou parler."
+  },
+  "intake_staff": {
+    "panel_title": "Motif décrit par le patient",
+    "seen": "Vu",
+    "take": "Reprendre comme constat",
+    "taken": "Repris dans le dossier comme douleur",
+    "marked_seen": "Marqué comme vu",
+    "list_title": "Motifs",
+    "list_hint": "Ce que les patients décrivent eux-mêmes – dans leur langue, traduit pour vous.",
+    "f_new": "Nouveaux",
+    "f_all": "Tous",
+    "none": "Aucun nouveau motif.",
+    "st": {
+      "new": "nouveau",
+      "seen": "vu",
+      "taken": "repris"
+    },
+    "ch": {
+      "app": "depuis l'app",
+      "kiosk": "sur la tablette du cabinet",
+      "staff": "saisi"
+    },
+    "where_short": "Où",
+    "pain_short": "Douleur",
+    "worse_short": "Pire",
+    "goals_short": "Objectifs",
+    "translation_pending": "Traduction en cours …",
+    "pain_at": "Douleur {place} (selon patient)",
+    "unspecified": "sans localisation",
+    "description": "Demandes des patient·e·s dans leur propre langue (app patient), traduites pour vous",
+    "since_short": "Depuis"
+  }
+}

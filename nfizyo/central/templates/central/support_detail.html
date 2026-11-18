@@ -1,0 +1,30 @@
+{% extends "central/layout.html" %}
+{% block content %}
+<p class="small"><a href="/support">← Support-Anfragen</a></p>
+<h1 style="margin-bottom:4px">{{ areas.get(r.area, r.area) }} · {{ urgencies.get(r.urgency, r.urgency) }}</h1>
+<p class="small muted" style="margin-bottom:16px"><a href="/box/{{ r.box_id }}">{{ r.box_name }}</a> · {{ r.practice }} · {{ r.from_name }} ({{ r.from_role }}) · Eingang {{ local(r.received_at) }}</p>
+{% if flash %}<div class="banner ok" style="margin-bottom:12px">{{ icon('check_circle', 20) }}<span>Gespeichert. Die Praxis sieht die Antwort nach der nächsten Meldung der Box (max. 5 Minuten).</span></div>{% endif %}
+{% if error %}<div class="banner error" style="margin-bottom:12px">{{ icon('error', 20) }}<span>{{ error }}</span></div>{% endif %}
+<div class="grid-main-side">
+  <div class="col stack">
+    <section class="card stack-s">
+      <h2>Anfrage</h2>
+      {% if r.body %}<p style="white-space:pre-wrap">{{ r.body }}</p>
+      {% else %}<div class="banner warn">{{ icon('warning', 20) }}<span>Text nicht gespeichert: vermutlich Patientendaten ({{ r.blocked }}). Bitte die Praxis anrufen.</span></div>{% endif %}
+      {% if r.with_access %}<p class="small"><span class="pill-label warn">Die Leitung hat den Supportzugang mit der Anfrage geöffnet</span>{% if box_support.open %} – offen bis {{ local(box_support.until) }}{% endif %}</p>{% endif %}
+    </section>
+  </div>
+  <div class="col stack">
+    <section class="card stack-s">
+      <h2>Antwort an die Praxis</h2>
+      <form method="post" class="form"><input type="hidden" name="_csrf" value="{{ csrf }}">
+        <div class="field"><label for="st">Status</label><select id="st" name="status">{% for k, v in statuses.items() %}<option value="{{ k }}"{% if k == r.status or (r.status == 'new' and k == 'in_progress') %} selected{% endif %}>{{ v }}</option>{% endfor %}</select></div>
+        <div class="field"><label for="re">Antwort (die Praxis sieht sie in der App, Hilfe › Support)</label><textarea id="re" name="reply" rows="6" maxlength="4000">{{ r.reply or '' }}</textarea></div>
+        <p class="small muted">Keine Patientendaten schreiben. Sprache der Praxis verwenden.</p>
+        <button class="btn block" type="submit">{{ icon('send', 18) }}Speichern</button>
+      </form>
+      {% if r.reply_at %}<p class="small muted">Letzte Antwort: {{ r.reply_by }} · {{ local(r.reply_at) }}</p>{% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}

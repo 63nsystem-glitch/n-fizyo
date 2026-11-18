@@ -1,0 +1,97 @@
+{% extends "layouts/patient.html" %}
+{% block title %}<bdi dir="auto">{{ practice.name }}</bdi>{% endblock %}
+{% block content %}
+<div class="row" style="justify-content:space-between;align-items:center">
+  <h2 style="margin:0">{{ t('p.booking.title') }}</h2>
+  <a class="chip" href="/p/sprachen?next={{ path | urlencode }}">{{ icon('language', 18) }}{{ LANG_NAMES[lang] }}</a>
+</div>
+{% if error is defined and error %}<div class="banner error" role="alert">{{ icon('error') }}<span>{{ t(error) }}</span></div>{% endif %}
+
+{% if step == 'closed' %}
+<section class="card"><p>{{ t('p.booking.closed') }}</p>{% if practice.phone %}<p style="margin-top:8px"><a href="tel:{{ practice.phone | replace(' ', '') }}">{{ practice.phone | phone }}</a></p>{% endif %}</section>
+
+{% elif step == 'types' %}
+<section class="card stack-s">
+  {% if intro.text %}<p dir="auto">{{ intro.text }}</p>{% endif %}
+  <p class="muted">{{ t('p.booking.choose_type') }}</p>
+  {% for ty in types %}
+  <a class="list-item" href="?art={{ ty.id }}"><span class="lead avatar">{{ icon('event_available', 20) }}</span>
+    <span class="body"><span class="title"><bdi dir="auto">{{ names[ty.id].text }}</bdi></span><br><span class="sub">{{ t('p.booking.minutes', n=ty.minutes) }}</span></span>
+    <span class="trail">{{ icon('chevron_right', 20, 'flip-rtl') }}</span></a>
+  {% endfor %}
+  {% if machine %}<details class="small muted"><summary>{{ icon('translate', 14) }} {{ t('p.machine_translated') }} · {{ t('p.booking.original') }}</summary>
+    <div class="stack-s" style="margin-top:6px">{% if intro.machine %}<p dir="auto" lang="{{ intro.src_lang }}">{{ intro.original }}</p>{% endif %}
+    {% for ty in types if names[ty.id].machine %}<p><bdi dir="auto">{{ names[ty.id].text }}</bdi> = <bdi dir="auto" lang="{{ names[ty.id].src_lang }}">{{ names[ty.id].original }}</bdi></p>{% endfor %}</div></details>{% endif %}
+</section>
+
+{% elif step == 'slots' %}
+<section class="card stack-s">
+  <div class="row" style="justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+    <strong><bdi dir="auto">{{ names[type.id].text }}</bdi> · {{ t('p.booking.minutes', n=type.minutes) }}</strong>
+    {% if types | length > 1 %}<a class="btn text sm" href="{{ path }}">{{ t('p.booking.other_type') }}</a>{% endif %}
+  </div>
+  <p class="small muted">{{ t('p.booking.choose_slot') }}</p>
+  {% if closures %}{% set dates %}{% for c in closures %}{{ fmt_date(c['from']) }}{% if c['to'] != c['from'] %} – {{ fmt_date(c['to']) }}{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}{% endset %}
+  <div class="banner info" data-closures>{{ icon('event_busy', 20) }}<span>{{ t('p.booking.closure', dates=dates | trim) }}</span></div>{% endif %}
+  {% if loc_choices %}<div class="chips">
+    <a class="chip{% if not ort %} selected{% endif %}" href="?art={{ type.id }}&ab={{ start_day }}">{{ t('p.booking.all_places') }}</a>
+    {% for l in loc_choices %}<a class="chip{% if ort == l.id %} selected{% endif %}" href="?art={{ type.id }}&ab={{ start_day }}&ort={{ l.id }}"><bdi dir="auto">{{ l.name }}</bdi></a>{% endfor %}
+  </div>{% endif %}
+  {% for day, slots in days.items() %}
+  <h3 class="small" style="margin:12px 0 6px">{{ fmt_long_date(day) }}</h3>
+  <div class="slotgrid">
+    {% for s in slots %}<a class="slot" href="?art={{ type.id }}&s={{ s.token | urlencode }}">{{ s.time }}{% if s.who %}<small><bdi dir="auto">{{ s.who }}</bdi></small>{% endif %}{% if multi_loc and s.where %}<small><bdi dir="auto">{{ s.where }}</bdi></small>{% endif %}</a>{% endfor %}
+  </div>
+  {% else %}<p>{{ t('p.booking.no_slots') }}</p>{% endfor %}
+  <div class="row" style="justify-content:space-between;margin-top:12px">
+    {% if prev_day %}<a class="btn text" href="?art={{ type.id }}&ab={{ prev_day }}{% if ort %}&ort={{ ort }}{% endif %}">{{ icon('chevron_left', 18, 'flip-rtl') }}{{ t('p.booking.earlier') }}</a>{% else %}<span></span>{% endif %}
+    {% if next_day %}<a class="btn text" href="?art={{ type.id }}&ab={{ next_day }}{% if ort %}&ort={{ ort }}{% endif %}">{{ t('p.booking.later') }}{{ icon('chevron_right', 18, 'flip-rtl') }}</a>{% endif %}
+  </div>
+</section>
+
+{% elif step == 'data' %}
+<section class="card stack">
+  <div class="banner info">{{ icon('event', 20) }}<div><strong>{{ when }}</strong><br><bdi dir="auto">{{ names[type.id].text }}</bdi>{% if therapist %} · <bdi dir="auto">{{ therapist }}</bdi>{% endif %}{% if location %} · <bdi dir="auto">{{ location }}</bdi>{% endif %}
+    <br><a href="?art={{ type.id }}">{{ t('p.booking.other_slot') }}</a></div></div>
+  {% macro bad(name) %}{% if name in errors %} aria-invalid="true"{% endif %}{% endmacro %}
+  {% if errors %}<div class="banner error" role="alert">{{ icon('error') }}<span>{{ t('p.booking.err_fields') }}</span></div>{% endif %}
+  <form method="post" class="form">
+    <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="step" value="data"><input type="hidden" name="slot" value="{{ slot_token }}">
+    <div class="hp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>
+    <div class="field"><label for="fn">{{ t('p.booking.first_name') }} *</label><input id="fn" name="first_name" value="{{ values.first_name or '' }}" required autocomplete="given-name"{{ bad('first_name') }}></div>
+    <div class="field"><label for="ln">{{ t('p.booking.last_name') }} *</label><input id="ln" name="last_name" value="{{ values.last_name or '' }}" required autocomplete="family-name"{{ bad('last_name') }}></div>
+    <div class="field"><label for="bd">{{ t('p.booking.birthdate') }} *</label><input id="bd" name="birthdate" type="date" value="{{ values.birthdate or '' }}" required autocomplete="bday"{{ bad('birthdate') }}></div>
+    <div class="field"><label for="ph">{{ t('p.booking.phone') }} *</label><input id="ph" name="phone" type="tel" inputmode="tel" value="{{ values.phone_raw or '' }}" required autocomplete="tel"{{ bad('phone') }}>
+      <p class="hint">{{ t('p.booking.phone_hint') }}</p></div>
+    <div class="field"><label for="em">{{ t('p.booking.email') }}</label><input id="em" name="email" type="email" value="{{ values.email or '' }}" autocomplete="email"{{ bad('email') }}></div>
+    <label class="check"><input type="checkbox" name="email_ok" value="1"{% if values.email_ok %} checked{% endif %}>{{ t('p.booking.email_ok') }}</label>
+    <div class="field"><label for="ins">{{ t('p.booking.insurance') }}</label><select id="ins" name="insurance"><option value="">–</option>
+      {% for i in insurance %}<option value="{{ i }}"{% if values.insurance == i %} selected{% endif %}>{{ t('p.booking.ins_' ~ i) }}</option>{% endfor %}</select></div>
+    <label class="check"><input type="checkbox" name="has_prescription" value="1"{% if values.has_prescription %} checked{% endif %}>{{ t('p.booking.prescription') }}</label>
+    <div class="field"><label for="nt">{{ t('p.booking.note') }}</label><textarea id="nt" name="note" rows="2" maxlength="300">{{ values.note or '' }}</textarea>
+      <p class="hint">{{ t('p.booking.note_hint') }}</p></div>
+    <label class="check"><input type="checkbox" name="consent" value="1" required{{ bad('consent') }}><span>{{ t('p.booking.consent', practice=practice.name) }} <a href="/p/datenschutz?praxis={{ practice.slug }}">{{ t('p.privacy.link') }}</a></span></label>
+    <button class="btn lg block" type="submit">{{ t('p.booking.send_code') }}</button>
+  </form>
+</section>
+
+{% elif step == 'code' %}
+<section class="card stack">
+  <p>{{ t('p.booking.code_intro') }}</p>
+  {% if demo_code is defined and demo_code %}<div class="banner info">{{ icon('info') }}<span>{{ t('p.login.demo_code', code=demo_code) }}</span></div>{% endif %}
+  <form method="post" class="form"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="step" value="code"><input type="hidden" name="rid" value="{{ rid }}">
+    <div class="field"><label for="code">{{ t('p.login.code') }}</label><input id="code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="8" required style="font-size:28px;letter-spacing:8px;text-align:center"></div>
+    <button class="btn lg block" type="submit">{{ t('p.booking.confirm') }}</button>
+  </form>
+</section>
+
+{% elif step == 'sent' %}
+<section class="card stack-s">
+  <div class="row" style="gap:12px;align-items:center">{{ icon('task_alt', 32) }}<h3 style="margin:0">{{ t('p.booking.sent_title') }}</h3></div>
+  {% if when is defined %}<p><strong>{{ when }}</strong></p>{% endif %}
+  <p>{{ t('p.booking.sent_text', practice=practice.name) }}</p>
+</section>
+{% endif %}
+<div class="emergency">{{ icon('emergency', 20) }}<span>{{ t('p.emergency') }}</span></div>
+<p class="small" style="text-align:center"><a href="/p/datenschutz?praxis={{ practice.slug }}">{{ t('p.privacy.link') }}</a></p>
+{% endblock %}

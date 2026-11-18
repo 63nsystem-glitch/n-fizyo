@@ -1,0 +1,98 @@
+{
+  "p": {
+    "app_name": "Fizyoterapim",
+    "nav": {
+      "main": "Gezinme",
+      "today": "Bugün",
+      "exercises": "Egzersizler",
+      "appointments": "Randevular",
+      "messages": "Mesajlar",
+      "today_short": "Bugün",
+      "appointments_short": "Randevu",
+      "messages_short": "Mesajlar"
+    },
+    "emergency": "Acil durumda 144'ü arayın. Uygulama acil durumlar için değildir.",
+    "machine_translated": "makine çevirisi",
+    "home": {
+      "hello": "Merhaba, {name}",
+      "next": "Bir sonraki randevunuz",
+      "exercises": "Bugünkü egzersizlerim",
+      "exercises_hint": "Yaptığınız egzersizleri işaretleyin – muayenehane gelişiminizi görür.",
+      "describe": "Şikâyetlerimi anlat",
+      "report": "Sorun bildir",
+      "messages": "Mesajlar",
+      "appointment": "Randevular",
+      "call": "Sorunuz mu var? Bizi arayın:"
+    },
+    "profile": {
+      "title": "Profil",
+      "language": "Dil",
+      "language_hint": "Gerekirse muayenehanenin metinleri dilinize makine ile çevrilir.",
+      "privacy": "Veri koruma",
+      "privacy_text": "Verileriniz İsviçre'deki muayenehanenizin sunucusunda kalır. Çeviri ve ses tanıma orada çalışır – hiçbir şey dışarıdaki hizmetlere gönderilmez.",
+      "privacy_text_remote": "Verileriniz İsviçre'deki muayenehanenizin sunucusunda kalır. Çeviri ve ses tanıma, NSystem'in İsviçre'deki, hiçbir şey saklamayan bir sunucusunda çalışır.",
+      "logout": "Çıkış yap",
+      "revoke": "Uygulama erişimini sonlandır",
+      "revoke_confirm": "Erişimi gerçekten sonlandırmak istiyor musunuz? Daha sonra yeni bir davet alabilirsiniz."
+    },
+    "login": {
+      "title": "Giriş",
+      "intro": "Cep telefonu numaranızı ve doğum tarihinizi girin. SMS ile bir kod alacaksınız.",
+      "phone": "Cep telefonu numarası",
+      "birthdate": "Doğum tarihi",
+      "send_code": "Kodu gönder",
+      "code_intro": "SMS'teki 6 haneli kodu girin.",
+      "code": "Kod",
+      "submit": "Giriş yap",
+      "demo_code": "Demo: SMS gönderilmez. Kodunuz {code}.",
+      "wrong_code": "Kod yanlış veya süresi dolmuş.",
+      "blocked": "Çok fazla deneme. Lütfen daha sonra tekrar deneyin.",
+      "too_many_codes": "Bu numaraya zaten birkaç kod gönderildi. Lütfen bir saat bekleyin veya bizi arayın."
+    },
+    "invite": {
+      "title": "Hoş geldiniz",
+      "hello": "Merhaba, {name}. {practice} sizi uygulamayı kullanmaya davet ediyor.",
+      "what": "Uygulamada egzersizlerinizi ve randevularınızı görürsünüz, şikâyetlerinizi kendi dilinizde anlatırsınız ve muayenehaneye yazarsınız.",
+      "code": "Muayenehaneden aldığınız kod",
+      "code_hint": "6 haneli kodu muayenehanede veya SMS ile aldınız.",
+      "privacy_title": "Verileriniz",
+      "privacy_text": "Verileriniz İsviçre'deki muayenehanenizin sunucusunda kalır. Terapistiniz girdiklerinizi görür. Erişimi istediğiniz zaman sonlandırabilirsiniz.",
+      "consent": "Uygulamayı kullanmayı kabul ediyorum.",
+      "consent_translation": "Yazdıklarım muayenehanenin sunucusunda makine ile çevrilebilir.",
+      "consent_translation_remote": "Yazdıklarım makine ile çevrilebilir – İsviçre'deki yapay zekâ sunucusunda (şifreli gönderilir, orada saklanmaz).",
+      "start": "Uygulamayı başlat",
+      "need_consent": "Lütfen onayınızı verin.",
+      "wrong_code": "Kod yanlış.",
+      "invalid": "Bu davetin süresi dolmuş veya daha önce kullanılmış.",
+      "invalid_hint": "Muayenehaneden yeni bir davet isteyin veya cep telefonu numaranızla giriş yapın."
+    },
+    "sms": {
+      "invite": "Merhaba {name}, fizyoterapi uygulamanız: {url} – kod: {code}",
+      "login": "Giriş kodunuz: {code} (15 dakika geçerli)"
+    },
+    "privacy": {
+      "title": "Veri koruma",
+      "link": "Veri koruma beyanı",
+      "controller_title": "Sorumlu",
+      "controller_generic": "Sorumlu, sizi uygulamaya davet eden muayenehanedir. İletişim bilgilerini uygulamada «Profil» altında bulursunuz.",
+      "data_title": "Hangi veriler",
+      "data": "Kimlik ve iletişim bilgileriniz, sigorta bilgileriniz, doktor reçeteleri ve raporları, tedavi notları ve ölçümler ile uygulamaya girdikleriniz (egzersizler, ağrı bilgileri, mesajlar, talepler, antrenman setleri). Sağlık verileri özellikle korunması gereken verilerdir.",
+      "purpose_title": "Ne için",
+      "purpose": "Tedaviniz, randevu planlaması, sigortanızla faturalama ve doktorunuzla iş birliği için – reklam için asla.",
+      "where_title": "Veriler nerede",
+      "where": "Muayenehanenin İsviçre'deki sunucusunda. Verileriniz yurt dışına aktarılmaz. Görüntülü görüşmeler muayenehanenin İsviçre'deki kendi video sunucusu üzerinden yapılır ve kaydedilmez.",
+      "who_title": "Kim görür",
+      "who": "Sadece tedavi ekibinizdeki uzmanlar ve randevu ile faturalar için resepsiyon. Doktorlara raporlar HIN üzerinden şifreli gider, faturalar sigortanıza. SMS'leri İsviçre'deki bir hizmet sağlayıcı gönderir; e-postalar sadece onayınızla. Herkes meslek sırrına tabidir.",
+      "processor_title": "Yazılım ve teknik",
+      "processor": "N-Fizyo yazılımı NSystem GmbH, Biel/Bienne'e aittir. NSystem tekniği muayenehane adına işletir, sır saklama yükümlülüğü vardır ve normal işleyişte hasta verilerini görmez. Çeviri ve ses tanıma muayenehanenin sunucusunda veya NSystem'in İsviçre'deki, hiçbir şey saklamayan bir sunucusunda çalışır.",
+      "consent_title": "Onayınız",
+      "consent": "Uygulama, e-postalar, kendi egzersiz videolarınız ve görüntülü görüşmeler için onayınızı isteriz. Onayınızı istediğiniz zaman geri alabilirsiniz – uygulamada «Profil» altında veya muayenehanede.",
+      "retention_title": "Ne kadar süre",
+      "retention": "Muayenehane tedavi kayıtlarını yasanın gerektirdiği süre boyunca saklar. Kendi egzersiz videolarınızı istediğiniz zaman silebilirsiniz. Giriş kodları ve bağlantılar kısa sürede geçersiz olur.",
+      "rights_title": "Haklarınız",
+      "rights": "Verileriniz hakkında bilgi isteyebilir, yanlış bilgileri düzelttirebilir ve bir yasa gerektirmedikçe işlenmesine itiraz edebilirsiniz. Muayenehaneye başvurun. Veri korumayla ilgili sorular için Federal Veri Koruma ve Kamuya Açıklık Sorumlusu'na (EDÖB) da başvurabilirsiniz.",
+      "version": "Tarih: Kasım 2026"
+    }
+  },
+  "_review": "Erstübersetzung NSystem – vor Einsatz von Muttersprachler/in prüfen lassen."
+}

@@ -1,0 +1,41 @@
+{% extends "layouts/staff.html" %}
+{% import "ui/figure.html" as fig with context %}
+{% block title %}{{ t('anatomy.title') }}{% endblock %}
+{% block subtitle %}{{ t('anatomy.subtitle') }}{% endblock %}
+{% block content %}
+<div class="grid-main-side" style="--side:minmax(320px,420px)">
+  <div class="col">
+    <form class="search" method="get" action="{{ S }}/anatomie" role="search">
+      {{ icon('search') }}<input name="q" value="{{ q }}" placeholder="{{ t('anatomy.search') }}" aria-label="{{ t('anatomy.search') }}">
+      {% if group %}<input type="hidden" name="g" value="{{ group }}">{% endif %}
+    </form>
+    <div class="chips">
+      <a class="chip{% if not group %} selected{% endif %}" href="{{ S }}/anatomie{% if q %}?q={{ q | urlencode }}{% endif %}">{{ t('anatomy.all') }}</a>
+      {% for g in groups %}<a class="chip{% if g == group %} selected{% endif %}" href="?g={{ g }}{% if q %}&q={{ q | urlencode }}{% endif %}">{{ t('anatomy.group.' ~ g) }}</a>{% endfor %}
+    </div>
+    <div class="card">
+      <div class="list">
+        {% for s in items %}
+        <a class="list-item" href="?s={{ s.id }}{% if group %}&g={{ group }}{% endif %}{% if q %}&q={{ q | urlencode }}{% endif %}"{% if selected and selected.id == s.id %} aria-current="true" style="background:var(--surface-low)"{% endif %}>
+          <span class="lead avatar" style="width:36px;height:36px">{{ icon({'bone': 'orthopedics', 'joint': 'body_system', 'muscle': 'fitness_center', 'group': 'fitness_center', 'ligament': 'link', 'tendon': 'link', 'meniscus': 'contrast', 'disc': 'layers', 'nerve': 'neurology', 'bursa': 'radio_button_unchecked', 'fascia': 'layers', 'spine': 'skeleton'}.get(s.type, 'skeleton'), 20) }}</span>
+          <span class="body"><span class="title">{{ anat.name(s, lang) }}</span><br><span class="sub">{{ s.la }}{% if s.abbr %} · {{ s.abbr | join(', ') }}{% endif %}</span></span>
+          <span class="trail small">{{ anat.type_name(s, lang) }}</span>
+        </a>
+        {% else %}
+        <div class="empty">{{ icon('search', 32) }}{{ t('anatomy.none') }}</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col side-sticky">
+    <div class="card">
+      {% if selected %}{% include "anatomy/_detail.html" %}
+      {% else %}
+      <h2 style="margin-bottom:8px">{{ t('anatomy.pick') }}</h2>
+      <p class="muted" style="margin-bottom:12px">{{ t('anatomy.pick_hint') }}</p>
+      {{ fig.body_figure({'muscle': {}, 'skeleton': {}}, id='atlas-fig', layer='skeleton', editable=True, bone_href=S ~ '/anatomie?bone=') }}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

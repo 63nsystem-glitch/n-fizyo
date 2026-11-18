@@ -1,0 +1,38 @@
+{% extends "layouts/patient.html" %}
+{% block title %}{{ practice.name if practice else t('p.offer.title') }}{% endblock %}
+{% block content %}
+{% if practice %}
+<div class="row" style="justify-content:space-between;align-items:center">
+  <h2 style="margin:0">{{ t('p.offer.title') }}</h2>
+  <a class="chip" href="/p/sprachen?next={{ path | urlencode }}">{{ icon('language', 18) }}{{ LANG_NAMES[lang] }}</a>
+</div>
+{% endif %}
+{% if state == 'invalid' or state == 'blocked' %}
+<section class="card"><p>{{ t('p.offer.invalid') }}</p></section>
+{% else %}
+<section class="card stack-s">
+  <p style="font-size:24px;line-height:32px">{{ fmt_long_date(start.date()) }}<br><strong style="font-weight:500">{{ fmt_time(start) }}</strong> · {{ t('p.offer.minutes', n=minutes) }}</p>
+  <p>{{ icon('location_on', 18) }} {{ place }}{% if therapist %} · {{ therapist }}{% endif %}</p>
+</section>
+{% if state == 'open' %}
+<p class="muted">{{ t('p.offer.first_wins') }}</p>
+<form method="post" class="stack-s">
+  <input type="hidden" name="_csrf" value="{{ csrf }}">
+  <button class="btn lg block" type="submit" name="answer" value="yes">{{ icon('check', 20) }}{{ t('p.offer.accept') }}</button>
+  <button class="btn outlined block" type="submit" name="answer" value="no">{{ t('p.offer.decline') }}</button>
+</form>
+{% elif state == 'booked' %}
+<div class="banner info" role="status" style="background:var(--ok-container);color:var(--on-ok-container)">{{ icon('check_circle') }}<div><strong style="font-weight:500">{{ t('p.offer.booked_title') }}</strong><p>{{ t('p.offer.booked_text') }}</p></div></div>
+{% elif state == 'declined' %}
+<div class="banner info" role="status">{{ icon('info') }}<p>{{ t('p.offer.declined') }}</p></div>
+<form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><button class="btn text" type="submit" name="answer" value="yes">{{ t('p.offer.changed_mind') }}</button></form>
+{% elif state == 'expired' %}
+<div class="banner" role="status">{{ icon('schedule') }}<p>{{ t('p.offer.expired') }}</p></div>
+{% else %}
+<div class="banner" role="status">{{ icon('info') }}<p>{{ t('p.offer.taken') }}</p></div>
+{% endif %}
+{% if practice.phone %}<p class="small" style="display:flex;gap:6px;align-items:center">{{ icon('call', 16) }}{{ t('p.offer.call') }} <a href="tel:{{ practice.phone | replace(' ', '') }}">{{ practice.phone | phone }}</a></p>{% endif %}
+{% endif %}
+<div class="emergency">{{ icon('emergency', 20) }}<span>{{ t('p.emergency') }}</span></div>
+<p class="small" style="text-align:center"><a href="/p/datenschutz{{ '?praxis=' ~ practice_slug if practice_slug is defined and practice_slug else '' }}">{{ t('p.privacy.link') }}</a></p>
+{% endblock %}

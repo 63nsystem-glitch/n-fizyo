@@ -1,0 +1,66 @@
+{
+  "notify": {
+    "title": "Notifications",
+    "sec": "Notifications",
+    "description": "Avis aux patient·e·s en cas de nouveau message, d'information ou de nouveau rendez-vous (e-mail avec accord ou SMS)",
+    "how": "Comment les patient·e·s apprennent-ils qu'il y a du nouveau dans l'application ?",
+    "how_hint": "Quand le cabinet répond à un message ou que la thérapie publie une information, la patiente / le patient reçoit un bref avis avec le lien vers l'application – sans contenu.",
+    "default": "recommandé",
+    "mode": {
+      "email_or_sms": "E-mail avec accord, sinon SMS",
+      "email_or_sms_hint": "E-mail aux personnes ayant donné leur accord (fiche), toutes les autres par SMS.",
+      "email": "E-mail seulement",
+      "email_hint": "Seulement les personnes ayant donné leur accord pour l'e-mail. Pas de frais SMS.",
+      "sms": "SMS seulement",
+      "sms_hint": "Au numéro de portable de la fiche.",
+      "off": "Désactivé",
+      "off_hint": "Aucune notification. Les patient·e·s voient les nouveautés en ouvrant l'application."
+    },
+    "appointments": "Notifier aussi les nouveaux rendez-vous",
+    "appointments_hint": "Seulement pour les rendez-vous dans plus d'un jour – sinon le rappel de rendez-vous arrive de toute façon. Pas pour les personnes qui ne souhaitent pas de rappels.",
+    "example": "Voici à quoi ressemble la notification",
+    "example_hint": "Toujours dans la langue de l'application de la patiente / du patient (11 langues).",
+    "test_mode": "Mode test : les notifications restent dans la boîte d'envoi (voir Paramètres › SMS).",
+    "last30": "30 derniers jours",
+    "sent_sms": "Notifié·e·s par SMS",
+    "sent_email": "Notifié·e·s par e-mail",
+    "waiting": "Planifiées",
+    "not_sent": "Pas de notification, car …",
+    "rules_title": "Règles",
+    "rule_content": "Jamais de contenu ni de données de santé – seulement « nouveau message », « nouvelle information » ou « nouveau rendez-vous », le nom du cabinet et le lien vers l'application.",
+    "rule_app": "Seulement aux personnes qui ont connecté l'application patient.",
+    "rule_bundle": "Au plus une notification par personne en 15 minutes – ce qui s'ajoute est regroupé.",
+    "rule_night": "Pas de SMS entre 20 h et 8 h – il part le matin à 8 h. Les e-mails partent tout de suite.",
+    "rule_read": "Ce que la personne a déjà lu dans l'application ne déclenche pas de notification.",
+    "ch": {
+      "sms": "SMS",
+      "email": "e-mail"
+    },
+    "st": {
+      "sent": "Patient·e notifié·e ({channel}, {when})",
+      "pending": "Notification planifiée ({channel}, {when})",
+      "skipped": "Pas de notification : {reason}"
+    },
+    "reason": {
+      "off": "notifications désactivées",
+      "no_app": "n'utilise pas l'application",
+      "no_consent": "pas d'accord pour l'e-mail",
+      "no_phone": "pas de numéro de portable",
+      "no_contact": "ni accord pour l'e-mail ni numéro de portable",
+      "read": "déjà lu dans l'application",
+      "reminder": "le rappel de rendez-vous arrive de toute façon"
+    }
+  },
+  "p": {
+    "notify": {
+      "message": "Vous avez un nouveau message de {practice}. Ouvrir : {url}",
+      "info": "Vous avez une nouvelle information de {practice}. Ouvrir : {url}",
+      "appointment": "Vous avez un nouveau rendez-vous chez {practice}. Détails : {url}",
+      "several": "Du nouveau de {practice} dans votre application. Ouvrir : {url}",
+      "mail_subject": "Nouvelles de {practice}",
+      "mail_hello": "Bonjour",
+      "mail_privacy": "Pour protéger vos données, le contenu se trouve uniquement dans l'application. Veuillez vous y connecter.",
+      "mail_bye": "Meilleures salutations\n{practice}"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "p": {
+    "appt": {
+      "title": "Citas",
+      "none": "No hay citas previstas.",
+      "cancel_hint": "Para anular o cambiar una cita, llame al menos 24 horas antes.",
+      "request": "Pedir una cita",
+      "wish": "Su deseo",
+      "wish_ph": "p. ej. cita más temprana",
+      "preferred": "¿Cuándo le va bien?",
+      "preferred_ph": "p. ej. lunes o miércoles por la mañana",
+      "send": "Enviar solicitud",
+      "requested": "Solicitud enviada. La consulta se pondrá en contacto con usted.",
+      "closure": "La consulta está cerrada: {dates}."
+    },
+    "sms": {
+      "reminder": "Recordatorio: su cita de fisioterapia el {when} ({place}). Anule por teléfono al menos 24 horas antes.",
+      "offer": "{practice}: ha quedado libre una cita – {when}, {place}. ¿La quiere? Responda aquí: {url}",
+      "offer_booked": "{practice}: su cita del {when} está confirmada. Para cancelar, llame al menos 24 horas antes: {phone}",
+      "offer_gone": "{practice}: la cita ofrecida del {when} ya no está libre. Sigue en la lista de espera.",
+      "cancelled": "{practice}: sus citas han sido canceladas: {dates}. Si tiene preguntas, llámenos: {phone}"
+    },
+    "mail": {
+      "reminder_subject": "Recordatorio: cita el {when}",
+      "reminder_body": "Buenos días, {name}\n\nLe recordamos su cita de fisioterapia el {when} ({place}).\nAnulación al menos 24 horas antes: {phone}\n\nUn saludo cordial\n{practice}"
+    },
+    "offer": {
+      "title": "Cita libre",
+      "minutes": "{n} minutos",
+      "first_wins": "Esta cita se ha ofrecido a varias personas. Quien confirme primero se la queda.",
+      "accept": "Sí, quiero la cita",
+      "decline": "No, gracias",
+      "booked_title": "Su cita está reservada",
+      "booked_text": "Recibirá una confirmación por SMS. Para cancelar, llame al menos 24 horas antes.",
+      "declined": "Gracias por su respuesta. Sigue en la lista de espera.",
+      "changed_mind": "Al final sí quiero la cita",
+      "taken": "Lo sentimos, la cita ya está asignada. Sigue en la lista de espera.",
+      "expired": "Esta oferta ha caducado. Sigue en la lista de espera.",
+      "invalid": "Este enlace no es válido o ha caducado.",
+      "call": "¿Preguntas? Llámenos:"
+    }
+  }
+}

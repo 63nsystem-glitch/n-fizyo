@@ -1,0 +1,30 @@
+{
+  "p": {
+    "msg": {
+      "title": "Poruke",
+      "empty": "Još nema poruka.",
+      "write": "Vaša poruka",
+      "write_ph": "Pišite na svom jeziku.",
+      "reply_time": "Praksa obično odgovara u roku od jednog radnog dana. Bez hitnih slučajeva preko aplikacije.",
+      "too_many": "Poslali ste mnogo poruka u kratkom vremenu. Molimo pokušajte kasnije ili nazovite ordinaciju.",
+      "sent": "Poruka je poslana.",
+      "report_sent": "Prijava je poslana. Praksa će je vidjeti kod sljedećeg otvaranja.",
+      "problem": "Problem prijavljen",
+      "machine": "Prikaži original (mašinski prijevod)",
+      "reply": {
+        "same_day": "Praksa obično odgovara istog radnog dana.",
+        "next_day": "Praksa obično odgovara do sljedećeg radnog dana.",
+        "two_days": "Praksa obično odgovara u roku od dva radna dana.",
+        "three_days": "Praksa obično odgovara u roku od tri radna dana.",
+        "week": "Praksa obično odgovara u roku od jedne sedmice."
+      },
+      "no_emergency": "Bez hitnih slučajeva preko aplikacije."
+    },
+    "report": {
+      "title": "Prijaviti problem",
+      "what": "Šta se desilo?",
+      "what_ph": "npr. koljeno oteklo nakon penjanja uz stepenice",
+      "send": "Poslati"
+    }
+  }
+}

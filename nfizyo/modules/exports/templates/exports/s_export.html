@@ -1,0 +1,119 @@
+{% extends "ui/settings.html" %}
+{% block settings %}
+<div class="grid-main-side">
+  <div class="col stack">
+    <section class="card stack">
+      <h2>{{ t('exports.accounting') }}</h2>
+      <p class="small muted">{{ t('exports.accounting_hint') }}</p>
+      <div class="chips">{% for p in presets %}<a class="chip{% if p.von.isoformat() == von and p.bis.isoformat() == bis %} selected{% endif %}" href="?von={{ p.von }}&bis={{ p.bis }}">{{ t('exports.p_' ~ p.key) }}</a>{% endfor %}</div>
+      <form method="get" class="row" style="gap:8px;align-items:flex-end;flex-wrap:wrap">
+        <div class="field"><label for="von">{{ t('exports.from') }}</label><input id="von" name="von" type="date" value="{{ von }}"></div>
+        <div class="field"><label for="bis">{{ t('exports.to') }}</label><input id="bis" name="bis" type="date" value="{{ bis }}"></div>
+        <button class="btn tonal" type="submit">{{ t('exports.show') }}</button>
+      </form>
+      <dl class="facts">
+        <dt>{{ t('exports.invoices') }}</dt><dd class="mono">{{ (data.invoices | length) + (data.firms.invoices | length) }} · {{ chf(data.sums.invoices) }}</dd>
+        <dt>{{ t('exports.cancellations') }}</dt><dd class="mono">{{ (data.cancellations | length) + (data.firms.cancellations | length) }} · {{ chf(data.sums.cancellations) }}</dd>
+        <dt>{{ t('exports.payments') }}</dt><dd class="mono">{{ (data.payments | length) + (data.firms.payments | length) }} · {{ chf(data.sums.payments) }}</dd>
+        {% if cash %}<dt>{{ t('exports.sales') }}</dt><dd class="mono">{{ data.sales | length }} · {{ chf(data.sums.sales_net) }}
+          {% if data.sums.cash_corrections_n %}<br><span class="small muted">{{ t('exports.sales_corrected', gross=chf(data.sums.sales), storno=chf(data.sums.sales_storno), n=data.sums.cash_corrections_n) }}</span>{% endif %}</dd>{% endif %}
+        <dt>{{ t('exports.entries') }}</dt><dd class="mono">{{ data.entries | length }}</dd>
+      </dl>
+      <div class="row" style="gap:8px;flex-wrap:wrap">
+        <a class="btn" href="{{ S }}/export/buchhaltung.xlsx?{{ qs }}">{{ icon('table_view', 18) }}{{ t('exports.xlsx') }}</a>
+        <a class="btn tonal" href="{{ S }}/export/journal.csv?{{ qs }}">{{ icon('download', 18) }}{{ t('exports.csv') }}</a>
+      </div>
+      {% if data.entries %}
+      <details><summary class="disclose">{{ t('exports.preview') }}</summary>
+        <div class="table-wrap" style="margin-top:8px"><table class="table"><thead><tr><th>{{ t('exports.col_date') }}</th><th>{{ t('exports.col_doc') }}</th><th>{{ t('exports.col_debit') }}</th><th>{{ t('exports.col_credit') }}</th><th class="num">CHF</th><th>{{ t('exports.col_text') }}</th></tr></thead><tbody>
+          {% for e in data.entries[:40] %}<tr><td>{{ fmt_date(e.day) }}</td><td class="mono">{{ e.doc }}</td><td class="mono">{{ e.debit }}</td><td class="mono">{{ e.credit }}</td><td class="num mono">{{ e.amount | money }}</td><td class="small">{{ e.text }}</td></tr>{% endfor %}
+        </tbody></table></div>
+        {% if data.entries | length > 40 %}<p class="small muted">{{ t('exports.more', n=data.entries | length - 40) }}</p>{% endif %}
+      </details>
+      {% endif %}
+    </section>
+    <section class="card stack" id="bexio">
+      <h2>{{ t('exports.bexio.title') }}</h2>
+      <p class="small muted">{{ t('exports.bexio.hint') }}</p>
+      {% if bexio.mode == 'off' %}
+      <div class="banner info">{{ icon('info', 20) }}<div>{{ t('exports.bexio.off') }}</div></div>
+      {% elif bexio.mode == 'other' %}
+      <div class="banner info">{{ icon('info', 20) }}<div>{{ t('exports.bexio.other') }}</div></div>
+      {% elif not bexio.connected %}
+      <a class="btn" href="{{ S }}/einstellungen/export/bexio/verbinden">{{ icon('link', 18) }}{{ t('exports.bexio.connect') }}</a>
+      {% else %}
+      <p class="small"><span class="pill-label ok">{{ icon('check', 14) }} {{ t('exports.bexio.connected_label') }}</span>
+        {% if bexio.mode == 'token' %}<span class="muted"> · {{ t('exports.bexio.via_token') }}</span>{% endif %}</p>
+      {% if bexio.missing is not none %}
+        {% if bexio.missing %}<div class="banner warn">{{ icon('warning', 20) }}<div>{{ t('exports.bexio.missing_accounts') }} <span class="mono">{{ bexio.missing | join(', ') }}</span></div></div>
+        {% else %}<div class="banner ok">{{ icon('check_circle', 20) }}<div>{{ t('exports.bexio.accounts_ok') }}</div></div>{% endif %}
+      {% endif %}
+      <dl class="facts">
+        <dt>{{ t('exports.bexio.p_new') }}</dt><dd class="mono">{{ bexio.plan.new }}</dd>
+        <dt>{{ t('exports.bexio.p_sent') }}</dt><dd class="mono">{{ bexio.plan.sent }}</dd>
+        {% if bexio.plan.failed %}<dt>{{ t('exports.bexio.p_failed') }}</dt><dd class="mono">{{ bexio.plan.failed }}</dd>{% endif %}
+        {% if bexio.plan.unknown %}<dt>{{ t('exports.bexio.p_unknown') }}</dt><dd class="mono">{{ bexio.plan.unknown }}</dd>{% endif %}
+      </dl>
+      <div class="row" style="gap:8px;flex-wrap:wrap">
+        <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="von" value="{{ von }}"><input type="hidden" name="bis" value="{{ bis }}">
+          <button class="btn" type="submit" name="do" value="bexio_send"{% if not (bexio.plan.new or bexio.plan.failed) %} disabled{% endif %}>{{ icon('send', 18) }}{{ t('exports.bexio.send', n=bexio.plan.new + bexio.plan.failed) }}</button>
+          <button class="btn tonal" type="submit" name="do" value="bexio_check">{{ icon('fact_check', 18) }}{{ t('exports.bexio.check') }}</button></form>
+      </div>
+      {% if bexio.problems %}
+      <div class="stack-s">
+        <h3 class="small" style="font-weight:600">{{ t('exports.bexio.problems') }}</h3>
+        {% for b in bexio.problems %}
+        <div class="row-between small" style="gap:8px;flex-wrap:wrap"><span>{{ fmt_date(b.day) }} · <span class="mono">{{ b.doc }}</span> · {{ b.debit }}/{{ b.credit }} · {{ chf(b.amount_chf) }}
+          <br><span class="pill-label {{ 'warn' if b.status == 'unknown' else 'error' }}">{{ t('exports.bexio.st_' ~ b.status) }}</span> <span class="muted">{{ b.error or '' }}</span></span>
+          {% if b.status == 'unknown' %}
+          <form method="post" class="row" style="gap:4px"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="bexio_mark"><input type="hidden" name="booking_id" value="{{ b.id }}"><input type="hidden" name="von" value="{{ von }}"><input type="hidden" name="bis" value="{{ bis }}">
+            <button class="btn text sm" type="submit" name="status" value="sent">{{ t('exports.bexio.mark_sent') }}</button>
+            <button class="btn text sm" type="submit" name="status" value="failed">{{ t('exports.bexio.mark_resend') }}</button></form>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <p class="small muted">{{ t('exports.bexio.vat_note') }}</p>
+      {% if bexio.mode == 'oauth' %}
+      <form method="post" data-confirm="{{ t('exports.bexio.disconnect_confirm') }}" data-confirm-yes="{{ t('exports.bexio.disconnect') }}"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="bexio_disconnect">
+        <button class="btn text sm" type="submit">{{ icon('link', 16) }}{{ t('exports.bexio.disconnect') }}</button></form>
+      {% endif %}
+      {% endif %}
+    </section>
+    <section class="card stack" id="voll">
+      <h2>{{ t('exports.full') }}</h2>
+      <p class="small">{{ t('exports.full_hint') }}</p>
+      <form method="post" action="{{ S }}/export/voll" class="row" style="gap:8px;align-items:flex-end;flex-wrap:wrap" data-confirm="{{ t('exports.full_confirm') }}" data-confirm-yes="{{ t('exports.full_btn') }}">
+        <input type="hidden" name="_csrf" value="{{ csrf }}">
+        <div class="field grow"><label for="pw">{{ t('exports.password') }}</label><input id="pw" name="password" type="password" autocomplete="current-password" required></div>
+        <button class="btn" type="submit">{{ icon('folder_zip', 18) }}{{ t('exports.full_btn') }}</button>
+      </form>
+      {% for f in files %}
+      <div class="row-between" style="flex-wrap:wrap;gap:8px"><span class="small"><span class="mono">{{ f.name }}</span><br>{{ (f.size / 1048576) | round(1) }} MB · {{ t('exports.expires', date=fmt_date(f.expires), time=fmt_time(f.expires)) }}</span>
+        <span class="row" style="gap:6px"><a class="btn tonal sm" href="{{ S }}/export/datei/{{ f.name }}">{{ icon('download', 16) }}{{ t('exports.download') }}</a>
+          <form method="post" action="{{ S }}/export/datei/{{ f.name }}/loeschen"><input type="hidden" name="_csrf" value="{{ csrf }}"><button class="btn text sm" type="submit">{{ t('common.delete') }}</button></form></span></div>
+      {% endfor %}
+    </section>
+    <section class="card stack" id="auskunft">
+      <h2>{{ t('exports.auskunft') }}</h2>
+      <p class="small">{{ t('exports.auskunft_hint') }}</p>
+      <form method="post" action="{{ S }}/export/auskunft" class="row" style="gap:8px;align-items:flex-end;flex-wrap:wrap" data-multi>
+        <input type="hidden" name="_csrf" value="{{ csrf }}">
+        <div class="field grow"><label for="ak-p">{{ t('exports.auskunft_patient') }}</label><input id="ak-p" name="patient" maxlength="80" placeholder="P00012" required></div>
+        <div class="field grow"><label for="ak-pw">{{ t('exports.password') }}</label><input id="ak-pw" name="password" type="password" autocomplete="current-password" required></div>
+        <button class="btn tonal" type="submit">{{ icon('download', 18) }}{{ t('exports.auskunft_btn') }}</button>
+      </form>
+    </section>
+  </div>
+  <section class="card stack">
+    <h2>{{ t('exports.accounts') }}</h2>
+    <p class="small muted">{{ t('exports.accounts_hint') }}</p>
+    <form method="post" class="form"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="accounts">
+      {% for k in accounts %}<div class="row-between" style="gap:8px"><label for="{{ k }}" class="small">{{ t('exports.' ~ k) }}</label><input id="{{ k }}" name="{{ k }}" value="{{ acc_stored[k] or '' }}"{% if k == 'acc_rounding' %} placeholder="{{ acc.acc_services }}"{% endif %} maxlength="12" class="select-sm mono" style="width:90px"></div>{% endfor %}
+      <p class="hint">{{ t('exports.acc_rounding_hint') }}</p>
+      <div class="form-actions"><button class="btn" type="submit">{{ t('common.save') }}</button></div>
+    </form>
+  </section>
+</div>
+{% endblock %}

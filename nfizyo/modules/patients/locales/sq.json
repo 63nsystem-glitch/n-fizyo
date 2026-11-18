@@ -1,0 +1,33 @@
+{
+  "p": {
+    "progress": {
+      "title": "Përparimi juaj",
+      "hint": "E ndarë nga fizioterapeuti juaj. Nëse keni pyetje, flisni në takimin e ardhshëm.",
+      "from_to": "{first} më {first_on} → {last} më {last_on}",
+      "goal": "Qëllimi {goal}",
+      "kind": {
+        "flexion": "Përkulja",
+        "extension": "Shtrirja",
+        "abduction": "Ngritja anash",
+        "external_rotation": "Rrotullimi nga jashtë",
+        "internal_rotation": "Rrotullimi nga brenda",
+        "elevation": "Ngritja e krahut",
+        "pain_vas": "Dhimbja (0–10)"
+      },
+      "joint": {
+        "knee": "gjuri",
+        "shoulder": "supi",
+        "hip": "ijët",
+        "elbow": "bërryli",
+        "ankle": "kyçi i këmbës",
+        "wrist": "kyçi i dorës",
+        "cervical": "qafa",
+        "lumbar": "pjesa e poshtme e shpinës"
+      },
+      "side": {
+        "l": "majtas",
+        "r": "djathtas"
+      }
+    }
+  }
+}

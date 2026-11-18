@@ -1,0 +1,25 @@
+{#- Inhalt eines Struktur-Blatts (Atlas und Seitenblatt) -#}
+{% import "ui/figure.html" as fig with context %}
+<div class="stack">
+  <div>
+    <p class="small muted">{{ type_name }}{% if place %} · {{ place }}{% endif %}</p>
+    <h2 style="font-size:22px;line-height:28px;font-weight:400">{{ anat.name(s, lang) }}</h2>
+    <p class="muted">{{ s.la }}{% if s.abbr %} · {{ s.abbr | join(', ') }}{% endif %}</p>
+    <p class="muted small">{{ 'DE' if lang == 'fr' else 'FR' }}: {{ s.de if lang == 'fr' else s.fr }}</p>
+    {% if patient_term %}<p class="small" style="margin-top:4px"><span class="lang-tag">{{ icon('translate', 14) }}{{ patient_term.lang }}</span> {{ patient_term.text }} <span class="muted">· {{ t('ai.machine_translated') }}</span></p>{% endif %}
+  </div>
+  <div class="card flat" style="padding:12px">{{ fig.body_figure(marks, id='fig-' ~ s.id, layer=layer, view=view) }}</div>
+  {% set rows = [('anatomy.origin', s.origin), ('anatomy.insertion', s.insertion), ('anatomy.innervation', s.innervation), ('anatomy.function', s.function), ('anatomy.note', s.note)] %}
+  {% if rows | selectattr(1) | list %}
+  <div class="kv" style="grid-template-columns: minmax(96px, 34%) 1fr">
+    {% for key, val in rows if val %}<div class="k">{{ t(key) }}</div><div>{{ anat.text_of(val, lang) }}</div>{% endfor %}
+  </div>
+  {% endif %}
+  {% if related %}
+  <div>
+    <h3 style="margin-bottom:8px">{{ t('anatomy.related') }}</h3>
+    <div class="chips">{% for r in related %}<a class="chip" href="{{ S }}/anatomie?s={{ r.id }}{% if side %}&side={{ side }}{% endif %}" data-sheet="{{ S }}/anatomie/{{ r.id }}/blatt{% if side %}?side={{ side }}{% endif %}">{{ anat.name(r, lang) }}</a>{% endfor %}</div>
+  </div>
+  {% endif %}
+  <p class="small muted">{{ icon('info', 16) }}{{ t('anatomy.review_note') if not s.reviewed else t('anatomy.reviewed') }}</p>
+</div>

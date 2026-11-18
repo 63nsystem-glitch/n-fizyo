@@ -1,0 +1,4 @@
+{% macro text(x) %}
+<span dir="auto" lang="{{ x.lang }}">{{ x.text }}</span>
+{% if x.machine %}<details class="small muted" style="margin-top:4px"><summary>{{ icon('translate', 12) }} {{ t('p.machine_translated') }}</summary><span dir="auto">{{ x.original }}</span></details>{% endif %}
+{% endmacro %}

@@ -1,0 +1,42 @@
+{% extends "ui/settings.html" %}
+{% block settings %}
+<div class="grid-main-side">
+  <section class="card flush">
+    <div class="card-head" style="padding:16px 16px 0"><h2>{{ t('agenda.hol.list', year=year, canton=setting.effective) }}</h2>
+      <div class="seg">{% for y in years %}<a href="?jahr={{ y }}"{% if y == year %} aria-current="page"{% endif %}>{{ y }}</a>{% endfor %}</div></div>
+    <div class="table-wrap"><table class="table">
+      <thead><tr><th>{{ t('agenda.date') }}</th><th>{{ t('agenda.hol.name') }}</th><th class="hide-compact">{{ t('agenda.hol.kind_label') }}</th><th>{{ t('agenda.hol.active') }}</th></tr></thead>
+      <tbody>
+      {% for it in items %}{% set h = it.h %}
+        <tr{% if not it.enabled %} style="opacity:.6"{% endif %} data-holiday="{{ h.code }}">
+          <td class="nowrap">{{ fmt_date(h.day, weekday=True) }}</td>
+          <td>{{ t('agenda.hol.' ~ h.code) }}{% if h.from_time %} <span class="small muted">({{ t('agenda.abs.from_time', time=h.from_time) }})</span>{% endif %}
+            {% if h.note %}<br><span class="small muted">{{ t('agenda.hol.note.' ~ h.note) }}</span>{% endif %}</td>
+          <td class="hide-compact"><span class="small">{{ t('agenda.hol.kind.' ~ h.kind) }}</span></td>
+          <td><form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="toggle"><input type="hidden" name="code" value="{{ h.code }}"><input type="hidden" name="jahr" value="{{ year }}"><input type="hidden" name="enabled" value="{{ '0' if it.enabled else '1' }}">
+            <button class="chip{{ ' ok' if it.enabled else '' }}" type="submit" title="{{ t('agenda.hol.switch_off') if it.enabled else t('agenda.hol.switch_on') }}">{{ icon('check' if it.enabled else 'close', 16) }}{{ t('agenda.hol.on') if it.enabled else t('agenda.hol.off') }}</button></form></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+    <p class="small muted" style="padding:12px 16px 16px">{{ t('agenda.hol.source') }}</p>
+  </section>
+  <div class="col">
+    <section class="card">
+      <h2 style="margin-bottom:16px">{{ t('agenda.hol.canton_title') }}</h2>
+      <form method="post" class="form"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="canton"><input type="hidden" name="jahr" value="{{ year }}">
+        <div class="field"><label for="canton">{{ t('agenda.hol.canton_label') }}</label>
+          <select id="canton" name="canton"><option value=""{% if not setting.canton %} selected{% endif %}>{{ t('agenda.hol.canton_default', canton=setting.default) }}</option>
+            {% for c in cantons %}<option value="{{ c }}"{% if setting.canton == c %} selected{% endif %}>{{ c }}</option>{% endfor %}</select>
+          <span class="hint">{{ t('agenda.hol.canton_hint') }}</span></div>
+        <div class="form-actions"><button class="btn" type="submit">{{ t('common.save') }}</button></div>
+      </form>
+    </section>
+    <section class="card">
+      <div class="card-head"><h2>{{ t('agenda.hol.closures') }}</h2><a class="btn text sm" href="{{ S }}/agenda/abwesenheiten">{{ icon('add', 18) }}{{ t('agenda.abs.new') }}</a></div>
+      {% for r in closures %}<p class="small">{{ fmt_date(r.starts_on, weekday=True) }}{% if r.ends_on != r.starts_on %} – {{ fmt_date(r.ends_on, weekday=True) }}{% endif %}{% if r.start_time %} · {{ r.start_time }}–{{ r.end_time }}{% endif %}{% if r.note %} · {{ r.note }}{% endif %}</p>
+      {% else %}<p class="small muted">{{ t('agenda.hol.no_closures') }}</p>{% endfor %}
+    </section>
+  </div>
+</div>
+{% endblock %}

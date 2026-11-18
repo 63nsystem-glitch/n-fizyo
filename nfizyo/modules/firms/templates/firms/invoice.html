@@ -1,0 +1,179 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/firmen/{{ inv.firm_id }}" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('firms.invoice') }}{% if inv.number %} {{ inv.number }}{% endif %}{% endblock %}
+{% block subtitle %}<a href="{{ S }}/firmen/{{ inv.firm_id }}" style="color:inherit">{{ inv.firm_name }}</a>{% if inv.subject %} · {{ inv.subject }}{% endif %}{% endblock %}
+{% block actions %}
+  <span class="pill-label {{ {'draft': 'warn', 'final': 'ok', 'cancelled': 'error'}[inv.status] }}">{% if inv.status != 'draft' %}{{ icon('lock', 14) }} {% endif %}{{ t('firms.status.' ~ inv.status) }}</span>
+  {% if inv.status == 'final' %}<span class="pill-label {{ {'paid': 'ok', 'overdue': 'error', 'partial': 'warn', 'open': 'info'}.get(b.state, '') }}">{{ t('firms.state.' ~ b.state) }}</span>{% endif %}
+  <a class="btn tonal" href="{{ S }}/firmen/rechnungen/{{ inv.id }}/pdf" target="_blank" rel="noopener">{{ icon('picture_as_pdf', 18) }}<span>PDF</span></a>
+  {% if inv.status == 'final' %}
+  <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="email">
+    <button class="btn tonal" type="submit"{% if not firm.email %} disabled title="{{ t('firms.mail_missing') }}"{% else %} title="{{ t('firms.mail_last', date=fmt_date(emailed)) if emailed else firm.email }}"{% endif %}>{{ icon('mail', 18) }}<span>{{ t('firms.mail_btn') }}{% if emailed %} ✓{% endif %}</span></button></form>
+  {% endif %}
+{% endblock %}
+{% block content %}
+{% set edit = inv.status == 'draft' %}
+<div class="grid-main-side">
+  <div class="col stack">
+    {% for p in problems %}<div class="banner warn">{{ icon('warning', 20) }}<div>{{ t('firms.problem.' ~ p) }}{% if p == 'firm_address' %} <a href="{{ S }}/firmen/{{ inv.firm_id }}">{{ t('firms.master') }}</a>{% endif %}</div></div>{% endfor %}
+    {% if inv.status == 'cancelled' %}<div class="banner error">{{ icon('info', 20) }}<div>{{ t('firms.cancelled_on', date=fmt_date(inv.cancelled_at), reason=inv.cancel_reason) }}</div></div>{% endif %}
+    {% if edit %}
+    <section class="card">
+      <form method="post" class="form">
+        <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="head">
+        <div class="row" style="gap:8px;flex-wrap:wrap">
+          <div class="field grow"><label for="hsub">{{ t('firms.subject') }}</label><input id="hsub" name="subject" maxlength="160" value="{{ inv.subject or '' }}" placeholder="{{ t('firms.subject_ph') }}"></div>
+          <div class="field"><label for="href">{{ t('firms.f.their_reference') }}</label><input id="href" name="their_reference" maxlength="80" value="{{ inv.their_reference or '' }}"></div>
+        </div>
+        <div class="row" style="gap:8px;flex-wrap:wrap;align-items:flex-end">
+          <div class="field"><label for="hpf">{{ t('firms.period_from') }}</label><input id="hpf" name="period_from" type="date" value="{{ inv.period_from or '' }}"></div>
+          <div class="field"><label for="hpt">{{ t('firms.period_to') }}</label><input id="hpt" name="period_to" type="date" value="{{ inv.period_to or '' }}"></div>
+          <div class="field"><label for="hlang">{{ t('firms.f.lang') }}</label><select id="hlang" name="lang">{% for l in ('de', 'fr') %}<option value="{{ l }}"{% if inv.lang == l %} selected{% endif %}>{{ t('firms.lang_' ~ l) }}</option>{% endfor %}</select></div>
+          <button class="btn tonal" type="submit">{{ t('common.save') }}</button>
+        </div>
+      </form>
+    </section>
+    {% endif %}
+    <section class="card flush">
+      <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>{{ t('firms.col_date') }}</th><th>{{ t('firms.col_label') }}</th><th class="num">{{ t('firms.col_qty') }}</th><th class="num">{{ t('firms.col_price') }}</th><th class="num">{{ t('firms.col_vat') }}</th><th class="num">CHF</th>{% if edit %}<th></th>{% endif %}</tr></thead>
+        <tbody>
+        {% for l in lines %}
+        <tr>
+          <td style="white-space:nowrap">{{ fmt_date(l.service_date) if l.service_date else '–' }}</td>
+          <td>{{ l.label }}{% if l.code %} <span class="small muted mono">{{ l.code }}</span>{% endif %}{% if l.kind == 'product' %} <span class="pill-label">{{ t('firms.kind_product') }}</span>{% endif %}</td>
+          {% if edit %}
+          {# eine Zelle je Spalte: Menge unter «Menge», Preis + Speichern unter «Preis» (Formular über das form-Attribut) #}
+          <td class="num"><form id="lf{{ l.id }}" method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="line"><input type="hidden" name="line_id" value="{{ l.id }}"></form>
+            <input name="quantity" form="lf{{ l.id }}" value="{{ l.quantity | num }}" inputmode="decimal" class="select-sm" style="width:64px;text-align:end" aria-label="{{ t('firms.col_qty') }}"></td>
+          <td class="num"><input name="unit_price" form="lf{{ l.id }}" value="{{ '%.2f' | format(l.unit_price) }}" inputmode="decimal" class="select-sm" style="width:90px;text-align:end" aria-label="{{ t('firms.col_price') }}"></td>
+          {% else %}
+          <td class="num">{{ l.quantity | num }}</td><td class="num mono">{{ l.unit_price | money }}</td>
+          {% endif %}
+          <td class="num mono">{{ (l.vat_rate | num) ~ ' %' if l.vat_rate else '–' }}</td>
+          <td class="num mono">{{ l.amount_chf | money }}</td>
+          {% if edit %}
+          <td><span class="row" style="gap:2px;flex-wrap:nowrap">
+            <button class="icon-btn" type="submit" form="lf{{ l.id }}" aria-label="{{ t('common.save') }}" title="{{ t('common.save') }}">{{ icon('check', 20) }}</button>
+            <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="remove"><input type="hidden" name="line_id" value="{{ l.id }}">
+            <button class="icon-btn" type="submit" aria-label="{{ t('common.delete') }}" title="{{ t('common.delete') }}">{{ icon('delete', 20) }}</button></form></span></td>
+          {% endif %}
+        </tr>
+        {% else %}
+        <tr><td colspan="{{ 7 if edit else 6 }}" class="muted small">{{ t('firms.no_lines') }}</td></tr>
+        {% endfor %}
+        </tbody>
+        <tfoot><tr><td colspan="5"><strong>{{ t('firms.total') }}</strong></td><td class="num mono"><strong>{{ inv.total_chf | money }}</strong></td>{% if edit %}<td></td>{% endif %}</tr>
+          {% for v in vat %}<tr><td colspan="5" class="small muted">{{ t('firms.vat_incl', rate=pct(v.rate)) }}</td><td class="num mono small muted">{{ v.vat | money }}</td>{% if edit %}<td></td>{% endif %}</tr>{% endfor %}</tfoot>
+      </table>
+      </div>
+    </section>
+    {% if edit %}
+    <section class="card stack-s">
+      <h2>{{ t('firms.add_item') }}</h2>
+      {% if items %}
+      <form method="post" class="row" style="gap:8px;align-items:flex-end;flex-wrap:wrap">
+        <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="item">
+        <div class="field grow"><label for="iitem">{{ t('firms.price_item') }}</label>
+          <select id="iitem" name="item_id">{% for it in items %}<option value="{{ it.id }}">{{ it.code }} · {{ it.name_fr if inv.lang == 'fr' and it.name_fr else it.name_de }} · {{ chf(it.price_chf) }}</option>{% endfor %}</select></div>
+        <div class="field" style="width:88px"><label for="iqty">{{ t('firms.col_qty') }}</label><input id="iqty" name="quantity" value="1" inputmode="decimal"></div>
+        <div class="field"><label for="idate">{{ t('firms.col_date') }}</label><input id="idate" name="service_date" type="date" value="{{ today }}"></div>
+        <button class="btn tonal" type="submit">{{ icon('add', 18) }}{{ t('firms.add') }}</button>
+      </form>
+      {% else %}<p class="small muted">{{ t('firms.no_price_items') }}</p>{% endif %}
+      <details{% if not items %} open{% endif %}><summary class="disclose">{{ t('firms.add_free') }}</summary>
+        <form method="post" class="form" style="margin-top:8px">
+          <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="free">
+          <div class="field"><label for="flabel">{{ t('firms.col_label') }}</label><input id="flabel" name="label" required maxlength="200" placeholder="{{ t('firms.free_ph') }}"></div>
+          <div class="row" style="gap:8px;flex-wrap:wrap;align-items:flex-end">
+            <div class="field" style="width:88px"><label for="fqty">{{ t('firms.col_qty') }}</label><input id="fqty" name="quantity" value="1" inputmode="decimal" required></div>
+            <div class="field" style="width:120px"><label for="fprice">{{ t('firms.unit_price') }}</label><input id="fprice" name="unit_price" inputmode="decimal" required></div>
+            {% if vat_allowed %}<div class="field"><label for="fvat">{{ t('firms.col_vat') }}</label><select id="fvat" name="vat_rate">{% for r in vat_rates %}<option value="{{ r }}">{{ pct(r) if r else t('firms.no_vat_short') }}</option>{% endfor %}</select></div>{% endif %}
+            <div class="field"><label for="fkind">{{ t('firms.kind') }}</label><select id="fkind" name="kind"><option value="service">{{ t('firms.kind_service') }}</option><option value="product">{{ t('firms.kind_product') }}</option></select></div>
+            <div class="field"><label for="fdate">{{ t('firms.col_date') }}</label><input id="fdate" name="service_date" type="date" value="{{ today }}"></div>
+            <button class="btn tonal" type="submit">{{ icon('add', 18) }}{{ t('firms.add') }}</button>
+          </div>
+          <p class="hint">{{ t('firms.price_hint') if vat_allowed else t('firms.no_vat_hint') }}</p>
+        </form>
+      </details>
+    </section>
+    {% endif %}
+    {% if payments %}
+    <section class="card flush">
+      <h2 style="padding:16px 16px 8px">{{ t('firms.pay.list') }}</h2>
+      <div class="table-wrap"><table class="table"><thead><tr><th>{{ t('firms.col_date') }}</th><th>{{ t('firms.pay.source') }}</th><th>{{ t('firms.pay.from') }}</th><th class="num">CHF</th></tr></thead><tbody>
+      {% for pm in payments %}<tr><td>{{ fmt_date(pm.booked_on) }}</td><td>{{ t('firms.pay.src_' ~ pm.source) }} · {{ t('firms.pay.method_' ~ pm.method) }}{% if pm.note %} · {{ pm.note }}{% endif %}</td><td>{{ pm.debtor or '–' }}</td><td class="num mono">{{ pm.amount_chf | money }}</td></tr>{% endfor %}
+      </tbody></table></div>
+    </section>
+    {% endif %}
+  </div>
+  <div class="col stack">
+    <section class="card stack-s">
+      <h2>{{ t('firms.details') }}</h2>
+      <dl class="facts">
+        <dt>{{ t('firms.firm') }}</dt><dd>{{ firm.name }}{% if firm.department %}<br><span class="small muted">{{ firm.department }}</span>{% endif %}</dd>
+        {% if inv.their_reference %}<dt>{{ t('firms.f.their_reference') }}</dt><dd>{{ inv.their_reference }}</dd>{% endif %}
+        {% if inv.period_from %}<dt>{{ t('firms.period') }}</dt><dd>{{ date_range(inv.period_from, inv.period_to) }}</dd>{% endif %}
+        <dt>{{ t('firms.f.lang') }}</dt><dd>{{ t('firms.lang_' ~ inv.lang) }}</dd>
+        {% if inv.vat_number %}<dt>{{ t('firms.vat_number') }}</dt><dd class="mono">{{ inv.vat_number }}</dd>{% endif %}
+        <dt>{{ t('firms.created') }}</dt><dd>{{ inv.creator_name }} · {{ fmt_date(inv.created_at) }}</dd>
+        {% if inv.finalized_at %}<dt>{{ t('firms.finalized_at') }}</dt><dd>{{ fmt_date(inv.finalized_at) }}</dd>{% endif %}
+      </dl>
+      {% if edit %}
+      {% if can_finalize %}
+      <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="finalize">
+        <button class="btn block" type="submit"{% if problems %} disabled{% endif %}>{{ icon('lock', 18) }}{{ t('firms.finalize') }}</button></form>
+      <p class="small muted">{{ t('firms.finalize_hint') }}</p>
+      {% else %}
+      <div class="banner info">{{ icon('info', 20) }}<span>{{ t('firms.to_control') }}</span></div>
+      {% endif %}
+      <form method="post" data-confirm="{{ t('firms.delete_confirm') }}" data-confirm-yes="{{ t('common.delete') }}"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="delete">
+        <button class="btn text sm" type="submit" style="color:var(--error)">{{ icon('delete', 18) }}{{ t('firms.delete') }}</button></form>
+      {% elif can_finalize and inv.status == 'final' %}
+      <details><summary class="disclose">{{ t('firms.cancel') }}</summary>
+        <form method="post" class="form" style="margin-top:8px"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="cancel">
+          <div class="field"><label for="reason">{{ t('firms.cancel_reason') }}</label><input id="reason" name="reason" required maxlength="200"></div>
+          <button class="btn outlined" type="submit">{{ t('firms.cancel') }}</button></form></details>
+      {% endif %}
+    </section>
+    {% if inv.status == 'final' %}
+    <section class="card stack-s">
+      <h2>{{ t('firms.pay.title') }}</h2>
+      <dl class="facts">
+        <dt>{{ t('firms.due') }}</dt><dd>{{ fmt_date(inv.due_on) if inv.due_on else '–' }}</dd>
+        <dt>{{ t('firms.pay.paid') }}</dt><dd class="mono">{{ chf(b.paid) }}</dd>
+        {% if b.fees %}<dt>{{ t('firms.pay.fees') }}</dt><dd class="mono">{{ chf(b.fees) }}</dd>{% endif %}
+        <dt>{{ t('firms.pay.open') }}</dt><dd class="mono"><strong>{{ chf(b.open) }}</strong></dd>
+        {% if b.overpaid %}<dt>{{ t('firms.pay.overpaid') }}</dt><dd class="mono">{{ chf(b.overpaid) }}</dd>{% endif %}
+        {% if inv.qr_reference %}<dt>{{ t('firms.pay.reference') }}</dt><dd class="mono small" style="user-select:all">{{ ref }}</dd>{% endif %}
+      </dl>
+      <p class="small muted">{{ t('firms.pay.camt_hint') }}</p>
+      {% if b.open > 0 %}
+      <details><summary class="disclose">{{ t('firms.pay.add') }}</summary>
+        <form method="post" class="form" style="margin-top:8px"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="payment">
+          <div class="row" style="gap:8px;flex-wrap:wrap">
+            <div class="field" style="width:120px"><label for="pamt">CHF</label><input id="pamt" name="amount" inputmode="decimal" required value="{{ '%.2f' | format(b.open) }}"></div>
+            <div class="field"><label for="pdate">{{ t('firms.col_date') }}</label><input id="pdate" name="booked_on" type="date" value="{{ today }}" required></div>
+            <div class="field"><label for="pmeth">{{ t('firms.pay.method') }}</label><select id="pmeth" name="method">{% for m in methods %}<option value="{{ m }}">{{ t('firms.pay.method_' ~ m) }}</option>{% endfor %}</select></div>
+          </div>
+          <div class="field"><label for="pnote">{{ t('firms.pay.note') }}</label><input id="pnote" name="note" maxlength="200"></div>
+          <button class="btn tonal" type="submit">{{ t('common.save') }}</button>
+        </form></details>
+      {% endif %}
+    </section>
+    <section class="card stack-s">
+      <h2>{{ t('firms.rem.title') }}</h2>
+      {% for r in reminders %}
+      <div class="row-between"><span>{{ t('firms.rem.level_' ~ r.level) }} · {{ fmt_date(r.created_at) }}{% if r.fee_chf %} · {{ chf(r.fee_chf) }}{% endif %}</span>
+        <a class="btn text sm" href="{{ S }}/firmen/rechnungen/{{ inv.id }}/mahnung/{{ r.level }}/pdf" target="_blank" rel="noopener">{{ icon('picture_as_pdf', 16) }}PDF</a></div>
+      {% else %}<p class="small muted">{{ t('firms.rem.none') }}</p>{% endfor %}
+      {% if next_reminder %}
+      <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="reminder"><input type="hidden" name="level" value="{{ next_reminder }}">
+        <button class="btn outlined block" type="submit">{{ icon('assignment_late', 18) }}{{ t('firms.rem.create_' ~ next_reminder) }}</button></form>
+      {% endif %}
+    </section>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

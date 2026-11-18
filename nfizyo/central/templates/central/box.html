@@ -1,0 +1,87 @@
+{% extends "central/layout.html" %}
+{% block content %}
+<h1 style="margin-bottom:4px">{{ box.name }}</h1>
+<p class="small muted mono" style="margin-bottom:16px">{{ box.id }} · Version {{ box.last_version or '–' }} · {% if age is none %}noch keine Meldung{% else %}letzte Meldung vor {{ age }} min{% endif %}</p>
+{% if flash == 'command' %}<div class="banner ok" style="margin-bottom:12px">{{ icon('check_circle', 20) }}<span>Befehl signiert. Die Box holt ihn mit der nächsten Meldung ab (max. 5 Minuten).</span></div>
+{% elif flash == 'scheduled' %}<div class="banner ok" style="margin-bottom:12px">{{ icon('check_circle', 20) }}<span>Befehl signiert und geplant. Die Box bekommt ihn erst zur gewählten Zeit.</span></div>
+{% elif flash == 'cancelled' %}<div class="banner ok" style="margin-bottom:12px">{{ icon('check_circle', 20) }}<span>Geplanter Befehl abgebrochen.</span></div>
+{% elif flash == 'code' %}<div class="banner error" style="margin-bottom:12px">{{ icon('error', 20) }}<span>Code aus der App stimmt nicht – kein Befehl ausgestellt.</span></div>
+{% elif flash == 'release' %}<div class="banner error" style="margin-bottom:12px">{{ icon('error', 20) }}<span>Version nicht im signierten Release-Index.</span></div>
+{% elif flash == 'past' %}<div class="banner error" style="margin-bottom:12px">{{ icon('error', 20) }}<span>Zeitpunkt liegt in der Vergangenheit.</span></div>
+{% elif flash == 'invalid' %}<div class="banner error" style="margin-bottom:12px">{{ icon('error', 20) }}<span>Ungültiger Befehl.</span></div>{% endif %}
+<div class="grid-main-side">
+  <div class="col stack">
+    <section class="card stack-s">
+      <h2>Supportzugang</h2>
+      {% if support.open %}
+      <p><span class="pill-label warn">Support offen bis {{ local(support.until) }}</span> – von der Leitung der Praxis geöffnet.</p>
+      {% if box.wg_ip %}<p class="small">Verbinden: <span class="mono">ssh{% if ssh_host %} -J {{ ssh_host }}{% endif %} nfizyo-support@{{ box.wg_ip }}</span> (nur das Support-Werkzeug, keine Daten).</p>{% endif %}
+      {% elif support.configured %}<p class="small">Geschlossen. Nur die Leitung der Praxis kann ihn öffnen (Einstellungen › NSystem oder mit einer Support-Anfrage).</p>
+      {% else %}<p class="small muted">Nicht eingerichtet{% if box.wg_ip %} (Tunnel-Adresse {{ box.wg_ip }} vergeben, Einstellungen noch nicht auf der Box){% endif %}. Einrichtung: <span class="mono">support-peer</span>, docs/MERKEZ.md.</p>{% endif %}
+      {% if events %}<details{% if support.open %} open{% endif %}><summary class="small">Protokoll der Box (Supportzugang, Anfragen, Hinweise)</summary>
+        <div class="table-wrap"><table class="table"><tbody>
+        {% for e in events %}<tr><td class="small">{{ local(e.at) }}</td><td class="small">{{ event_labels.get(e.kind, e.kind) }}{% if e.data.until %} bis {{ local(e.data.until) }}{% endif %}{% if e.data.reason %} ({{ close_reasons.get(e.data.reason, e.data.reason) }}){% endif %}{% if e.data.cmd %}: <span class="mono">{{ e.data.cmd }}</span>{% endif %}{% if e.data.error %}: {{ e.data.error }}{% endif %}</td></tr>{% endfor %}
+        </tbody></table></div></details>{% endif %}
+    </section>
+    <section class="card stack-s">
+      <h2>Checkliste</h2>
+      {% for c in check %}<p class="row" style="gap:8px;color:{{ '#1b8a3a' if c.ok else ('#ba1a1a' if c.required else 'inherit') }}">{{ icon('check_circle' if c.ok else ('error' if c.required else 'radio_button_unchecked'), 20) }}<span>{{ c.label }}{% if not c.required %} <span class="small muted">(optional)</span>{% endif %}</span></p>{% endfor %}
+    </section>
+    <section class="card stack-s">
+      <h2>Praxen auf dieser Box</h2>
+      {% for p in rep.get('practices') or [] %}<p>{{ p.name }}{% if p.demo %} <span class="pill-label">Demo</span>{% endif %} · {{ p.staff }} Konten{% if p.staff_without_2fa %} · <span class="pill-label warn">{{ p.staff_without_2fa }} ohne 2FA</span>{% endif %}
+        · GLN {{ '✓' if p.has_gln else '✗' }} · Adresse {{ '✓' if p.has_address else '✗' }} · IBAN {{ '✓' if p.has_iban else '✗' }}</p>{% else %}<p class="muted">–</p>{% endfor %}
+    </section>
+    <section class="card" style="padding:0;overflow:hidden">
+      <h2 style="padding:16px 16px 8px">Befehle</h2>
+      <div class="table-wrap"><table class="table"><thead><tr><th>Zeit</th><th>Wer</th><th>Aktion</th><th>Status</th></tr></thead><tbody>
+      {% for c in commands %}<tr><td>{{ c.issued_at[:16].replace('T', ' ') }}{% if c.deliver_after %}<br><span class="small muted">geplant {{ local(c.deliver_after) }}</span>{% endif %}</td><td>{{ c.issued_by }}</td><td>{{ actions.get(c.action, c.action) }}{% if c.action == 'update' %}<br><span class="small mono">{{ c.args }}</span>{% endif %}</td>
+        <td><span class="pill-label {{ {'done': 'ok', 'failed': 'error', 'rejected': 'error', 'expired': '', 'pending': 'info', 'delivered': 'info', 'running': 'warn'}.get(c.status, '') }}">{{ c.status }}</span>
+          {% if c.status == 'pending' and c.deliver_after and c.deliver_after > now_ts %}<form method="post" action="/box/{{ box.id }}/befehl/{{ c.id }}/abbrechen" style="display:inline"><input type="hidden" name="_csrf" value="{{ csrf }}"><button class="btn text sm" type="submit">Abbrechen</button></form>{% endif %}
+          {% if c.result %}<details><summary class="small">Ergebnis</summary><pre class="json">{{ c.result }}</pre></details>{% endif %}</td></tr>
+      {% else %}<tr><td colspan="4" class="muted">Noch keine Befehle.</td></tr>{% endfor %}
+      </tbody></table></div>
+    </section>
+    <section class="card"><details><summary>Letzte Meldung (technisch)</summary><pre class="json">{{ rep | tojson_pretty }}</pre></details></section>
+  </div>
+  <div class="col stack">
+    <section class="card stack-s">
+      <h2>Befehl senden</h2>
+      <p class="small muted">Nur diese Liste. Die Leitung der Praxis sieht jeden Befehl. Passwörter setzt NSystem nie zurück. Supportzugang öffnet nur die Praxis.</p>
+      <form method="post" action="/box/{{ box.id }}/befehl" class="form"><input type="hidden" name="_csrf" value="{{ csrf }}">
+        <div class="field"><label for="a">Aktion</label><select id="a" name="action">{% for k, v in actions.items() %}<option value="{{ k }}">{{ v }}</option>{% endfor %}</select></div>
+        <fieldset class="stack-s" style="border:1px solid var(--outline-variant, #ccd);border-radius:12px;padding:12px">
+          <legend class="small">Für «Neue Version»</legend>
+          {% if releases %}
+          <div class="field"><label for="rel">Version (signierter Index)</label><select id="rel" name="release">
+            {% for m in releases %}<option value="{{ m.version }}"{% if loop.first %} selected{% endif %}>{{ m.version }} · {{ m.built_at[:10] }}{% if m.version == box.last_version %} (installiert){% endif %}</option>{% endfor %}</select></div>
+          {% for m in releases[:3] %}<details{% if loop.first %} open{% endif %}><summary class="small">{{ m.version }} – Änderungen</summary>
+            <ul class="small" style="padding-inline-start:18px">{% for line in m.changelog %}<li>{{ line }}</li>{% else %}<li class="muted">kein Auszug</li>{% endfor %}</ul>
+            <p class="small muted mono">SHA-256 {{ m.sha256[:16] }}… · {{ (m.size / 1e6) | round(1) }} MB{% if m.migrations %} · Datenbank-Stand: {% for k, v in m.migrations.items() %}{{ k }} {{ v[:3] }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}</p></details>{% endfor %}
+          {% elif release_error %}<p class="small" style="color:#ba1a1a">{{ release_error }}</p>
+          {% else %}<p class="small muted">Keine Release-Ablage eingerichtet (NFIZYO_CENTRAL_RELEASE_DIR/_BASE, _PUBKEY).</p>{% endif %}
+          <div class="field"><label for="w">Zeitpunkt (leer = sofort)</label><input id="w" type="datetime-local" name="when"></div>
+          <label class="small" style="display:flex;gap:8px;align-items:flex-start"><input type="checkbox" name="notice" value="1" checked style="width:auto;margin-top:2px"><span>Wartungshinweis an die Praxis (de/fr, ab jetzt bis 45 min nach dem Update)</span></label>
+          <details><summary class="small">Datei von Hand (nur wenn kein Index)</summary>
+            <div class="field"><label for="f">Datei (n-fizyo-X.Y.Z.tar.gz)</label><input id="f" name="file" placeholder="n-fizyo-0.9.0.tar.gz"></div>
+            <div class="field"><label for="s">SHA-256 der Datei</label><input id="s" name="sha256" class="mono" maxlength="64"></div></details>
+        </fieldset>
+        <div class="field"><label for="c">Bestätigen: Code aus der App</label><input id="c" name="code" required inputmode="numeric" autocomplete="one-time-code"></div>
+        <button class="btn block" type="submit">{{ icon('send', 18) }}Signieren und senden</button>
+      </form>
+    </section>
+    <section class="card stack-s">
+      <h2>Support-Anfragen</h2>
+      {% for q in requests %}<p class="small"><a href="/support/{{ q.id }}">{{ areas.get(q.area, q.area) }}</a> · {{ urgencies.get(q.urgency, q.urgency) }} · <span class="pill-label {{ 'error' if q.status == 'new' else ('warn' if q.status == 'in_progress' else 'ok') }}">{{ statuses.get(q.status) }}</span> <span class="muted">· {{ local(q.received_at) }}</span></p>{% else %}<p class="muted small">Keine.</p>{% endfor %}
+    </section>
+    <section class="card stack-s">
+      <h2>Wartungshinweise</h2>
+      {% for n in notices %}<p class="small">{{ n.text_de }} <span class="muted">· {{ local(n.starts_at) }} – {{ local(n.ends_at) }}</span></p>{% else %}<p class="muted small">Keine. <a href="/hinweise">Neuer Hinweis</a></p>{% endfor %}
+    </section>
+    <section class="card stack-s">
+      <h2>Warnungen</h2>
+      {% for a in alerts %}<p class="small">{% if a.closed_at %}<span class="muted">erledigt</span>{% else %}<span class="pill-label error">offen</span>{% endif %} {{ a.message }} <span class="muted">· {{ a.opened_at[:16].replace('T', ' ') }}{% if a.pushed %} · Push{% endif %}</span></p>{% else %}<p class="muted small">Keine.</p>{% endfor %}
+    </section>
+  </div>
+</div>
+{% endblock %}

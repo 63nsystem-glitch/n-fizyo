@@ -1,0 +1,47 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S ~ '/patienten/' ~ patient.id ~ '/termine' if patient else S ~ '/agenda' }}" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('agenda.series') }}{% endblock %}
+{% block subtitle %}{% if patient %}{{ patient.first_name }} {{ patient.last_name }} · {% if remaining is not none %}{{ t('agenda.remaining_of', n=remaining, total=prescribed) }}{% else %}{{ t('agenda.no_rx') }}{% endif %}{% else %}{{ t('agenda.series_hint') }}{% endif %}{% endblock %}
+{% block content %}
+<form method="post" action="{{ S }}/agenda/serie" class="stack" style="max-width:960px">
+  {% include "agenda/_form.html" %}
+  {% if patient and remaining == 0 %}<div class="banner warn" role="status" data-rx-used>{{ icon('warning') }}<span>{{ t('agenda.rx_used_up', total=prescribed) }}</span></div>
+  {% elif exceeds %}<div class="banner warn" role="status" data-exceeds>{{ icon('warning') }}<span>{{ t('agenda.series_exceeds', n=planned, r=remaining) }}</span></div>{% endif %}
+  <section class="card"><div class="form-grid">
+    <div class="field" style="grid-column:1/-1"><label for="patient">{{ t('agenda.patient') }}</label><input id="patient" name="patient" list="patients-dl" value="{{ p.patient or '' }}" required autocomplete="off"></div>
+    <div class="field"><label for="therapist_id">{{ t('agenda.therapist') }}</label><select id="therapist_id" name="therapist_id">{% for th in therapists %}<option value="{{ th.id }}"{% if (p.therapist_id | string) == (th.id | string) or (not p.therapist_id and ((patient and th.id == patient.therapist_id) or (not (patient and patient.therapist_id) and th.id == user.id))) %} selected{% endif %}>{{ th.name }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="start">{{ t('agenda.from') }}</label><input id="start" name="start" type="date" value="{{ p.start or '' }}" required></div>
+    <div class="field"><label for="time">{{ t('agenda.time') }}</label><input id="time" name="time" type="time" step="300" value="{{ p.time or '08:00' }}" required></div>
+    <div class="field"><label for="count">{{ t('agenda.count') }}</label><input id="count" name="count" type="number" min="1" max="36" value="{{ p.count or default_count }}">
+      {% if remaining is not none %}<span class="hint">{{ t('agenda.count_hint', r=remaining) }}</span>{% endif %}</div>
+    <div class="field"><label for="tt">{{ t('agenda.type') }}</label><select id="tt" name="treatment_type_id">{% for tt in types %}<option value="{{ tt.id }}"{% if (p.treatment_type_id | string) == (tt.id | string) %} selected{% endif %}>{{ tt.name_fr if lang == 'fr' else tt.name_de }} · {{ tt.minutes }} min</option>{% endfor %}</select></div>
+    <div class="field"><label for="location_id">{{ t('agenda.location') }}</label><select id="location_id" name="location_id">{% for l in locations %}<option value="{{ l.id }}"{% if (p.location_id | string) == (l.id | string) %} selected{% endif %}>{{ l.name }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="room_id">{{ t('agenda.room') }}</label><select id="room_id" name="room_id"><option value="">–</option>{% for r in rooms %}<option value="{{ r.id }}"{% if (p.room_id | string) == (r.id | string) %} selected{% endif %}>{{ r.location_name }} · {{ r.name }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="device_id">{{ t('agenda.device') }}</label><select id="device_id" name="device_id"><option value="">–</option>{% for d in devices %}<option value="{{ d.id }}"{% if (p.device_id | string) == (d.id | string) %} selected{% endif %}>{{ d.location_name }} · {{ d.name }}</option>{% endfor %}</select></div>
+  </div>
+  <fieldset style="border:0;padding:0;margin:16px 0 0"><legend class="small muted" style="margin-bottom:8px">{{ t('agenda.weekdays') }}</legend>
+    <div class="chips">
+      {% for i in range(6) %}<label class="chip"><input type="checkbox" name="weekday" value="{{ i }}"{% if i in weekdays_selected %} checked{% endif %}> {{ wd_names[i] }}</label>{% endfor %}
+    </div></fieldset>
+  </section>
+  {% if preview %}
+  <section class="card">
+    <div class="card-head"><h2>{{ t('agenda.preview') }}</h2><span class="meta">{{ t('agenda.preview_meta', n=preview | rejectattr('skipped') | list | length, c=preview | selectattr('conflicts') | list | length) }}{% if n_skipped %} · {{ t('agenda.preview_skipped', n=n_skipped) }}{% endif %}</span></div>
+    {% if n_skipped %}<p class="small muted" style="margin-bottom:8px">{{ t('agenda.skipped_hint') }}</p>{% endif %}
+    <div class="table-wrap"><table class="table"><thead><tr><th>#</th><th>{{ t('agenda.date') }}</th><th>{{ t('agenda.time') }}</th><th>{{ t('agenda.status') }}</th></tr></thead><tbody>
+      {% set ns = namespace(n=0) %}
+      {% for it in preview %}{% if not it.skipped %}{% set ns.n = ns.n + 1 %}{% endif %}
+      <tr{% if it.skipped %} style="opacity:.7" data-skipped{% endif %}><td>{{ '' if it.skipped else ns.n }}</td><td>{{ fmt_date(it.start, weekday=True) }}</td><td class="mono">{{ fmt_time(it.start) }}–{{ fmt_time(it.end) }}</td>
+        <td>{% if it.skipped %}<span class="pill-label warn">{{ t('agenda.skipped') }}: {{ it.skipped | join(' · ') }}</span>
+          {% elif it.conflicts %}<span class="pill-label error">{{ t('agenda.conflict_' ~ it.conflicts[0].kind) }}</span>{% elif it.outside %}<span class="pill-label warn">{{ t('agenda.outside_hours_short') }}</span>{% else %}<span class="pill-label ok">{{ t('agenda.free') }}</span>{% endif %}
+          {% if not it.skipped and remaining is not none and ns.n > remaining %} <span class="pill-label error sm" data-beyond-rx>{{ t('agenda.beyond_rx') }}</span>{% endif %}</td></tr>{% endfor %}
+    </tbody></table></div>
+    <label class="check" style="margin-top:12px"><input type="checkbox" name="skip_conflicts" value="1" checked>{{ t('agenda.skip_conflicts') }}</label>
+  </section>
+  {% endif %}
+  <div class="form-actions">
+    <button class="btn outlined" type="submit" name="preview" value="1">{{ icon('visibility', 18) }}{{ t('agenda.check') }}</button>
+    {% if preview %}<button class="btn" type="submit" name="create" value="1">{{ icon('event_available', 18) }}{{ t('agenda.create_series') }}</button>{% endif %}
+  </div>
+</form>
+{% endblock %}

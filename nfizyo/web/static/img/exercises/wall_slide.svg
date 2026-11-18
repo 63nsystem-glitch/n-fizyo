@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <title>Wandrutschen</title>
+  <g id="fig" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 186 L300 186" stroke-width="3" opacity="0.3"/>
+    <path d="M192.7 186 L192.7 8" stroke-width="5" opacity="0.45"/>
+    <path d="M157.8 58.8 L184.7 70.8 L184.7 44.1" stroke-width="10" opacity="0.2"/>
+    <path d="M153 104.6 L157.8 58.8" stroke-width="13"/>
+    <path d="M157.8 58.8 L160 43.3" stroke-width="10"/>
+    <circle cx="160" cy="43.3" r="10.1" fill="currentColor" stroke="none"/>
+    <path d="M153 104.6 L151 143.2 L150 180" stroke-width="10"/>
+    <path d="M150 180 L162.9 182" stroke-width="8"/>
+    <path d="M157.8 58.8 L182.5 42.8 L184.7 16.1" stroke-width="10" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M212.7 66.8 L212.7 25.6" stroke-width="4" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M212.7 20.1 L217.3 29 L208.1 29 Z" stroke-width="2.5" style="fill:var(--ex-accent, #D9661F);stroke:var(--ex-accent, #D9661F)"/>
+  </g>
+</svg>

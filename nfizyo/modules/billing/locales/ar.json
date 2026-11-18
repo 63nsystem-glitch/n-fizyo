@@ -1,0 +1,8 @@
+{
+  "p": {
+    "mail": {
+      "invoice_subject": "الفاتورة {number}",
+      "invoice_body": "مرحبًا {name}\n\nتجد في المرفق الفاتورة {number} بمبلغ {amount} فرنك سويسري. يُرجى الدفع بقسيمة الدفع QR حتى {due}.\n\nمع أطيب التحيات\n{practice}"
+    }
+  }
+}

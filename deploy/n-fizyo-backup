@@ -1,0 +1,314 @@
+#!/usr/bin/env bash
+# N-Fizyo – tägliche Sicherung: konsistente Kopie der Datenbank (auch im Betrieb) + Dateien der Praxis
+# (Dokumente, eigene Übungsvideos, noch nicht freigegebene Diktate). Alte Sicherungen nach 30 Tagen löschen – nie die
+# Sicherung von vor dem letzten Update (/opt/n-fizyo/.last-update-backup, für update.sh --rollback).
+# Optional (0.9.0): jede Sicherung zusätzlich VERSCHLÜSSELT an ein externes Ziel (anderer Ort, z. B. Speicher in der Schweiz).
+# Wird von install.sh und update.sh nach /usr/local/sbin/n-fizyo-backup kopiert. Wiederherstellen: deploy/restore.sh
+#
+#   n-fizyo-backup                                   # Sicherung (+ externe Kopie, falls eingerichtet)
+#   n-fizyo-backup --offsite-keygen                  # Schlüsseldatei erzeugen (root, 0600; überschreibt nie)
+#   n-fizyo-backup --offsite-test                    # externes Ziel prüfen: Testdatei hin und zurück (keine Patientendaten)
+#   n-fizyo-backup --offsite-list                    # vollständige Sätze am externen Ziel (neueste zuerst)
+#   n-fizyo-backup --offsite-upload <Sicherungsordner>        # einen vorhandenen Satz (nochmals) hochladen
+#   n-fizyo-backup --offsite-fetch <Name|latest> <Ordner>     # holen, Prüfsumme, entschlüsseln, auspacken (für restore.sh)
+#
+# Einstellungen für die externe Kopie in /etc/n-fizyo/n-fizyo.env (oder als Umgebungsvariable), Anleitung docs/YEDEK.md:
+#   NFIZYO_OFFSITE_TARGET=rclone:<remote>:<pfad>  |  benutzer@host:/pfad (rsync über SSH)  |  /mnt/ordner (eingehängt)
+#   NFIZYO_OFFSITE_KEY_FILE=/etc/n-fizyo/offsite.key   (Passphrase, nur root lesbar – nie im Git, nie im Chat)
+#   NFIZYO_OFFSITE_KEEP=14                         (so viele Sätze bleiben extern liegen)
+#   NFIZYO_OFFSITE_SSH_KEY=/root/.ssh/n-fizyo-offsite   (nur rsync/SSH)
+#   NFIZYO_OFFSITE_RCLONE_CONFIG=/root/.config/rclone/rclone.conf   (nur rclone, optional)
+# Verschlüsselung: GnuPG symmetrisch, AES-256 (Ubuntu-Paket gnupg). Ohne die Schlüsseldatei ist eine Kopie wertlos –
+# Papierkopie der Passphrase im Tresor der Praxis aufbewahren.
+# Zustand (ohne Patientendaten: ok/fehlgeschlagen, Zeit, Grösse) → <Sicherungsordner>/status.json → Runner → NSystem-Übersicht.
+# Auch für die NSystem-Übersicht selbst (0.9.0, Dienst n-fizyo-central-backup, docs/MERKEZ.md):
+#   NFIZYO_BACKUP_FILES="/etc/n-fizyo-central/central.env /var/lib/n-fizyo-central/command-signing.pem …"  → keys.tar.gz im Satz
+#   NFIZYO_BACKUP_STATUS_OWNER=nfizyo-central   (Zustandsdatei für den Dienst lesbar machen)
+set -euo pipefail
+umask 077
+DATA=${NFIZYO_DATA:-/var/lib/n-fizyo}
+DEST=${NFIZYO_BACKUP_DIR:-/var/backups/n-fizyo}
+KEEP_DAYS=${NFIZYO_BACKUP_KEEP_DAYS:-30}
+KEEP_MARK=${NFIZYO_BACKUP_KEEP_MARK:-/opt/n-fizyo/.last-update-backup}   # von update.sh: Sicherung für --rollback
+ENV_FILE=${NFIZYO_ENV_FILE:-/etc/n-fizyo/n-fizyo.env}
+STATUS_FILE=${NFIZYO_BACKUP_STATUS_FILE-$DEST/status.json}   # leer = keinen Zustand schreiben (restore.sh)
+OFFSITE_ON=${NFIZYO_OFFSITE:-1}                               # 0 = externe Kopie für diesen Lauf aus (restore.sh)
+SET_RE='^n-fizyo-[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{4}\.tar\.gz\.gpg$'
+
+die() { printf 'FEHLER: %s\n' "$*" >&2; exit 1; }
+
+env_get() {  # env_get KEY – zuerst Umgebung, sonst Zeile KEY=… aus der .env (die Datei wird nie ausgeführt)
+  local key=$1
+  if [[ -n "${!key+x}" ]]; then printf '%s' "${!key}"; return 0; fi
+  [[ -r "$ENV_FILE" ]] || return 0
+  sed -n "s/^${key}=//p" "$ENV_FILE" | tail -n 1 | sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\(.*\)'$/\1/"
+}
+
+TARGET=$(env_get NFIZYO_OFFSITE_TARGET)
+KEY_FILE=$(env_get NFIZYO_OFFSITE_KEY_FILE); KEY_FILE=${KEY_FILE:-/etc/n-fizyo/offsite.key}
+KEEP=$(env_get NFIZYO_OFFSITE_KEEP); KEEP=${KEEP:-14}
+SSH_KEY=$(env_get NFIZYO_OFFSITE_SSH_KEY)
+RCLONE_CONF=$(env_get NFIZYO_OFFSITE_RCLONE_CONFIG)
+[[ "$KEEP" =~ ^[0-9]+$ && "$KEEP" -ge 1 ]] || KEEP=14
+OFF_ERR=""      # kurzer Fehlercode für die Übersicht (keine Pfade, keine Inhalte)
+OFF_SIZE=0
+OFF_SETS=""
+
+# ------------------------------------------------------------------ Schlüssel und Verschlüsselung
+key_ok() {
+  [[ -f "$KEY_FILE" && -r "$KEY_FILE" ]] || { OFF_ERR=key_missing; echo "Schlüsseldatei fehlt: $KEY_FILE" >&2; return 1; }
+  [[ -s "$KEY_FILE" ]] || { OFF_ERR=key_missing; echo "Schlüsseldatei ist leer: $KEY_FILE" >&2; return 1; }
+  local mode; mode=$(stat -c '%a' "$KEY_FILE")
+  if [[ "${mode: -2}" != "00" ]]; then
+    OFF_ERR=key_perm; echo "Schlüsseldatei darf nur für root lesbar sein (chmod 600 $KEY_FILE, jetzt $mode)." >&2; return 1
+  fi
+  command -v gpg >/dev/null || { OFF_ERR=gpg_missing; echo "gpg fehlt: sudo apt install gnupg" >&2; return 1; }
+  # eigener, leerer GnuPG-Ordner (kein Schlüsselbund von root) – hier anlegen, nicht erst in einer Pipe (Unterprozess)
+  [[ -n "$GPG_HOME" ]] || GPG_HOME=$(mktemp -d "${TMPDIR:-/tmp}/nfg.XXXXXX")
+}
+
+GPG_HOME=""
+gpg_run() {
+  GNUPGHOME="$GPG_HOME" gpg --batch --quiet --no-tty --pinentry-mode loopback --no-symkey-cache \
+    --passphrase-file "$KEY_FILE" "$@"
+}
+gpg_encrypt() { gpg_run --symmetric --cipher-algo AES256 --s2k-mode 3 --s2k-digest-algo SHA512 --s2k-count 65011712 \
+  --compress-algo none -o - ; }
+gpg_decrypt() { gpg_run --decrypt -o - "$1"; }
+
+STAGES=()
+cleanup() {
+  if [[ -n "$GPG_HOME" ]]; then GNUPGHOME="$GPG_HOME" gpgconf --kill gpg-agent >/dev/null 2>&1 || true; rm -rf "$GPG_HOME"; fi
+  local s; for s in "${STAGES[@]+"${STAGES[@]}"}"; do rm -rf "$s"; done
+}
+
+# ------------------------------------------------------------------ Übertragung (rclone oder rsync; rsync auch für Ordner)
+is_rclone() { [[ "$TARGET" == rclone:* ]]; }
+rpath() {  # rpath <Datei> – Zielpfad für rclone
+  local base=${TARGET#rclone:}
+  if [[ "$base" == *: ]]; then printf '%s%s' "$base" "$1"; else printf '%s/%s' "${base%/}" "$1"; fi
+}
+rclone_run() {
+  command -v rclone >/dev/null || { OFF_ERR=rclone_missing; echo "rclone fehlt: sudo apt install rclone" >&2; return 1; }
+  rclone ${RCLONE_CONF:+--config "$RCLONE_CONF"} --retries 3 --low-level-retries 10 "$@"
+}
+RSYNC=(rsync --timeout=600)
+# SSH: nur mit Schlüssel, ohne Rückfrage; Host-Schlüssel wird beim ersten Mal gemerkt und danach streng geprüft
+[[ -n "$SSH_KEY" ]] && RSYNC+=(-e "ssh -i $SSH_KEY -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=30")
+rdir() { printf '%s/' "${TARGET%/}"; }
+
+remote_put() {  # remote_put <Datei>… – Dateien ans Ziel (rsync schreibt zuerst in eine Temp-Datei, dann umbenennen)
+  local f
+  if is_rclone; then
+    for f in "$@"; do rclone_run copyto "$f" "$(rpath "$(basename "$f")")" || return 1; done
+  elif [[ "$TARGET" == /* ]]; then
+    # eingehängtes Laufwerk: der Ordner muss schon da sein – sonst landete die «externe» Kopie unbemerkt auf der eigenen Platte
+    [[ -d "$TARGET" ]] || { echo "Ziel-Ordner fehlt (Laufwerk nicht eingehängt?): $TARGET" >&2; return 1; }
+    "${RSYNC[@]}" -t --chmod=F600 "$@" "$(rdir)"
+  else
+    "${RSYNC[@]}" -t --mkpath --chmod=F600 "$@" "$(rdir)"
+  fi
+}
+remote_get() {  # remote_get <Name> <Ordner>
+  if is_rclone; then rclone_run copyto "$(rpath "$1")" "$2/$1"; else "${RSYNC[@]}" -t "$(rdir)$1" "$2/"; fi
+}
+remote_ls() {  # Dateinamen am Ziel (nur oberste Ebene)
+  if is_rclone; then
+    rclone_run lsf --files-only "${TARGET#rclone:}"
+  else
+    "${RSYNC[@]}" --list-only "$(rdir)" | awk '$1 !~ /^d/ {print $NF}'
+  fi
+}
+remote_rm() {  # remote_rm <Name>… – nur genau diese Dateien löschen
+  [[ $# -gt 0 ]] || return 0
+  local f
+  if is_rclone; then
+    for f in "$@"; do rclone_run deletefile "$(rpath "$f")" || return 1; done
+  else
+    local empty args=()
+    empty=$(mktemp -d "${TMPDIR:-/tmp}/nfe.XXXXXX"); STAGES+=("$empty")
+    for f in "$@"; do args+=(--include "/$f"); done
+    "${RSYNC[@]}" -r --delete "${args[@]}" --exclude '*' "$empty/" "$(rdir)"
+  fi
+}
+remote_sets() {  # vollständige Sätze (Datei + .sha256), neueste zuerst
+  local files; files=$(remote_ls) || { OFF_ERR=${OFF_ERR:-list}; return 1; }
+  grep -E "$SET_RE" <<<"$files" | while read -r f; do grep -qxF "$f.sha256" <<<"$files" && echo "$f"; done | sort -r || true
+}
+
+# ------------------------------------------------------------------ Externe Kopie eines Satzes
+offsite_upload() {  # offsite_upload <Sicherungsordner> – verschlüsseln, hochladen, alte Sätze extern löschen
+  local set_dir=$1 name stage
+  [[ -n "$TARGET" ]] || { OFF_ERR=config; echo "NFIZYO_OFFSITE_TARGET fehlt." >&2; return 1; }
+  [[ -d "$set_dir" ]] || { OFF_ERR=config; echo "Sicherung nicht gefunden: $set_dir" >&2; return 1; }
+  key_ok || return 1
+  name="n-fizyo-$(basename "$set_dir").tar.gz.gpg"
+  [[ "$name" =~ $SET_RE ]] || { OFF_ERR=config; echo "Unerwarteter Sicherungsname: $(basename "$set_dir")" >&2; return 1; }
+  stage=$(mktemp -d "$(dirname "$set_dir")/.offsite-XXXXXX"); STAGES+=("$stage")
+  if ! tar -C "$(dirname "$set_dir")" -czf - "$(basename "$set_dir")" | gpg_encrypt > "$stage/$name"; then
+    OFF_ERR=encrypt; echo "Verschlüsseln fehlgeschlagen." >&2; return 1
+  fi
+  (cd "$stage" && sha256sum "$name" > "$name.sha256")
+  OFF_SIZE=$(stat -c '%s' "$stage/$name")
+  echo "Externe Kopie: $name ($(awk -v b="$OFF_SIZE" 'BEGIN { printf "%.1f", b / 1e6 }') MB, verschlüsselt) → Ziel"
+  # zuerst die Daten, zuletzt die Prüfsumme: ein Satz gilt erst mit .sha256 als vollständig
+  remote_put "$stage/$name" || { OFF_ERR=${OFF_ERR:-upload}; echo "Hochladen fehlgeschlagen." >&2; return 1; }
+  remote_put "$stage/$name.sha256" || { OFF_ERR=${OFF_ERR:-upload}; echo "Hochladen fehlgeschlagen." >&2; return 1; }
+  rm -rf "$stage"
+  local sets old=() f n=0
+  sets=$(remote_sets) || { OFF_ERR=${OFF_ERR:-list}; echo "Liste am Ziel nicht lesbar." >&2; return 1; }
+  grep -qxF "$name" <<<"$sets" || { OFF_ERR=verify; echo "Satz am Ziel nicht gefunden." >&2; return 1; }
+  while read -r f; do
+    [[ -n "$f" ]] || continue
+    n=$((n + 1))
+    if [[ $n -gt $KEEP && "$f" != "$name" ]]; then old+=("$f" "$f.sha256"); fi   # den eben hochgeladenen nie
+  done <<<"$sets"
+  # Reste früherer abgebrochener Läufe (Daten ohne .sha256, älter als dieser Satz) ebenfalls weg
+  while read -r f; do
+    [[ -n "$f" && "$f" < "$name" ]] && ! grep -qxF "$f" <<<"$sets" && old+=("$f")
+  done < <(remote_ls | grep -E "$SET_RE" || true)
+  if [[ ${#old[@]} -gt 0 ]]; then
+    remote_rm "${old[@]}" || { OFF_ERR=prune; echo "Alte Sätze am Ziel nicht gelöscht." >&2; return 1; }
+    echo "Extern gelöscht: ${#old[@]} Datei(en) (ältere als die letzten $KEEP Sätze, abgebrochene Reste)"
+  fi
+  OFF_SETS=$(( n < KEEP ? n : KEEP ))
+}
+
+offsite_fetch() {  # offsite_fetch <Name|latest> <Ordner> – letzte Zeile der Ausgabe: Pfad des ausgepackten Satzes
+  local name=$1 out=$2 sets dl
+  [[ -n "$TARGET" ]] || die "NFIZYO_OFFSITE_TARGET fehlt (in $ENV_FILE)."
+  key_ok || die "Ohne Schlüssel kann die externe Kopie nicht geöffnet werden."
+  sets=$(remote_sets) || die "Liste am externen Ziel nicht lesbar."
+  [[ "$name" == latest ]] && name=$(head -n 1 <<<"$sets")
+  [[ -n "$name" ]] || die "Keine Sätze am externen Ziel."
+  [[ "$name" =~ $SET_RE ]] || die "Unbekannter Name: $name (siehe --offsite-list)"
+  grep -qxF "$name" <<<"$sets" || die "Nicht am externen Ziel: $name"
+  install -d -m 0700 "$out"
+  dl=$(mktemp -d "$out/.download-XXXXXX"); STAGES+=("$dl")
+  echo "Hole $name …" >&2
+  remote_get "$name" "$dl" >&2 && remote_get "$name.sha256" "$dl" >&2 || die "Herunterladen fehlgeschlagen."
+  (cd "$dl" && sha256sum --check --quiet "$name.sha256" >&2) || die "Prüfsumme stimmt nicht – Datei beschädigt."
+  gpg_decrypt "$dl/$name" | tar -C "$out" --no-same-owner -xzf - || die "Entschlüsseln fehlgeschlagen (falscher Schlüssel oder Datei verändert)."
+  rm -rf "$dl"
+  local stamp=${name#n-fizyo-}; stamp=${stamp%.tar.gz.gpg}
+  [[ -d "$out/$stamp" ]] || die "Satz unvollständig: $stamp fehlt im Archiv."
+  echo "$out/$stamp"
+}
+
+offsite_test() {
+  [[ -n "$TARGET" ]] || die "NFIZYO_OFFSITE_TARGET fehlt (in $ENV_FILE)."
+  key_ok || die "Schlüssel nicht bereit."
+  local t name; t=$(mktemp -d "${TMPDIR:-/tmp}/nft.XXXXXX"); STAGES+=("$t")
+  name="n-fizyo-verbindungstest-$(date +%s).gpg"
+  head -c 4096 /dev/urandom > "$t/probe"
+  gpg_encrypt < "$t/probe" > "$t/$name" || die "Verschlüsseln geht nicht."
+  echo "1/4 Verschlüsseln: ok"
+  remote_put "$t/$name" || die "Hochladen geht nicht (Ziel, Zugang, Netz?)."
+  echo "2/4 Hochladen: ok"
+  mkdir "$t/back"
+  remote_get "$name" "$t/back" || die "Herunterladen geht nicht."
+  gpg_decrypt "$t/back/$name" > "$t/back/probe" && cmp -s "$t/probe" "$t/back/probe" || die "Entschlüsseln/Vergleich geht nicht."
+  echo "3/4 Herunterladen und Entschlüsseln: ok"
+  remote_rm "$name" || die "Löschen am Ziel geht nicht (für das Aufräumen alter Sätze nötig)."
+  echo "4/4 Löschen: ok"
+  echo "Externe Sicherung bereit. Vorhandene Sätze: $(remote_sets | grep -c . || true), behalten werden $KEEP."
+}
+
+offsite_keygen() {
+  [[ ! -e "$KEY_FILE" ]] || die "Schlüsseldatei gibt es schon ($KEY_FILE) – sie wird nie überschrieben (alte Kopien bräuchten sie)."
+  install -d -m 0750 "$(dirname "$KEY_FILE")"
+  (umask 077; head -c 36 /dev/urandom | base64 | tr -d '\n' > "$KEY_FILE")
+  chmod 600 "$KEY_FILE"
+  [[ $EUID -eq 0 ]] && chown root:root "$KEY_FILE"
+  echo "Schlüsseldatei erzeugt: $KEY_FILE (nur root). Jetzt eine Papierkopie machen (docs/YEDEK.md) – sie wird hier nicht angezeigt."
+}
+
+# ------------------------------------------------------------------ Zustand für Runner / NSystem-Übersicht
+LOCAL_STATE=failed LOCAL_SIZE=0 OFF_STATE=off
+write_status() {
+  [[ -n "$STATUS_FILE" ]] || return 0
+  local now last_ok_file last_ok
+  now=$(date +%s)
+  mkdir -p "$(dirname "$STATUS_FILE")"
+  last_ok_file="$(dirname "$STATUS_FILE")/.offsite-last-ok"
+  if [[ "$OFF_STATE" == ok ]]; then echo "$now" > "$last_ok_file"; fi
+  last_ok=$(cat "$last_ok_file" 2>/dev/null || true); [[ "$last_ok" =~ ^[0-9]+$ ]] || last_ok=null
+  printf '{"local": {"state": "%s", "at": %s, "size_mb": %s}, "offsite": {"state": "%s", "at": %s, "size_mb": %s, "sets": %s, "error": %s, "last_ok_at": %s}}\n' \
+    "$LOCAL_STATE" "$now" "$(awk -v b="$LOCAL_SIZE" 'BEGIN { printf "%.1f", b / 1e6 }')" \
+    "$OFF_STATE" "$now" "$(awk -v b="$OFF_SIZE" 'BEGIN { printf "%.1f", b / 1e6 }')" "${OFF_SETS:-null}" \
+    "$([[ -n "$OFF_ERR" ]] && printf '"%s"' "$OFF_ERR" || echo null)" "$last_ok" > "$STATUS_FILE.tmp"
+  mv "$STATUS_FILE.tmp" "$STATUS_FILE"
+  if [[ -n "${NFIZYO_BACKUP_STATUS_OWNER:-}" ]]; then chown "$NFIZYO_BACKUP_STATUS_OWNER" "$STATUS_FILE" 2>/dev/null || true; chmod 0640 "$STATUS_FILE"; fi
+}
+
+trap cleanup EXIT
+
+case "${1:-}" in
+  --offsite-keygen) offsite_keygen; exit 0 ;;
+  --offsite-test) offsite_test; exit 0 ;;
+  --offsite-list)
+    [[ -n "$TARGET" ]] || die "NFIZYO_OFFSITE_TARGET fehlt (in $ENV_FILE)."
+    remote_sets || die "Liste am externen Ziel nicht lesbar."
+    exit 0 ;;
+  --offsite-fetch) [[ $# -eq 3 ]] || die "Aufruf: --offsite-fetch <Name|latest> <Ordner>"; offsite_fetch "$2" "$3"; exit 0 ;;
+  --offsite-upload)
+    [[ $# -eq 2 ]] || die "Aufruf: --offsite-upload <Sicherungsordner>"
+    if offsite_upload "${2%/}"; then OFF_STATE=ok; echo "Externe Kopie: ok"; exit 0; fi
+    die "Externe Kopie fehlgeschlagen (${OFF_ERR:-unbekannt})." ;;
+  "") ;;
+  *) sed -n '2,25p' "$0"; exit 1 ;;
+esac
+
+# ------------------------------------------------------------------ Sicherung (lokal)
+STAMP=$(date +%Y-%m-%d_%H%M)
+finish() {  # bei jedem Ende: Zustand schreiben (auch wenn die lokale Sicherung scheitert), dann aufräumen
+  local rc=$?
+  [[ $LOCAL_STATE == ok ]] || OFF_STATE=off
+  write_status || true
+  cleanup
+  exit $rc
+}
+trap finish EXIT
+mkdir -p "$DEST/$STAMP"
+for db in "$DATA"/*.db "$DATA"/*.sqlite3; do
+  [ -f "$db" ] && sqlite3 "$db" ".backup '$DEST/$STAMP/$(basename "$db")'"
+done
+for dir in documents videos audio; do
+  [ -d "$DATA/$dir" ] && tar -C "$DATA" -czf "$DEST/$STAMP/$dir.tar.gz" "$dir"
+done
+# Zusätzliche Dateien (Schlüsselmaterial der NSystem-Übersicht): nur absolute Pfade; fehlende werden gemeldet und übersprungen
+if [[ -n "${NFIZYO_BACKUP_FILES:-}" ]]; then
+  EXTRA=()
+  read -r -a WANTED <<<"$NFIZYO_BACKUP_FILES"
+  for f in "${WANTED[@]}"; do
+    if [[ "$f" == /* && -f "$f" ]]; then EXTRA+=("${f#/}"); else echo "Hinweis: Datei für die Sicherung fehlt: $f" >&2; fi
+  done
+  [[ ${#EXTRA[@]} -gt 0 ]] && tar -C / -czf "$DEST/$STAMP/keys.tar.gz" "${EXTRA[@]}"
+fi
+# Prüfen, dass die Kopie lesbar ist (sonst lieber laut scheitern als still eine kaputte Sicherung behalten)
+for db in "$DEST/$STAMP"/*.sqlite3 "$DEST/$STAMP"/*.db; do
+  [ -f "$db" ] || continue
+  [ "$(sqlite3 "$db" 'PRAGMA integrity_check;')" = "ok" ] || { echo "Sicherung beschädigt: $db" >&2; exit 1; }
+done
+chmod -R go-rwx "$DEST/$STAMP"
+LOCAL_SIZE=$(du -sb "$DEST/$STAMP" | cut -f1)
+LOCAL_STATE=ok
+# Alte Sätze löschen – ausser der Sicherung von vor dem letzten Update (update.sh --rollback braucht sie, auch nach 30 Tagen)
+KEEP_REF="$(head -n 1 "$KEEP_MARK" 2>/dev/null || true)"
+[[ -n "$KEEP_REF" ]] && KEEP_REF="$(readlink -f "$KEEP_REF" 2>/dev/null || true)"
+while IFS= read -r -d '' old; do
+  [[ -n "$KEEP_REF" && "$(readlink -f "$old")" == "$KEEP_REF" ]] && continue
+  rm -rf "$old"
+done < <(find "$DEST" -mindepth 1 -maxdepth 1 -type d -mtime +"$KEEP_DAYS" -print0)
+
+# ------------------------------------------------------------------ Externe Kopie (optional)
+RC=0
+if [[ "$OFFSITE_ON" != 0 && -n "$TARGET" ]]; then
+  if offsite_upload "$DEST/$STAMP"; then
+    OFF_STATE=ok; echo "Externe Kopie: ok ($OFF_SETS Sätze am Ziel)"
+  else
+    OFF_STATE=failed; RC=2
+    echo "Externe Kopie fehlgeschlagen (${OFF_ERR:-unbekannt}). Die lokale Sicherung ist in Ordnung: $DEST/$STAMP" >&2
+  fi
+fi
+exit $RC

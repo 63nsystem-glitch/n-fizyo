@@ -1,0 +1,24 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/patienten" aria-label="{{ t('patients.back_to_list') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block lead %}<span class="avatar primary hide-compact" aria-hidden="true">{{ initials }}</span>{% endblock %}
+{% block title %}{{ patient.first_name }} {{ patient.last_name }}{% if patient.archived %} <span class="pill-label">{{ t('patients.archived_label') }}</span>{% endif %}{% endblock %}
+{% block subtitle %}{{ facts | join(' · ') }}{% endblock %}
+{% block actions %}
+  {% if relation == 'delegated' %}<span class="chip warn hide-compact" title="{{ t('patients.delegated_hint') }}">{{ icon('swap_horiz', 18) }}{{ t('patients.delegated') }}</span>{% endif %}
+  {% if foreign %}<span class="chip {{ 'warn' if patient.needs_interpreter else 'info' }} hide-compact" title="{{ t('patients.spoken_language') }}">{{ icon('translate', 18) }}{{ spoken_name }}{% if patient.needs_interpreter %} · {{ t('patients.interpreter_needed') }}{% endif %}</span>{% endif %}
+  {% for a in actions %}
+    {% if a.post %}
+    <form method="post" action="{{ a.href }}" style="display:inline">
+      <input type="hidden" name="_csrf" value="{{ csrf }}">
+      <button class="{{ 'btn' if a.primary else ('icon-btn io' if a.icon_only else 'btn tonal') }}" type="submit" title="{{ t(a.label_key) }}"{% if a.icon_only %} aria-label="{{ t(a.label_key) }}"{% endif %}>{{ icon(a.icon, 18 if not a.icon_only else 24) }}{% if not a.icon_only %}<span>{{ t(a.label_key) }}</span>{% else %}<span class="io-label" aria-hidden="true">{{ t(a.label_key) }}</span>{% endif %}</button>
+    </form>
+    {% else %}
+    <a class="{{ 'btn' if a.primary else ('icon-btn io' if a.icon_only else 'btn tonal') }}" href="{{ a.href }}" title="{{ t(a.label_key) }}"{% if a.icon_only %} aria-label="{{ t(a.label_key) }}"{% endif %}>{{ icon(a.icon, 18 if not a.icon_only else 24) }}{% if not a.icon_only %}<span>{{ t(a.label_key) }}</span>{% else %}<span class="io-label" aria-hidden="true">{{ t(a.label_key) }}</span>{% endif %}</a>
+    {% endif %}
+  {% endfor %}
+{% endblock %}
+{% block tabs %}
+<nav class="tabs" aria-label="{{ t('patients.record') }}">
+  {% for tab in tabs %}<a href="{{ tab.href }}"{% if tab.active %} aria-current="page"{% endif %}>{{ t(tab.label_key) }}{% if tab.count %}<span class="count">{{ tab.count }}</span>{% endif %}</a>{% endfor %}
+</nav>
+{% endblock %}

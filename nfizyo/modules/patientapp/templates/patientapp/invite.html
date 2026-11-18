@@ -1,0 +1,24 @@
+{% extends "layouts/patient.html" %}
+{% block title %}{{ t('p.invite.title') }}{% endblock %}
+{% block content %}
+<div class="row" style="justify-content:flex-end"><a class="chip" href="/p/sprachen?next={{ request.path | urlencode }}">{{ icon('language', 18) }}{{ LANG_NAMES[lang] }}</a></div>
+<section class="card">
+  <p style="font-size:18px;line-height:26px">{{ t('p.invite.hello', name=invite.first_name, practice=invite.practice_name) }}</p>
+  <p class="muted" style="margin-top:8px">{{ t('p.invite.what') }}</p>
+</section>
+<form method="post" class="stack"><input type="hidden" name="_csrf" value="{{ csrf }}">
+  {% if error %}<div class="banner error">{{ icon('error') }}<span>{{ t(error) }}</span></div>{% endif %}
+  <section class="card">
+    <div class="field"><label for="code">{{ t('p.invite.code') }}</label><input id="code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="8" required style="font-size:28px;letter-spacing:8px;text-align:center"></div>
+    <p class="small muted" style="margin-top:6px">{{ t('p.invite.code_hint') }}</p>
+  </section>
+  <section class="card">
+    <h2 style="margin-bottom:8px">{{ icon('lock', 20) }} {{ t('p.invite.privacy_title') }}</h2>
+    <p class="small">{{ t('p.invite.privacy_text') }}</p>
+    <label class="check" style="margin-top:12px"><input type="checkbox" name="consent" value="1" required>{{ t('p.invite.consent') }}</label>
+    <label class="check"><input type="checkbox" name="consent_translation" value="1" checked>{{ t('p.invite.consent_translation_remote') if ai_remote else t('p.invite.consent_translation') }}</label>
+  </section>
+  <button class="btn lg block" type="submit">{{ t('p.invite.start') }}</button>
+</form>
+<p class="small" style="text-align:center"><a href="/p/datenschutz{{ '?praxis=' ~ practice_slug if practice_slug is defined and practice_slug else '' }}">{{ t('p.privacy.link') }}</a></p>
+{% endblock %}

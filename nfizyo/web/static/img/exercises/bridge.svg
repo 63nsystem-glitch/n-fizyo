@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <title>Brücke</title>
+  <g id="fig" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 186 L300 186" stroke-width="3" opacity="0.3"/>
+    <path d="M152 180 L92 180" stroke-width="13" opacity="0.2"/>
+    <path d="M152 180 L182.3 139.8 L206.9 181" stroke-width="10" opacity="0.2"/>
+    <path d="M146.8 155.6 L92 180" stroke-width="13" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M92 180 L73.5 171.3" stroke-width="10"/>
+    <circle cx="73.5" cy="171.3" r="13.2" fill="currentColor" stroke="none"/>
+    <path d="M146.8 155.6 L192.9 135.1 L206.9 181" stroke-width="10"/>
+    <path d="M206.9 181 L223.7 182" stroke-width="8"/>
+    <path d="M92 180 L130.4 181 L165.2 181" stroke-width="10"/>
+    <path d="M148.8 141.6 L148.8 113.1" stroke-width="4" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M148.8 107.6 L153.4 116.5 L144.2 116.5 Z" stroke-width="2.5" style="fill:var(--ex-accent, #D9661F);stroke:var(--ex-accent, #D9661F)"/>
+  </g>
+</svg>

@@ -1,0 +1,8 @@
+{% extends "layouts/patient.html" %}
+{% block back %}<a class="icon-btn" href="/p/training" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ machine.name if machine else t('p.mtt.title') }}{% endblock %}
+{% block content %}
+<section class="card"><p>{{ t('p.mtt.qr_unknown') if not machine else (t('p.mtt.qr_no_plan') if not plan else t('p.mtt.qr_not_in_plan')) }}</p></section>
+<a class="btn tonal block" href="/p/training">{{ t('p.mtt.to_plan') }}</a>
+<div class="emergency">{{ icon('emergency', 20) }}<span>{{ t('p.mtt.stop') }}</span></div>
+{% endblock %}

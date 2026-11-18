@@ -1,0 +1,16 @@
+{% import "homeprogram/_pic.html" as pic with context %}
+<section class="card" aria-labelledby="h-hp">
+  <div class="card-head"><h2 id="h-hp">{{ t('hp.title') }}</h2>
+    {% if ctx.prog and ctx.prog.status == 'active' %}<span class="meta">{{ t('hp.days_done', n=ctx.days_done) }}</span>{% elif ctx.prog %}<span class="pill-label warn">{{ t('hp.draft') }}</span>{% endif %}</div>
+  {% if ctx.prog and ctx['items'] %}
+  <div class="stack-s">
+    {% for it in ctx['items'] %}
+    <div class="row" style="flex-wrap:nowrap;gap:12px">
+      <svg viewBox="0 0 320 200" width="64" height="40" aria-hidden="true" focusable="false" style="flex:none;border-radius:10px;background:var(--surface-mid);color:var(--on-surface)"><use href="{{ static(ctx.pic_of(it).src) }}#fig"/></svg>
+      <span class="grow"><span>{{ it.name_fr if lang == 'fr' else it.name_de }}</span><br><span class="small muted">{{ ctx.dose_text(it) }}</span></span>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}<p class="small muted">{{ t('hp.none') }}</p>{% endif %}
+  <div class="row" style="justify-content:flex-end;margin-top:8px"><a class="btn text" href="{{ S }}/patienten/{{ ctx.patient.id }}/heimprogramm">{{ t('hp.edit') if ctx.prog else t('hp.create') }}</a></div>
+</section>

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="{{ lang }}" dir="{{ dir }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="csrf-token" content="{{ csrf }}">
+{% if user and screen and screen.key == 'therapie' %}<meta name="nf-user" content="{{ user.id }}">{% endif %}
+<meta name="theme-color" content="#F3F3FA">
+<meta name="robots" content="noindex, nofollow">
+<title>{% block head_title %}{{ self.title() | striptags | trim }}{% endblock %} · N-Fizyo</title>
+<link rel="icon" href="{{ static('img/icon.svg') }}" type="image/svg+xml">
+<link rel="stylesheet" href="{{ static('css/app.css') }}">
+{% block head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+{% block body %}{% endblock %}
+{% if flash %}<div class="snackbar" role="status">{{ flash }}</div>{% endif %}
+<script src="{{ static('js/app.js') }}" defer></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

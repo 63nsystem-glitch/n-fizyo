@@ -1,0 +1,68 @@
+{
+  "p": {
+    "ex": {
+      "title": "Esercizi",
+      "intro": "Il suo programma dallo studio. Tocchi un esercizio.",
+      "none": "Nessun programma di esercizi ancora approvato.",
+      "not_translated": "Questa istruzione non è ancora disponibile nella sua lingua.",
+      "stop_if_pain": "Si fermi se il dolore aumenta molto e contatti lo studio.",
+      "pain_after": "Quanto era forte il dolore?",
+      "done": "Fatto",
+      "done_again": "Fatto di nuovo",
+      "logged": "Salvato – ben fatto!",
+      "answer": {
+        "forgot": "Succede. Un momento fisso aiuta, per esempio dopo aver lavato i denti. Domani è un nuovo giorno.",
+        "unclear": "Grazie. Lo studio lo vedrà prima del suo prossimo appuntamento e le mostrerà di nuovo l'esercizio.",
+        "no_time": "Comprensibile. Anche un solo esercizio è meglio di niente.",
+        "no_time_star": "Comprensibile. Se il tempo è poco: faccia solo gli esercizi con la stella.",
+        "pain": "Non continui l'esercizio finché fa molto male e contatti lo studio. In caso di emergenza chiami il 144.",
+        "app": "Grazie. Chieda alla reception alla prossima visita – la aiutiamo volentieri con l'app.",
+        "no_benefit": "Grazie per la sincerità. Ne parli al prossimo appuntamento – insieme guarderete il suo obiettivo."
+      },
+      "write_practice": "Scrivere allo studio",
+      "star_hint": "Se il tempo è poco: prima gli esercizi con la stella.",
+      "star_one": "Se il tempo è poco: prima questo esercizio.",
+      "skip_q": "Oggi non ce l'ha fatta?",
+      "skip_saved": "Salvato: {reason}. Può cambiare la risposta.",
+      "skip_intro": "Facoltativo. Lo studio vedrà la sua risposta prima del prossimo appuntamento.",
+      "skip": {
+        "forgot": "Dimenticato",
+        "unclear": "L'esercizio non era chiaro",
+        "no_time": "Non ho avuto tempo",
+        "pain": "Troppo dolore",
+        "app": "Problema con l'app",
+        "no_benefit": "Non ne vedo l'utilità"
+      },
+      "skip_note": "Vuole aggiungere qualcosa? (facoltativo)",
+      "skip_send": "Invia",
+      "skip_choose": "Scelga un motivo.",
+      "own_video": "Il suo video – girato nello studio",
+      "video_delete_hint": "Può eliminare il suo video in qualsiasi momento. Verrà eliminato anche nello studio.",
+      "video_delete": "Elimina il mio video",
+      "video_deleted": "Video eliminato",
+      "dose": {
+        "sets": {
+          "one": "{n} serie",
+          "other": "{n} serie"
+        },
+        "reps": {
+          "one": "{n} ripetizione",
+          "other": "{n} ripetizioni"
+        },
+        "hold": {
+          "one": "tenere {n} s",
+          "other": "tenere {n} s"
+        },
+        "minutes": {
+          "one": "{n} minuto",
+          "other": "{n} minuti"
+        },
+        "per_day": {
+          "one": "{n} volta al giorno",
+          "other": "{n} volte al giorno"
+        },
+        "sets_reps": "{sets} da {reps}"
+      }
+    }
+  }
+}

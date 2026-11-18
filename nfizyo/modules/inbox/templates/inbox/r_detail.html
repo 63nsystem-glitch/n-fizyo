@@ -1,0 +1,36 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/posteingang" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('inbox.document') }}{% endblock %}
+{% block subtitle %}{% if doc.sender %}{{ doc.sender }} · {% endif %}{{ fmt_date(doc.created_at) }} · {{ t('inbox.src.' ~ doc.source) }}{% endblock %}
+{% block actions %}
+  {% if doc.status == 'failed' %}<form method="post" action="{{ S }}/posteingang/{{ doc.id }}/neu-lesen"><input type="hidden" name="_csrf" value="{{ csrf }}"><button class="btn tonal" type="submit">{{ icon('refresh', 18) }}<span>{{ t('inbox.reread') }}</span></button></form>{% endif %}
+{% endblock %}
+{% block content %}
+<div class="stack" style="max-width:760px">
+  {% if pending %}
+  <section class="card" data-poll="{{ S }}/posteingang/{{ doc.id }}/status">
+    <h2 style="margin-bottom:12px">{{ t('inbox.reading') }}</h2><div class="progress"><span style="width:55%"></span></div>
+    <p class="small muted" style="margin-top:12px">{{ t('inbox.r_reading_hint') }}</p>
+  </section>
+  {% endif %}
+  <section class="card">
+    <div class="card-head"><h2>{{ t('inbox.patient') }}</h2></div>
+    {% if doc.patient_id %}
+    <div class="row" style="gap:12px"><span class="avatar primary">{{ (doc.first_name[:1] ~ doc.last_name[:1]) | upper }}</span>
+      <span class="grow"><strong style="font-weight:500">{{ doc.first_name }} {{ doc.last_name }}</strong><br><span class="small muted">{{ fmt_date(doc.patient_birthdate) if doc.patient_birthdate else '' }}</span></span>
+      <a class="btn text" href="{{ S }}/patienten/{{ doc.patient_id }}">{{ t('agenda.open_record') }}</a></div>
+    <p class="small" style="margin-top:12px">{{ icon('outgoing_mail', 16) }} {% if team %}{{ t('inbox.sent_to', names=team | map(attribute='name') | join(', ')) }}{% else %}{{ t('inbox.no_team') }}{% endif %}</p>
+    {% else %}
+    <p style="margin-bottom:12px">{% if doc.extracted_name %}{{ t('inbox.read_as', name=doc.extracted_name, bd=(fmt_date(doc.extracted_birthdate) if doc.extracted_birthdate else '–')) }}{% else %}{{ t('inbox.no_name') }}{% endif %}</p>
+    {% for c in candidates %}
+    <form method="post" action="{{ S }}/posteingang/{{ doc.id }}/patient" class="row" style="margin-bottom:8px"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="patient_id" value="{{ c.id }}">
+      <span class="grow">{{ c.first_name }} {{ c.last_name }} · {{ fmt_date(c.birthdate) if c.birthdate else '' }} · {{ c.number }}</span><button class="btn tonal" type="submit">{{ t('inbox.assign_this') }}</button></form>
+    {% endfor %}
+    <form method="post" action="{{ S }}/posteingang/{{ doc.id }}/patient" class="row"><input type="hidden" name="_csrf" value="{{ csrf }}">
+      <select name="patient_id" class="input grow" required aria-label="{{ t('inbox.patient') }}"><option value="">{{ t('inbox.choose_patient') }}</option>{% for p in patients %}<option value="{{ p.id }}">{{ p.last_name }}, {{ p.first_name }}{% if p.birthdate %} · {{ fmt_date(p.birthdate) }}{% endif %} · {{ p.number }}</option>{% endfor %}</select>
+      <button class="btn" type="submit">{{ t('inbox.assign') }}</button></form>
+    {% endif %}
+  </section>
+  <section class="card tonal"><p class="small">{{ icon('lock', 14) }} {{ t('inbox.r_privacy') }}</p></section>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% import "ui/figure.html" as fig with context %}
+<section class="card" aria-labelledby="h-body">
+  <div class="card-head"><h2 id="h-body">{{ t('patients.bodymap') }}</h2>
+    <button class="icon-btn" type="button" data-dialog="dlg-finding" aria-label="{{ t('patients.finding_add') }}" title="{{ t('patients.finding_add') }}">{{ icon('add') }}</button>
+  </div>
+  {{ fig.body_figure(ctx.marks, id='pfig', editable=True, pick_dialog='dlg-finding', bone_href=(S ~ '/anatomie?bone=') if module_on('anatomy') else '') }}
+  <p class="small muted" style="margin-top:6px">{{ t('patients.bodymap_hint') }}</p>
+  {% if ctx.marks.markers %}
+  <div class="marker-list">
+    {% for m in ctx.marks.markers %}
+    {% set f0 = m.findings[0] %}
+    {% if m.structure %}
+    <button type="button" class="marker" data-sheet="{{ S }}/anatomie/{{ (anat.joint_structure(m.structure.joint) or m.structure).id }}/blatt?side={{ m.side or '' }}&patient={{ ctx.patient.id }}">
+    {% else %}<div class="marker">{% endif %}
+      <span class="num {{ m.cls }}">{{ m.n }}</span>
+      <span class="grow" style="text-align:start"><strong style="font-weight:500">{{ anat.place_name(m.structure, m.side, lang) if m.structure else t('finding.' ~ f0.kind) }}</strong><br>
+        <span class="small muted">{{ f0.title }}{% if m.findings | length > 1 %} · +{{ m.findings | length - 1 }}{% endif %}</span></span>
+      {% if m.structure %}{{ icon('chevron_right', 20, 'flip-rtl') }}{% endif %}
+    {% if m.structure %}</button>{% else %}</div>{% endif %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="muted small" style="margin-top:12px">{{ t('patients.no_findings') }}</p>
+  {% endif %}
+</section>

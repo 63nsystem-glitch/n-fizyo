@@ -1,0 +1,92 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/patienten" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block lead %}<span class="avatar primary hide-compact" aria-hidden="true">{{ (patient.first_name[:1] ~ patient.last_name[:1]) | upper }}</span>{% endblock %}
+{% block title %}{{ patient.first_name }} {{ patient.last_name }}{% if patient.archived %} <span class="pill-label">{{ t('patients.archived_label') }}</span>{% endif %}{% endblock %}
+{% block subtitle %}{{ patient.number }}{% if patient.birthdate %} · {{ fmt_date(patient.birthdate) }}{% endif %}{% if patient.law %} · {{ patient.law | law }} {{ patient.insurer_name or '' }}{% endif %}{% endblock %}
+{% block actions %}
+  {% for a in actions %}
+    {% if a.post %}
+    <form method="post" action="{{ a.href }}" style="display:inline"><input type="hidden" name="_csrf" value="{{ csrf }}">
+      <button class="{{ 'btn' if a.primary else ('icon-btn' if a.icon_only else 'btn tonal') }}" type="submit" title="{{ t(a.label_key) }}"{% if a.icon_only %} aria-label="{{ t(a.label_key) }}"{% endif %}>{{ icon(a.icon, 18 if not a.icon_only else 24) }}{% if not a.icon_only %}<span>{{ t(a.label_key) }}</span>{% endif %}</button></form>
+    {% else %}
+    <a class="{{ 'btn' if a.primary else ('icon-btn' if a.icon_only else 'btn tonal') }}" href="{{ a.href }}" title="{{ t(a.label_key) }}"{% if a.icon_only %} aria-label="{{ t(a.label_key) }}"{% endif %}>{{ icon(a.icon, 18 if not a.icon_only else 24) }}{% if not a.icon_only %}<span>{{ t(a.label_key) }}</span>{% endif %}</a>
+    {% endif %}
+  {% endfor %}
+  {% if patient.phone %}<a class="icon-btn" href="tel:{{ patient.phone }}" aria-label="{{ t('patients.call') }}" title="{{ t('patients.call') }}">{{ icon('call') }}</a>{% endif %}
+{% endblock %}
+{% block content %}
+<div class="grid-main-side">
+  <form method="post" action="{{ S }}/patienten/{{ patient.id }}" class="stack"><input type="hidden" name="_orig" value="{{ orig }}">
+    {% if errors %}<div class="banner error" role="alert">{{ icon('error') }}<span>{{ t('form.has_errors') }}</span></div>{% endif %}
+    {% include "patients/_fields.html" %}
+    <div class="form-actions"><button class="btn" type="submit">{{ icon('check', 18) }}{{ t('common.save') }}</button></div>
+  </form>
+  <div class="col stack">
+    {% for c in cards %}{% with ctx = c.ctx %}{% include c.template %}{% endwith %}{% endfor %}
+    <section class="card" id="verordnungen">
+      <h2 style="margin-bottom:8px">{{ t('patients.prescriptions') }}</h2>
+      {% for pr in prescriptions %}
+      <details class="list-item-details">
+        <summary class="list-item" style="padding-inline:0"><span class="body"><span class="title">{{ t('patients.sessions_n', n=pr.sessions) }} · {{ t('patients.pr_kind.' ~ pr.kind) }}</span><br><span class="sub">{{ fmt_date(pr.issued_on) if pr.issued_on else '–' }}{% if pr.referrer_name %} · {{ pr.referrer_name }}{% endif %}{% if pr.sessions_before %} · {{ t('patients.pr_before', n=pr.sessions_before) }}{% endif %}</span></span><span class="trail"><span class="pill-label {{ 'ok' if pr.status == 'active' else '' }}">{{ t('patients.pr_status_' ~ pr.status) }}</span>{{ icon('keyboard_arrow_down', 20) }}</span></summary>
+        <form method="post" action="{{ S }}/patienten/{{ patient.id }}/verordnungen/{{ pr.id }}" class="form" style="margin:8px 0 12px">
+          <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="edit">
+          <div class="form-grid">
+            <div class="field"><label for="pe-s{{ pr.id }}">{{ t('patients.sessions') }}</label><input id="pe-s{{ pr.id }}" name="sessions" type="number" min="1" max="36" value="{{ pr.sessions }}"></div>
+            <div class="field"><label for="pe-d{{ pr.id }}">{{ t('patients.issued_on') }}</label><input id="pe-d{{ pr.id }}" name="issued_on" type="date" value="{{ pr.issued_on or '' }}"></div>
+          </div>
+          <div class="form-grid">
+            <div class="field"><label for="pe-k{{ pr.id }}">{{ t('patients.pr_kind_label') }}</label><select id="pe-k{{ pr.id }}" name="kind">{% for k in pr_kinds %}<option value="{{ k }}"{% if pr.kind == k %} selected{% endif %}>{{ t('patients.pr_kind.' ~ k) }}</option>{% endfor %}</select></div>
+            <div class="field"><label for="pe-r{{ pr.id }}">{{ t('patients.referrer') }}</label><select id="pe-r{{ pr.id }}" name="referrer_id"><option value="">–</option>{% for r in referrers %}<option value="{{ r.id }}"{% if pr.referrer_id == r.id %} selected{% endif %}>{{ r.name }}</option>{% endfor %}</select></div>
+          </div>
+          <p class="hint">{{ t('patients.pr_edit_hint') }}</p>
+          <button class="btn tonal sm" type="submit">{{ t('patients.pr_correct') }}</button>
+        </form>
+        <form method="post" action="{{ S }}/patienten/{{ patient.id }}/verordnungen/{{ pr.id }}" class="row" style="gap:6px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px">
+          <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="status">
+          <div class="field"><label for="pe-st{{ pr.id }}">{{ t('patients.pr_status_label') }}</label><select id="pe-st{{ pr.id }}" name="status">{% for st in ('active', 'used', 'expired') %}<option value="{{ st }}"{% if pr.status == st %} selected{% endif %}>{{ t('patients.pr_status_' ~ st) }}</option>{% endfor %}</select></div>
+          <div class="field grow"><label for="pe-why{{ pr.id }}">{{ t('patients.pr_status_reason') }}</label><input id="pe-why{{ pr.id }}" name="reason" maxlength="200"></div>
+          <button class="btn outlined sm" type="submit">{{ t('patients.pr_status_save') }}</button>
+        </form>
+      </details>
+      {% else %}<p class="muted small">{{ t('patients.no_prescriptions') }}</p>{% endfor %}
+      <details style="margin-top:12px"><summary class="btn text">{{ icon('add', 18) }}{{ t('patients.prescription_add') }}</summary>
+        <form method="post" action="{{ S }}/patienten/{{ patient.id }}/verordnungen" class="form" style="margin-top:12px">
+          <input type="hidden" name="_csrf" value="{{ csrf }}">
+          <div class="form-grid">
+            <div class="field"><label for="pr-s">{{ t('patients.sessions') }}</label><input id="pr-s" name="sessions" type="number" min="1" max="36" value="9"></div>
+            <div class="field"><label for="pr-d">{{ t('patients.issued_on') }}</label><input id="pr-d" name="issued_on" type="date"></div>
+          </div>
+          <div class="form-grid">
+            <div class="field"><label for="pr-k">{{ t('patients.pr_kind_label') }}</label><select id="pr-k" name="kind">{% for k in pr_kinds %}<option value="{{ k }}">{{ t('patients.pr_kind.' ~ k) }}</option>{% endfor %}</select></div>
+            <div class="field"><label for="pr-r">{{ t('patients.referrer') }}</label><select id="pr-r" name="referrer_id"><option value="">–</option>{% for r in referrers %}<option value="{{ r.id }}">{{ r.name }}</option>{% endfor %}</select></div>
+          </div>
+          <div class="form-actions"><button class="btn tonal" type="submit">{{ t('common.save') }}</button></div>
+        </form>
+      </details>
+    </section>
+    <section class="card" id="team">
+      <h2 style="margin-bottom:4px">{{ t('patients.team') }}</h2>
+      <p class="small muted" style="margin-bottom:8px">{{ t('patients.team_hint') }}</p>
+      {% for m in team %}
+      <div class="list-item" style="padding-inline:0"><span class="lead avatar">{{ m.initials }}</span>
+        <span class="body"><span class="title">{{ m.name }}</span><br><span class="sub">{{ t('patients.team_reason.' ~ m.reason) }}</span></span>
+        <span class="trail"><form method="post" action="{{ S }}/patienten/{{ patient.id }}/team"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="remove"><input type="hidden" name="user_id" value="{{ m.user_id }}">
+          <button class="icon-btn" type="submit" aria-label="{{ t('common.delete') }}" title="{{ t('common.delete') }}">{{ icon('close', 20) }}</button></form></span></div>
+      {% endfor %}
+      <form method="post" action="{{ S }}/patienten/{{ patient.id }}/team" class="row" style="gap:8px;margin-top:8px">
+        <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="add">
+        <select name="user_id" class="select-sm grow" aria-label="{{ t('patients.team_add') }}">{% for u in therapists %}<option value="{{ u.id }}">{{ u.name }}</option>{% endfor %}</select>
+        <button class="btn tonal sm" type="submit">{{ icon('add', 18) }}{{ t('patients.team_add') }}</button>
+      </form>
+    </section>
+    <section class="card">
+      <form method="post" action="{{ S }}/patienten/{{ patient.id }}/archivieren"{% if not n_future %} data-confirm="{{ t('patients.archive_confirm') if not patient.archived else t('patients.unarchive_confirm') }}"{% endif %}>
+        <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="archive" value="{{ '0' if patient.archived else '1' }}">
+        <button class="btn outlined" type="submit">{{ icon('history' if patient.archived else 'folder_open', 18) }}{{ t('patients.unarchive') if patient.archived else t('patients.to_archive') }}</button>
+      </form>
+      {% if n_future %}<p class="small" style="margin-top:8px">{{ icon('event', 16) }} {{ t('patients.archive_future_hint', n=n_future) }}</p>{% endif %}
+      <p class="small muted" style="margin-top:8px">{{ t('patients.retention_note', canton=canton) }}</p>
+    </section>
+  </div>
+</div>
+{% endblock %}

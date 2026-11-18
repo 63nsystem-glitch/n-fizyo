@@ -1,0 +1,43 @@
+{
+  "p": {
+    "appt": {
+      "title": "Appuntamenti",
+      "none": "Nessun appuntamento previsto.",
+      "cancel_hint": "Per annullare o spostare un appuntamento, chiami almeno 24 ore prima.",
+      "request": "Richiedere un appuntamento",
+      "wish": "Il suo desiderio",
+      "wish_ph": "p. es. appuntamento prima",
+      "preferred": "Quando le va bene?",
+      "preferred_ph": "p. es. lunedì o mercoledì mattina",
+      "send": "Inviare la richiesta",
+      "requested": "Richiesta inviata. Lo studio la contatterà.",
+      "closure": "Lo studio è chiuso: {dates}."
+    },
+    "sms": {
+      "reminder": "Promemoria: appuntamento di fisioterapia il {when} ({place}). Annullare almeno 24 ore prima per telefono.",
+      "offer": "{practice}: si è liberato un appuntamento – {when}, {place}. Lo desidera? Risponda qui: {url}",
+      "offer_booked": "{practice}: il suo appuntamento del {when} è confermato. Disdetta almeno 24 ore prima: {phone}",
+      "offer_gone": "{practice}: l'appuntamento proposto del {when} non è più libero. Resta sulla lista d'attesa.",
+      "cancelled": "{practice}: i suoi appuntamenti sono annullati: {dates}. Per domande ci chiami: {phone}"
+    },
+    "mail": {
+      "reminder_subject": "Promemoria: appuntamento il {when}",
+      "reminder_body": "Buongiorno {name}\n\nLe ricordiamo il Suo appuntamento di fisioterapia il {when} ({place}).\nDisdetta almeno 24 ore prima: {phone}\n\nCordiali saluti\n{practice}"
+    },
+    "offer": {
+      "title": "Appuntamento libero",
+      "minutes": "{n} minuti",
+      "first_wins": "Questo appuntamento è stato offerto a più persone. Chi conferma per primo lo ottiene.",
+      "accept": "Sì, prendo l'appuntamento",
+      "decline": "No, grazie",
+      "booked_title": "Il suo appuntamento è prenotato",
+      "booked_text": "Riceverà una conferma via SMS. Disdetta almeno 24 ore prima.",
+      "declined": "Grazie per la risposta. Resta sulla lista d'attesa.",
+      "changed_mind": "Invece sì, voglio l'appuntamento",
+      "taken": "Purtroppo l'appuntamento è già stato assegnato. Resta sulla lista d'attesa.",
+      "expired": "Questa offerta è scaduta. Resta sulla lista d'attesa.",
+      "invalid": "Questo link non è valido o è scaduto.",
+      "call": "Domande? Ci chiami:"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{% extends "layouts/staff.html" %}
+{% block title %}{{ t('inbox.title') }}{% endblock %}
+{% block subtitle %}{{ t('inbox.r_subtitle') }}{% endblock %}
+{% block actions %}<button class="btn" type="button" data-dialog="dlg-upload">{{ icon('upload_file', 18) }}<span>{{ t('inbox.upload') }}</span></button>{% endblock %}
+{% block content %}
+<div class="grid-main-side">
+  <div class="col">
+    <div class="chips">
+      <a class="chip{% if f != 'alle' %} selected{% endif %}" href="{{ S }}/posteingang">{{ t('inbox.f_unassigned') }}{% if n_unassigned %} · {{ n_unassigned }}{% endif %}</a>
+      <a class="chip{% if f == 'alle' %} selected{% endif %}" href="{{ S }}/posteingang?f=alle">{{ t('inbox.f_all') }}</a>
+    </div>
+    <section class="card flush">
+      <div class="list">
+        {% for d in docs %}
+        <a class="list-item" href="{{ S }}/posteingang/{{ d.id }}">
+          <span class="lead avatar">{{ icon({'scan': 'document_scanner', 'patient': 'mobile', 'hin': 'mail'}.get(d.source, 'description'), 20) }}</span>
+          <span class="body"><span class="title">{% if d.patient_id %}{{ d.first_name }} {{ d.last_name }}{% elif d.extracted_name %}{{ t('inbox.read_name', name=d.extracted_name) }}{% else %}{{ t('inbox.no_name') }}{% endif %}</span><br>
+            <span class="sub">{{ d.sender | truncate(40) if d.sender else t('inbox.src.' ~ d.source) }} · {{ fmt_date(d.created_at) }}</span></span>
+          <span class="trail">
+            {% if d.status in ('new', 'processing') %}<span class="pill-label">{{ icon('hourglass_top', 14) }} {{ t('inbox.st.' ~ d.status) }}</span>
+            {% elif d.status == 'failed' %}<span class="pill-label error">{{ t('inbox.st.failed') }}</span>
+            {% elif not d.patient_id %}<span class="pill-label warn">{{ t('inbox.to_assign') }}</span>
+            {% elif d.status == 'done' %}<span class="pill-label ok">{{ t('inbox.st.done') }}</span>
+            {% else %}<span class="pill-label info">{{ t('inbox.with_therapy') }}</span>{% endif %}
+            {{ icon('chevron_right', 20, 'flip-rtl') }}</span>
+        </a>
+        {% else %}
+        <div class="empty">{{ icon('task_alt', 40) }}<p>{{ t('inbox.r_empty') }}</p></div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+  <div class="col">
+    <section class="card">
+      <h2 style="margin-bottom:8px">{{ icon('document_scanner', 20) }}{{ t('inbox.how') }}</h2>
+      <p class="small">{{ t('inbox.r_how_text') }}</p>
+      <p class="small" style="margin-top:8px">{{ icon('document_scanner', 14) }} {{ t('inbox.scan_auto') }}</p>
+      <p class="small muted">{% if scan.last %}{{ t('inbox.scan_last', when=fmt_date(scan.last, year=False) ~ ' ' ~ fmt_time(scan.last)) }} · {{ t('inbox.scan_today', n=scan.today) }}{% else %}{{ t('inbox.scan_none') }}{% endif %}</p>
+    </section>
+    <section class="card tonal"><p class="small">{{ icon('lock', 14) }} {{ t('inbox.r_privacy') }}</p></section>
+  </div>
+</div>
+<dialog class="dlg" id="dlg-upload">
+  <h2>{{ t('inbox.upload') }}</h2>
+  <form method="post" action="{{ S }}/posteingang/hochladen" enctype="multipart/form-data" class="form">
+    <input type="hidden" name="_csrf" value="{{ csrf }}">
+    <div class="field"><label for="files">{{ t('inbox.files') }}</label><input id="files" name="files" type="file" multiple accept=".pdf,.txt,.png,.jpg,.jpeg,.tif,.tiff,.webp" required></div>
+    <p class="small muted">{{ t('inbox.upload_hint') }}</p>
+    <div class="form-actions"><button type="button" class="btn text" data-close>{{ t('common.cancel') }}</button><button class="btn" type="submit">{{ icon('upload_file', 18) }}{{ t('inbox.upload_go') }}</button></div>
+  </form>
+</dialog>
+{% endblock %}

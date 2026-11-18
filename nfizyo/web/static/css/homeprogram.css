@@ -1,0 +1,50 @@
+/* Heimprogramm: Übungszeichnungen, Dosierung, Bibliothek. Nur auf den Seiten des Heimprogramms geladen.
+   Die Zeichnungen (img/exercises/*.svg) zeichnen in currentColor; --ex-accent färbt den bewegten Körperteil und den Pfeil. */
+:root { --ex-accent: #D9661F; }
+
+/* Bild klein (Listen) und gross (Übung in der App) */
+.ex-thumb-wrap { position: relative; flex: 0 0 auto; display: inline-flex; }
+.ex-thumb { display: block; width: 88px; height: 55px; border-radius: 12px; background: var(--surface-mid); color: var(--on-surface); }
+.ex-thumb-wrap.sm .ex-thumb { width: 64px; height: 40px; border-radius: 10px; }
+.ex-badge { position: absolute; inset-inline-end: -6px; bottom: -6px; width: 24px; height: 24px; border-radius: 12px; display: flex;
+  align-items: center; justify-content: center; background: var(--primary); color: var(--on-primary); box-shadow: var(--elev-1); }
+.ex-media { margin: 0; border-radius: 16px; background: var(--surface-card); color: var(--on-surface); overflow: hidden; box-shadow: var(--elev-1); }
+.ex-media-pic { display: block; width: 100%; height: auto; aspect-ratio: 8 / 5; }
+.ex-media figcaption { padding: 0 16px 16px; margin-top: -4px; text-align: center; font-size: 17px; line-height: 24px; font-weight: 500; }
+
+/* Patienten-App: Liste und Übung */
+.hp-ex-row { display: flex; gap: 14px; align-items: center; text-decoration: none; color: inherit; }
+.hp-ex-name { font-size: 17px; line-height: 24px; display: inline-flex; gap: 6px; align-items: center; }
+.hp-ex-dose { display: block; margin-top: 2px; }
+.hp-dose-big { font-size: 20px; line-height: 28px; font-variant-numeric: tabular-nums; }
+
+/* Maschinell übersetzt: eine ruhige Zeile, das Original zum Aufklappen */
+.mt-note { margin-top: 6px; font-size: 14px; line-height: 20px; color: var(--on-surface-variant); }
+.mt-note > summary { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; cursor: pointer; list-style: none;
+  border-radius: 8px; padding-inline-end: 4px; }
+.mt-note > summary::-webkit-details-marker { display: none; }
+.mt-note > summary .ic { flex: none; }
+.mt-note .mt-chev { transition: transform .15s; }
+.mt-note[open] .mt-chev { transform: rotate(180deg); }
+.mt-note > p { margin-top: 4px; font-size: 15px; line-height: 22px; }
+
+/* Therapie: Bibliothek, Formular, Programm */
+.hp-lib-item .body > span { display: block; }
+.hp-lib-item .body > .sub { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.hp-dose { color: var(--on-surface-variant); margin-top: 2px; }
+.hp-form { max-width: 880px; }
+.hp-dose-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 12px; }
+.hp-dose-preview { display: flex; gap: 6px; align-items: center; margin-top: 6px; }
+.ex-choices { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 8px; }
+.ex-choice { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 6px; border-radius: 12px; cursor: pointer;
+  border: 1px solid var(--outline-variant); background: var(--surface-card); }
+.ex-choice input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+.ex-choice svg { display: block; width: 100%; height: auto; aspect-ratio: 8 / 5; border-radius: 8px; background: var(--surface-mid);
+  color: var(--on-surface); }
+.ex-choice span { font-size: 12px; line-height: 16px; }
+.ex-choice:has(input:checked) { border-color: var(--primary); box-shadow: inset 0 0 0 1px var(--primary); background: var(--secondary-container);
+  color: var(--on-secondary-container); }
+.ex-choice:has(input:focus-visible) { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+/* Dosierung in der Liste gut lesbar (ältere Menschen) */
+.papp .hp-ex-dose { font-size: 16px; line-height: 22px; }

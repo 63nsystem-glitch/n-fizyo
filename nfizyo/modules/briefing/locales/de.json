@@ -1,0 +1,73 @@
+{
+  "brief": {
+    "title": "Kurzüberblick und Übergabe",
+    "description": "Vor jedem Termin das Wichtigste auf einen Blick; beim Wechsel der Therapeutin / des Therapeuten eine Übergabe aus der Akte.",
+    "action": "Kurzüberblick",
+    "page_title": "Kurzüberblick",
+    "session": "Sitzung {n} von {total}",
+    "interpreter": "Dolmetscher/in nötig",
+    "takeover": "Übernahme",
+    "takeover_text": "Zuletzt bei {name} ({date}).",
+    "open_handover": "Übergabe ansehen",
+    "last_time": "Letzte Notiz · {date} · {name}",
+    "first_time": "Erste Sitzung",
+    "first_text": "Noch keine Sitzung in der Akte.",
+    "since_label": "Seit der letzten Sitzung",
+    "last_days": "Letzte Tage",
+    "hp_days": "Übungen an {done} von {total} Tagen",
+    "pain_max": "Schmerz höchstens {n}/10",
+    "pain": "Schmerz {n}/10",
+    "msg": "Nachricht",
+    "msg_problem": "Problem gemeldet",
+    "translated": "übersetzt",
+    "intake": "Neues Anliegen in der App",
+    "rx": "Verordnung",
+    "rx_ok": "In Ordnung.",
+    "measures": "Messwerte",
+    "goal": "Ziel der Patientin / des Patienten",
+    "goal_value": "Ziel {v}",
+    "plan": "Plan",
+    "until": "bis {date}",
+    "restrictions": "Einschränkungen",
+    "clearances": "Freigaben",
+    "diagnoses": "Diagnosen",
+    "open_record": "Akte öffnen",
+    "dictate": "Diktat zu diesem Termin",
+    "messages": "Nachrichten öffnen",
+    "source_hint": "Aus der Akte zusammengestellt – ohne KI. Jede Angabe stammt aus einer freigegebenen Notiz, einem Befund, dem Heimprogramm oder einer Nachricht.",
+    "source_short": "aus freigegebenen Notizen, ohne KI",
+    "src_note": "Notiz vom {date}",
+    "ho_title_takeover": "Übergabe von {names}",
+    "ho_title_away": "Während Ihrer Abwesenheit",
+    "ho_notes": "Verlauf",
+    "ho_hp": "Heimprogramm (14 Tage)",
+    "ho_messages": "Offen in den Nachrichten",
+    "ho_open_msgs": "{unread} ungelesen · {problems} Problem-Meldungen offen.",
+    "ho_upcoming": "Nächste Termine",
+    "ho_full": "Ganze Übergabe",
+    "ho_none": "Keine Übergabe nötig – Sie haben zuletzt behandelt.",
+    "findings": "Befund",
+    "treatment": "Behandlung",
+    "skips": "Nicht geübt, weil",
+    "mtt": "MTT seit letzter Sitzung",
+    "auto_translated": "automatisch übersetzt",
+    "demo_translation": "Beispielübersetzung (Demo)",
+    "show_original": "Original anzeigen",
+    "items": {
+      "one": "{n} Übung",
+      "other": "{n} Übungen"
+    },
+    "ho_sub": {
+      "one": "{n} Sitzung · {first} – {last}",
+      "other": "{n} Sitzungen · {first} – {last}"
+    },
+    "ho_away_sub": {
+      "one": "{n} Sitzung bei {names} seit Ihrer letzten Sitzung",
+      "other": "{n} Sitzungen bei {names} seit Ihrer letzten Sitzung"
+    },
+    "mtt_line": {
+      "one": "{n} Training · {sets} Sätze",
+      "other": "{n} Trainings · {sets} Sätze"
+    }
+  }
+}

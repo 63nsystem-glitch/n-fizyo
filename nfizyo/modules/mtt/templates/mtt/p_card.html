@@ -1,0 +1,6 @@
+<a class="card" href="/p/training" style="display:block;text-decoration:none;color:inherit">
+  <div class="row-between"><h2>{{ icon('fitness_center', 20) }} {{ t('p.mtt.title') }}</h2>
+    {% if ctx.visit and not ctx.visit.ended_at %}<span class="pill-label info">{{ t('p.mtt.running') }}</span>{% elif ctx.visit %}<span class="pill-label ok">{{ icon('check', 14) }}</span>{% endif %}</div>
+  <p class="small muted" style="margin-top:6px">{{ t('p.mtt.card_hint', n=ctx.n_items) }}</p>
+  {% if ctx.sub %}<p class="small" style="margin-top:4px">{{ icon('card_membership', 16) }} {{ ctx.sub.label }}{% if ctx.sub.left is not none %} · {{ t('p.mtt.left', n=ctx.sub.left) }}{% endif %}</p>{% endif %}
+</a>

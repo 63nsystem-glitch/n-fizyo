@@ -1,0 +1,77 @@
+{
+  "_review": "Maschinennahe Erstübersetzung durch NSystem – vor Einsatz von Muttersprachler/in prüfen lassen.",
+  "common": {
+    "demo_ribbon": "Demo · dati fittizi",
+    "save": "Salva",
+    "saved": "Salvato",
+    "cancel": "Annulla",
+    "close": "Chiudi",
+    "back": "Indietro",
+    "yes": "Sì",
+    "no": "No",
+    "next": "Avanti",
+    "done": "Fatto",
+    "send": "Invia",
+    "edit": "Modifica",
+    "delete": "Elimina",
+    "loading": "Caricamento …",
+    "offline": "Nessuna connessione – invio più tardi",
+    "retry": "Riprova",
+    "today": "Oggi",
+    "tomorrow": "Domani",
+    "yesterday": "Ieri",
+    "region": {
+      "head": "Testa",
+      "neck": "Collo / nuca",
+      "trapezius": "Nuca / spalla",
+      "chest": "Petto",
+      "abs": "Pancia",
+      "obliques": "Fianco",
+      "front_deltoids": "Spalla (davanti)",
+      "back_deltoids": "Spalla (dietro)",
+      "biceps": "Braccio (davanti)",
+      "triceps": "Braccio (dietro)",
+      "forearm": "Avambraccio / mano",
+      "upper_back": "Parte alta della schiena",
+      "lower_back": "Parte bassa della schiena",
+      "gluteal": "Gluteo / anca",
+      "abductors": "Inguine / interno coscia",
+      "quadriceps": "Coscia (davanti)",
+      "hamstring": "Coscia (dietro)",
+      "knees": "Ginocchio",
+      "calves": "Gamba / piede",
+      "soleus": "Polpaccio / tallone"
+    },
+    "side": {
+      "l": "(lato sinistro)",
+      "r": "(lato destro)"
+    },
+    "hold_s": "tenere {n} s",
+    "per_day": "{n}× al giorno",
+    "search": "Cerca"
+  },
+  "p": {
+    "mail": {
+      "footer": "Questo messaggio è stato inviato automaticamente da {practice}. In caso di emergenza chiami il 144."
+    },
+    "error": {
+      "title_403": "Accesso negato",
+      "text_403": "Non può aprire questa pagina.",
+      "title_404": "Pagina non trovata",
+      "text_404": "Questa pagina non esiste (più).",
+      "title_500": "Si è verificato un errore",
+      "text_500": "Riprovi più tardi. Per domande chiami lo studio.",
+      "home": "Alla pagina iniziale"
+    },
+    "body": {
+      "view": "Vista",
+      "front": "Davanti",
+      "back": "Dietro",
+      "figure": "Corpo",
+      "right_short": "D",
+      "left_short": "S",
+      "zoom": "Ingrandisci"
+    },
+    "listen": "Ascolta"
+  }
+}

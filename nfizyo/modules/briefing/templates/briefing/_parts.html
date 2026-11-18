@@ -1,0 +1,36 @@
+{# Bausteine für Kurzüberblick und Übergabe #}
+{% macro hp_line(hp) %}
+{{ t('brief.hp_days', done=hp.done, total=hp.total) }}<span class="brief-days" aria-hidden="true">{% for d in hp.days %}<i class="{{ 'pain' if (d.pain is not none and d.pain >= 5) or d.skip == 'pain' else ('on' if d.n else ('skip' if d.skip else '')) }}" title="{{ fmt_date(d.date, weekday=True, year=False) }}{% if d.pain is not none %} · {{ d.pain }}/10{% endif %}{% if d.skip %} · {{ t('hp.skip.' ~ d.skip) }}{% endif %}"></i>{% endfor %}</span>{% if hp.max_pain is not none %} · {{ t('brief.pain_max', n=hp.max_pain) }}{% endif %}
+{% if hp.skips %}<span class="brief-skips{{ ' alert' if hp.skip_pain else '' }}">{{ t('brief.skips') }}: {% for s in hp.skips %}{{ t('hp.skip.' ~ s.reason) }}{% if s.note %} («<span dir="auto">{{ s.note }}</span>»){% endif %} <span class="muted">{{ fmt_date(s.date, weekday=True, year=False) }}</span>{{ ', ' if not loop.last else '' }}{% endfor %}</span>{% endif %}
+{% endmacro %}
+
+{% macro trend_line(s) %}
+{{ t('measure.' ~ s.kind) }}{% if s.joint %} {{ t('joint.' ~ s.joint) }}{% endif %}{% if s.side %} {{ t('common.side.' ~ s.side) }}{% endif %}:
+{% if s.prev is not none %}<span class="mono">{{ s.prev | num }}{{ s.unit }} → <strong>{{ s.last | num }}{{ s.unit }}</strong></span>{% else %}<strong class="mono">{{ s.last | num }}{{ s.unit }}</strong>{% endif %}{% if s.goal is not none %}<span class="muted"> · {{ t('brief.goal_value', v=(s.goal | num) ~ s.unit) }}</span>{% endif %}
+{% endmacro %}
+
+{% macro msg_row(m) %}
+<div class="brief-row{{ ' alert' if m.problem else '' }}">{{ icon('report' if m.problem else 'forum', 20) }}
+  <div><span class="lbl">{{ t('brief.msg_problem' if m.problem else 'brief.msg') }} · {{ fmt_date(m.at, weekday=True, year=False) }} {{ fmt_time(m.at) }}{% if m.pain is not none %} · {{ t('brief.pain', n=m.pain) }}{% endif %}</span>
+    <span dir="auto">«{{ m.text | truncate(160) }}»</span>{% if m.original %} <span class="small muted">{{ icon('translate', 12) }} {{ t('brief.translated') }}</span>{% endif %}</div></div>
+{% endmacro %}
+
+{% macro finding_list(items, kind) %}
+{% for f in items %}<div class="rx-line {{ 'act' if kind == 'restriction' else 'info' }}">{{ icon('warning' if kind == 'restriction' else 'check_circle', 18) }}<span>{{ f.title }}{% if f.until %} · {{ t('brief.until', date=fmt_date(f.until, year=False)) }}{% endif %}</span></div>{% endfor %}
+{% endmacro %}
+
+{% macro note_row(n, S, full=False) %}
+<div class="brief-row">{{ icon('history', 20) }}
+  <div><span class="lbl">{{ fmt_date(n.session_date, weekday=True, year=False) }} · {{ n.author_name }}</span>
+    {% if full and n.befund %}<span><strong>{{ t('brief.findings') }}:</strong> {{ n.befund }}</span><br>{% endif %}
+    {% if full and n.behandlung %}<span><strong>{{ t('brief.treatment') }}:</strong> {{ n.behandlung }}</span><br>{% endif %}
+    {% if n.beurteilung %}<span>{{ n.beurteilung }}</span>{% endif %}{% if n.plan %}<br><span><strong>{{ t('brief.plan') }}:</strong> {{ n.plan }}</span>{% endif %}
+    <br><a class="handover-src" href="{{ S }}/notizen/{{ n.id }}">{{ icon('description', 12) }} {{ t('brief.src_note', date=fmt_date(n.session_date)) }}</a></div></div>
+{% endmacro %}
+
+{% macro mtt_row(m, S, pid) %}
+{% if m and m.n %}<div class="brief-row{{ ' alert' if m.max_pain is not none and m.max_pain >= 5 else '' }}">{{ icon('speed', 20) }}<div><span class="lbl">{{ t('brief.mtt') }}</span>{{ t('brief.mtt_line', n=m.n, sets=m.sets) }}{% if m.max_effort is not none %} · {{ t('mtt.effort_short', n=m.max_effort) }}{% endif %}{% if m.max_pain is not none %} · {{ t('brief.pain_max', n=m.max_pain) }}{% endif %}{% if m.open_suggestions %} · <a href="{{ S }}/patienten/{{ pid }}/mtt">{{ t('mtt.n_sugg', n=m.open_suggestions) }}</a>{% endif %}</div></div>{% endif %}
+{% endmacro %}
+{% macro goal_row(g) %}{% if g %}<div class="brief-row">{{ icon('flag', 20) }}<div><span class="lbl">{{ t('brief.goal') }}</span><span dir="auto">{{ g.text }}</span>
+  {%- if g.original %} <span class="small muted">{{ icon('translate', 12) }} {{ t('brief.auto_translated') }}{% if g.demo %} · {{ t('brief.demo_translation') }}{% endif %}</span>
+  <details class="small muted"><summary>{{ t('brief.show_original') }}</summary><span dir="auto" lang="{{ g.lang }}">{{ g.original }}</span></details>{% endif %}</div></div>{% endif %}{% endmacro %}

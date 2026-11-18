@@ -1,0 +1,65 @@
+{% extends "layouts/staff.html" %}
+{% block title %}{{ t('booking.requests_title') }}{% endblock %}
+{% block subtitle %}{{ t('booking.requests_sub') }}{% endblock %}
+{% block content %}
+<div class="stack">
+  {% if not enabled %}<div class="banner info">{{ icon('info', 20) }}<span>{{ t('booking.disabled') }}</span></div>{% endif %}
+  <section class="card flush">
+    <div class="list">
+      {% for x in items %}{% set r = x.r %}
+      <div class="list-item" style="flex-wrap:wrap;align-items:flex-start;gap:12px" data-request="{{ r.id }}">
+        <span class="lead avatar">{{ icon('event_available', 20) }}</span>
+        <span class="body" style="min-width:240px">
+          <span class="title">{{ fmt_date(x.start, weekday=True) }} {{ fmt_time(x.start) }} · {{ (x.type.name_fr if lang == 'fr' else x.type.name_de) if x.type else '–' }} · {{ r.therapist_name }}</span><br>
+          <span class="sub"><strong>{{ r.first_name }} {{ r.last_name }}</strong> · {{ fmt_date(r.birthdate) }} · {{ r.phone | phone }}{% if r.email %} · {{ r.email }}{% if r.email_ok %} ({{ t('booking.email_ok_short') }}){% endif %}{% endif %}</span><br>
+          <span class="sub">{{ t('booking.insurance') }}: {{ (r.insurance | law) or '–' }} · {{ t('booking.prescription_yes') if r.has_prescription else t('booking.prescription_no') }} · {{ t('booking.lang') }}: {{ LANG_NAMES.get(r.lang, r.lang) }}</span>
+          {% if r.note %}<br><span class="sub">«{{ r.note }}»</span>{% endif %}
+          <br>{% if x.match %}<span class="pill-label info">{{ t('booking.existing', number=x.match.number) }}</span>{% elif x.likely %}<span class="pill-label warn">{{ t('booking.similar_found') }}</span>{% else %}<span class="pill-label warn">{{ t('booking.new_patient') }}</span>{% endif %}
+          {% if x.unavailable %}<span class="pill-label error">{{ icon('event_busy', 14) }}{{ t('booking.unavailable_short') }}</span>{% endif %}
+        </span>
+        <form method="post" id="confirm-{{ r.id }}" class="stack-s" style="flex-basis:100%;padding-inline-start:56px">
+          <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="confirm"><input type="hidden" name="request_id" value="{{ r.id }}">
+          <fieldset style="border:0;padding:0;margin:0" class="stack-s">
+            <legend class="small muted" style="margin-bottom:4px">{{ t('booking.who') }}</legend>
+            {% for m in x.likely %}
+            <label class="check"><input type="radio" name="patient_choice" value="{{ m.p.id }}" required{% if x.match and x.match.id == m.p.id %} checked{% endif %}>
+              <span>{{ m.p.first_name }} {{ m.p.last_name }} · {{ fmt_date(m.p.birthdate) if m.p.birthdate else '–' }} · {{ m.p.number }}{% if m.p.phone %} · {{ m.p.phone | phone }}{% endif %}
+                <span class="small muted">({% for k in m.reasons %}{{ t('booking.why.' ~ k) }}{% if not loop.last %}, {% endif %}{% endfor %})</span>
+                {% if m.same_day %}<span class="pill-label warn" data-same-day>{{ icon('event', 14) }}{{ t('booking.same_day', times=m.same_day | join(', ')) }}</span>{% endif %}</span></label>
+            {% endfor %}
+            <label class="check"><input type="radio" name="patient_choice" value="other" id="other-{{ r.id }}" required><span>{{ t('booking.choose_other') }}</span></label>
+            <div style="padding-inline-start:32px;max-width:520px"><input name="patient" list="booking-patients" class="input" style="width:100%;min-height:40px;padding:6px 12px" autocomplete="off" placeholder="{{ t('booking.search_ph') }}" aria-label="{{ t('booking.choose_other') }}" data-choose="other-{{ r.id }}"></div>
+            <label class="check"><input type="radio" name="patient_choice" value="new" required{% if not x.likely %} checked{% endif %}><span>{{ t('booking.create_new', name=r.first_name ~ ' ' ~ r.last_name) }}</span></label>
+          </fieldset>
+        </form>
+        <div class="row" style="flex-basis:100%;justify-content:flex-end;gap:8px">
+          <button class="btn text sm" type="button" data-dialog="decline-{{ r.id }}">{{ icon('event_busy', 18) }}{{ t('booking.decline') }}</button>
+          <button class="btn sm" type="submit" form="confirm-{{ r.id }}">{{ icon('check', 18) }}{{ t('booking.confirm') }}</button>
+        </div>
+        <dialog class="dlg" id="decline-{{ r.id }}">
+          <h2>{{ t('booking.decline_title') }}</h2>
+          <p class="small muted" style="margin-bottom:12px">{{ r.first_name }} {{ r.last_name }} · {{ fmt_date(x.start, weekday=True) }} {{ fmt_time(x.start) }}</p>
+          <form method="post" class="form"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="decline"><input type="hidden" name="request_id" value="{{ r.id }}">
+            <div class="field"><label for="reason-{{ r.id }}">{{ t('booking.reason_ph') }}</label><textarea id="reason-{{ r.id }}" name="reason" rows="2" maxlength="300"></textarea></div>
+            <p class="small muted">{{ t('booking.decline_hint') }}</p>
+            <div class="form-actions"><button type="button" class="btn text" data-close>{{ t('common.cancel') }}</button><button class="btn danger" type="submit">{{ t('booking.decline_send') }}</button></div>
+          </form>
+        </dialog>
+      </div>
+      {% else %}<div class="empty">{{ icon('event_available', 40) }}<p>{{ t('booking.none') }}</p></div>{% endfor %}
+    </div>
+  </section>
+  {% if items %}<datalist id="booking-patients">{% for p in patients %}<option value="{{ p.last_name }}, {{ p.first_name }} · {{ fmt_date(p.birthdate) if p.birthdate else '' }} · {{ p.number }}"></option>{% endfor %}</datalist>{% endif %}
+  {% if recent %}
+  <section class="card flush">
+    <h2 style="padding:16px 16px 8px">{{ t('booking.recent') }}</h2>
+    <div class="list">{% for r in recent %}
+      <div class="list-item"><span class="body"><span class="title">{{ r.first_name }} {{ r.last_name }} · {{ fmt_date(r.starts_at) }} {{ fmt_time(r.starts_at) }}</span><br>
+        <span class="sub">{{ t('booking.st_' ~ r.status) }} · {{ r.decider_name or '–' }}{% if r.decline_reason %} · {{ r.decline_reason }}{% endif %}</span></span>
+        {% if r.patient_id %}<a class="btn text sm trail" href="{{ S }}/patienten/{{ r.patient_id }}">{{ t('booking.open_patient') }}</a>{% endif %}</div>{% endfor %}</div>
+  </section>
+  {% endif %}
+  <p class="small muted">{{ t('booking.hint_flow') }}</p>
+</div>
+{% endblock %}
+{% block scripts %}{{ super() }}<script src="{{ static('js/booking.js') }}" defer></script>{% endblock %}

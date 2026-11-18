@@ -1,0 +1,75 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/patienten/{{ patient.id }}/berichte" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('reports.kind.' ~ r.kind) }}{% endblock %}
+{% block subtitle %}<a href="{{ S }}/patienten/{{ patient.id }}" style="color:inherit">{{ patient.first_name }} {{ patient.last_name }}</a> · {{ r.referrer_name or t('reports.no_referrer') }} · {{ 'Deutsch' if r.lang == 'de' else 'Français' }}{% endblock %}
+{% block actions %}
+  <span class="pill-label {{ {'draft': 'warn', 'final': 'info', 'sent': 'ok'}[r.status] }}">{% if r.status != 'draft' %}{{ icon('lock', 14) }} {% endif %}{{ t('reports.status.' ~ r.status) }}</span>
+  <a class="btn tonal" href="{{ S }}/berichte/{{ r.id }}/druck" target="_blank" rel="noopener">{{ icon('print', 18) }}<span>{{ t('reports.print') }}</span></a>
+{% endblock %}
+{% block content %}
+<div class="grid-main-side">
+  <div class="col stack">
+    {% for h in hints %}<div class="banner warn">{{ icon('info', 20) }}<div>{{ t('reports.hint.' ~ h) }}</div></div>{% endfor %}
+    {% if r.status == 'draft' and can_write %}
+    <form method="post" class="stack" id="report-form">
+      <input type="hidden" name="_csrf" value="{{ csrf }}">
+      <section class="card stack">
+        <div class="field"><label for="subject">{{ t('reports.subject') }}</label><input id="subject" name="subject" value="{{ r.subject }}" maxlength="300"></div>
+        <div class="field"><label for="salutation">{{ t('reports.salutation') }}</label><input id="salutation" name="salutation" value="{{ r.salutation }}" maxlength="200"></div>
+        {% for s in sections %}
+        <div class="field"><label for="{{ s }}">{{ t('reports.sec.' ~ s) }}</label><textarea id="{{ s }}" name="{{ s }}" rows="3" data-autogrow>{{ r[s] }}</textarea></div>
+        {% endfor %}
+      </section>
+      <div class="form-actions">
+        <button class="btn outlined" type="submit">{{ t('reports.save_draft') }}</button>
+        <button class="btn" type="submit" name="do" value="finalize" form="report-form" data-finalize>{{ icon('lock', 18) }}{{ t('reports.finalize') }}</button>
+      </div>
+    </form>
+    {% else %}
+    <section class="card stack">
+      <p><strong>{{ r.subject }}</strong></p>
+      <p>{{ r.salutation }}</p>
+      {% for s in sections if r[s] %}
+      <div><h3 class="small muted" style="margin-bottom:4px">{{ t('reports.sec.' ~ s) }}</h3><p style="white-space:pre-line">{{ r[s] }}</p></div>
+      {% endfor %}
+    </section>
+    {% endif %}
+  </div>
+  <div class="col stack">
+    <section class="card stack-s">
+      <h2>{{ t('reports.status_title') }}</h2>
+      <p class="small muted">{{ t('reports.created_by', name=r.author_name, date=fmt_date(r.created_at)) }}</p>
+      {% if r.finalized_at %}<p class="small muted">{{ icon('lock', 14) }} {{ t('reports.finalized_on', date=fmt_date(r.finalized_at)) }}</p>{% endif %}
+      {% if r.sent_at %}<p class="small">{{ icon('check', 14) }} {{ t('reports.sent_on', date=fmt_date(r.sent_at), via=t('reports.via.' ~ r.sent_via)) }}</p>{% endif %}
+      {% if r.status == 'draft' %}
+        <p class="small muted">{{ t('reports.draft_hint') }}</p>
+        {% if can_write and can_translate and r.lang != lang %}
+        <form method="post" action="{{ S }}/berichte/{{ r.id }}/uebersetzen"><input type="hidden" name="_csrf" value="{{ csrf }}">
+          <button class="btn text sm" type="submit">{{ icon('translate', 18) }}{{ t('reports.translate', language=('Français' if r.lang == 'fr' else 'Deutsch')) }}</button></form>
+        {% endif %}
+        {% if can_write %}
+        <form method="post" action="{{ S }}/berichte/{{ r.id }}/loeschen" data-confirm="{{ t('reports.delete_confirm') }}" data-confirm-yes="{{ t('common.delete') }}">
+          <input type="hidden" name="_csrf" value="{{ csrf }}"><button class="btn text sm" type="submit" style="color:var(--error)">{{ icon('delete', 18) }}{{ t('reports.delete') }}</button></form>
+        {% endif %}
+      {% elif r.status == 'final' %}
+        {% if hin.ready %}
+        <form method="post" action="{{ S }}/berichte/{{ r.id }}/hin" data-confirm="{{ t('reports.hin_confirm', to=hin.address) }}" data-confirm-yes="{{ t('reports.hin_send') }}">
+          <input type="hidden" name="_csrf" value="{{ csrf }}">
+          <button class="btn block" type="submit">{{ icon('forward_to_inbox', 18) }}{{ t('reports.hin_send') }}</button></form>
+        <p class="small muted">{{ t('reports.hin_to', to=hin.address) }}</p>
+        {% elif hin.configured %}
+        <p class="small muted">{{ t('reports.hin_no_address') }}</p>
+        {% endif %}
+        <a class="btn outlined" href="{{ S }}/berichte/{{ r.id }}/pdf" target="_blank" rel="noopener">{{ icon('picture_as_pdf', 18) }}{{ t('reports.pdf') }}</a>
+        <form method="post" action="{{ S }}/berichte/{{ r.id }}/versendet" class="form">
+          <input type="hidden" name="_csrf" value="{{ csrf }}">
+          <div class="field"><label for="via">{{ t('reports.sent_via') }}</label>
+            <select id="via" name="via">{% for v in sent_via %}<option value="{{ v }}">{{ t('reports.via.' ~ v) }}</option>{% endfor %}</select></div>
+          <button class="btn" type="submit">{{ icon('outgoing_mail', 18) }}{{ t('reports.mark_sent') }}</button>
+        </form>
+        {% if not hin.configured %}<p class="small muted">{{ t('reports.hin_later') }}{% if r.referrer_hin %} · {{ r.referrer_hin }}{% endif %}</p>{% endif %}
+      {% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}

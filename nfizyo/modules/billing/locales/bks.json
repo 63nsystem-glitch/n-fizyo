@@ -1,0 +1,8 @@
+{
+  "p": {
+    "mail": {
+      "invoice_subject": "Račun {number}",
+      "invoice_body": "Poštovani/a {name}\n\nU prilogu je račun {number} na iznos od CHF {amount}. Molimo platite pomoću QR uplatnice do {due}.\n\nSrdačan pozdrav\n{practice}"
+    }
+  }
+}

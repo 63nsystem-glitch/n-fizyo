@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <title>Schulterblätter zusammenziehen</title>
+  <g id="fig" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 186 L300 186" stroke-width="3" opacity="0.3"/>
+    <path d="M114 152 L206 152" stroke-width="5" opacity="0.45"/>
+    <path d="M120 152 L116 186" stroke-width="4" opacity="0.45"/>
+    <path d="M200 152 L204 186" stroke-width="4" opacity="0.45"/>
+    <path d="M145 68 L130 66 L143 100 Z" fill="currentColor" stroke="none" opacity="0.2"/>
+    <path d="M175 68 L190 66 L177 100 Z" fill="currentColor" stroke="none" opacity="0.2"/>
+    <path d="M145 150 L145 181" stroke-width="10" opacity="0.45"/>
+    <path d="M175 150 L175 181" stroke-width="10" opacity="0.45"/>
+    <path d="M130 64 L122 102 L127 138" stroke-width="10"/>
+    <path d="M190 64 L198 102 L193 138" stroke-width="10"/>
+    <path d="M133 66 Q133 58 143 57 L177 57 Q187 58 187 66 L178 142 L142 142 Z" stroke-width="10"/>
+    <path d="M160 56 L160 44" stroke-width="10"/>
+    <circle cx="160" cy="30" r="14" fill="currentColor" stroke="none"/>
+    <path d="M160 64 L160 136" stroke-width="3" opacity="0.35"/>
+    <path d="M154 68 L139 66 L152 100 Z" stroke="none" style="fill:var(--ex-accent, #D9661F)"/>
+    <path d="M166 68 L181 66 L168 100 Z" stroke="none" style="fill:var(--ex-accent, #D9661F)"/>
+    <path d="M136 114 L148.6 114" stroke-width="3.5" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M153 114 L145.9 117.7 L145.9 110.3 Z" stroke-width="2.5" style="fill:var(--ex-accent, #D9661F);stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M184 114 L171.4 114" stroke-width="3.5" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M167 114 L174.1 110.3 L174.1 117.7 Z" stroke-width="2.5" style="fill:var(--ex-accent, #D9661F);stroke:var(--ex-accent, #D9661F)"/>
+  </g>
+</svg>

@@ -1,0 +1,9 @@
+{% extends "layouts/staff.html" %}
+{% block title %}{{ t('settings.title') }}{% endblock %}
+{% block subtitle %}{{ practice.name }}{% endblock %}
+{% block tabs %}
+<nav class="tabs tabs-wrap" aria-label="{{ t('settings.title') }}">
+  {% for s in settings_tabs %}<a href="{{ s.href }}"{% if s.active %} aria-current="page"{% endif %}>{{ t(s.label_key) }}</a>{% endfor %}
+</nav>
+{% endblock %}
+{% block content %}{% block settings %}{% endblock %}{% endblock %}

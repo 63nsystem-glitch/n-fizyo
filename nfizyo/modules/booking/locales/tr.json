@@ -1,0 +1,61 @@
+{
+  "p": {
+    "booking": {
+      "title": "Randevu talep edin",
+      "closed": "Şu anda online randevu alınamıyor. Lütfen bizi arayın.",
+      "choose_type": "Ne için randevu almak istiyorsunuz?",
+      "minutes": "{n} dakika",
+      "other_type": "Başka tedavi",
+      "choose_slot": "Boş bir saat seçin. Muayenehane randevuyu daha sonra SMS ile onaylar.",
+      "no_slots": "Bu hafta boş saat kalmadı.",
+      "earlier": "Daha erken",
+      "later": "Daha geç",
+      "other_slot": "Başka saat seçin",
+      "err_fields": "Lütfen işaretli bilgileri kontrol edin.",
+      "first_name": "Ad",
+      "last_name": "Soyad",
+      "birthdate": "Doğum tarihi",
+      "phone": "Cep telefonu",
+      "phone_hint": "SMS ile bir kod alacaksınız.",
+      "email": "E-posta (isteğe bağlı)",
+      "email_ok": "Onay ve hatırlatmaları e-posta ile de almak istiyorum (e-posta şifreli değildir).",
+      "insurance": "Sigorta",
+      "ins_KVG": "Temel sağlık sigortası (hastalık)",
+      "ins_UVG": "Kaza sigortası",
+      "ins_IVG": "Malullük sigortası",
+      "ins_VVG": "Ek sigorta",
+      "ins_privat": "Kendim ödüyorum",
+      "prescription": "Fizyoterapi için doktor reçetem var.",
+      "note": "Not (isteğe bağlı)",
+      "note_hint": "Lütfen ayrıntılı sağlık bilgisi yazmayın – bunları muayenehanede konuşuruz.",
+      "consent": "{practice} kurumunun randevu için bilgilerimi kaydetmesini kabul ediyorum.",
+      "send_code": "Kodu SMS ile gönder",
+      "code_intro": "Size SMS ile bir kod gönderdik. Lütfen buraya girin.",
+      "confirm": "Talebi gönder",
+      "sent_title": "Talebiniz alındı",
+      "sent_text": "{practice} talebinizi inceler ve randevuyu SMS ile onaylar. Randevu ancak o zaman kesinleşir.",
+      "err_slot": "Bu saat artık geçerli değil. Lütfen yeniden seçin.",
+      "err_taken": "Bu saat az önce doldu. Lütfen başka bir saat seçin.",
+      "err_blocked": "Çok fazla deneme. Lütfen daha sonra tekrar deneyin veya bizi arayın.",
+      "err_phone": "Lütfen İsviçre veya Lihtenştayn'a ait bir cep telefonu numarası girin (ör. 079 123 45 67).",
+      "err_sms_limit": "Bu numaraya zaten birkaç kod gönderildi. Lütfen bir saat sonra tekrar deneyin veya bizi arayın.",
+      "err_code": "Kod doğru değil.",
+      "err_expired": "Talebin süresi doldu. Lütfen baştan başlayın.",
+      "all_places": "Tüm şubeler",
+      "closure": "Muayenehane kapalı: {dates}.",
+      "original": "Orijinali göster",
+      "err_busy": "Şu anda başka kod gönderemiyoruz. Lütfen daha sonra tekrar deneyin veya bizi arayın."
+    },
+    "sms": {
+      "booking_code": "{practice}: randevu talebiniz için kodunuz: {code}",
+      "booking_confirmed": "{practice}: {when} tarihindeki randevunuz onaylandı ({place}). İptal için en az 24 saat önce: {phone}",
+      "booking_declined": "{practice}: maalesef {when} tarihindeki randevuyu onaylayamıyoruz. Lütfen bizi arayın: {phone}"
+    },
+    "mail": {
+      "booking_confirmed_subject": "Randevu onaylandı: {when}",
+      "booking_confirmed_body": "Merhaba {name}\n\n{when} tarihindeki randevunuz onaylandı ({place}).\nİptal için lütfen en az 24 saat önce arayın: {phone}\n\nSaygılarımızla\n{practice}",
+      "booking_declined_subject": "Randevu talebiniz",
+      "booking_declined_body": "Merhaba {name}\n\nMaalesef {when} tarihindeki randevuyu onaylayamıyoruz. Lütfen bizi arayın: {phone}\n\nSaygılarımızla\n{practice}"
+    }
+  }
+}

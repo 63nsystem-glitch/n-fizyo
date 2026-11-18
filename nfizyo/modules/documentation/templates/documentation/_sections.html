@@ -1,0 +1,6 @@
+{# Notiz-Abschnitte (lesen) #}
+{% macro show(n) %}
+{% for s in ('befund', 'behandlung', 'beurteilung', 'plan') if n[s] %}
+<div class="note-sec"><h3>{{ t('notes.sec.' ~ s) }}</h3><p style="white-space:pre-wrap">{{ n[s] }}</p></div>
+{% endfor %}
+{% endmacro %}

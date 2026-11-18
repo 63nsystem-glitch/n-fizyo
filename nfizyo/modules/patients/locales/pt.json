@@ -1,0 +1,33 @@
+{
+  "p": {
+    "progress": {
+      "title": "O seu progresso",
+      "hint": "Partilhado pelo seu fisioterapeuta. Se tiver perguntas, fale sobre isso na próxima consulta.",
+      "from_to": "{first} em {first_on} → {last} em {last_on}",
+      "goal": "Objetivo {goal}",
+      "kind": {
+        "flexion": "Dobrar",
+        "extension": "Esticar",
+        "abduction": "Levantar para o lado",
+        "external_rotation": "Rodar para fora",
+        "internal_rotation": "Rodar para dentro",
+        "elevation": "Levantar o braço",
+        "pain_vas": "Dor (0–10)"
+      },
+      "joint": {
+        "knee": "joelho",
+        "shoulder": "ombro",
+        "hip": "anca",
+        "elbow": "cotovelo",
+        "ankle": "tornozelo",
+        "wrist": "pulso",
+        "cervical": "pescoço",
+        "lumbar": "fundo das costas"
+      },
+      "side": {
+        "l": "esquerdo",
+        "r": "direito"
+      }
+    }
+  }
+}

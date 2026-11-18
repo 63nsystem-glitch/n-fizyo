@@ -1,0 +1,13 @@
+{% if ctx.subs or ctx.sales %}
+<section class="card" aria-labelledby="h-cash">
+  <div class="card-head"><h2 id="h-cash">{{ t('cashdesk.card_title') }}</h2>
+    <a class="btn text sm" href="{{ S }}/kasse?patient={{ ctx.patient.id }}">{{ icon('point_of_sale', 18) }}{{ t('cashdesk.sell_btn') }}</a></div>
+  {% set back = S ~ '/patienten/' ~ ctx.patient.id %}
+  {% for s in ctx.subs %}{% include "cashdesk/_sub.html" %}{% endfor %}
+  {% for x in ctx.sales %}
+  <a class="list-item" style="padding-inline:0" href="{{ S }}/kasse/belege/{{ x.id }}"><span class="lead">{{ icon('receipt', 20) }}</span>
+    <span class="body"><span class="title">{{ x.number }}</span><br><span class="sub">{{ fmt_date(x.day) }} · {{ t('cashdesk.method.' ~ x.method) }}</span></span>
+    <span class="trail"><span class="mono small">{{ chf(x.total_chf) }}</span>{% if x.status == 'cancelled' %}<span class="pill-label error">{{ t('cashdesk.status.cancelled') }}</span>{% endif %}</span></a>
+  {% endfor %}
+</section>
+{% endif %}

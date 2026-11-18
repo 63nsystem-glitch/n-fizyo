@@ -1,0 +1,74 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/import" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('dataimport.kind.' ~ job.kind) }} · {{ job.filename }}{% endblock %}
+{% block subtitle %}{{ t('dataimport.n_rows', n=job.rows) }} · {{ t('dataimport.status.' ~ job.status) }}{% endblock %}
+{% block content %}
+{% if job.status == 'draft' and headers %}
+<div class="stack">
+  <section class="card">
+    <h2 style="margin-bottom:4px">{{ t('dataimport.step_map') }}</h2>
+    <p class="small muted" style="margin-bottom:16px">{{ t('dataimport.map_hint') }}</p>
+    <form method="post" class="form">
+      <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="map">
+      <div class="form-grid">
+        {% for f in fields %}
+        <div class="field"><label for="f_{{ f.key }}">{{ t('dataimport.f.' ~ f.key) }}{% if f.required %} *{% endif %}</label>
+          <select id="f_{{ f.key }}" name="f_{{ f.key }}"{% if f.required %} required{% endif %}>
+            <option value="">– {{ t('dataimport.not_in_file') }} –</option>
+            {% for h in headers %}<option value="{{ loop.index0 }}"{% if mapping.get(f.key) == loop.index0 %} selected{% endif %}>{{ h }}</option>{% endfor %}
+          </select></div>
+        {% endfor %}
+      </div>
+      <div class="form-actions"><button class="btn" type="submit">{{ icon('rule', 18) }}{{ t('dataimport.check') }}</button></div>
+    </form>
+  </section>
+  <section class="card flush">
+    <h2 style="padding:16px 16px 8px">{{ t('dataimport.sample') }}</h2>
+    <div class="table-wrap"><table class="table"><thead><tr>{% for h in headers %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+      <tbody>{% for r in sample %}<tr>{% for c in r %}<td>{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>
+  </section>
+  {% if preview %}
+  <section class="card stack-s" id="probelauf">
+    <h2>{{ t('dataimport.step_check') }}</h2>
+    <div class="row" style="gap:8px;flex-wrap:wrap">
+      <span class="pill-label ok">{{ t('dataimport.st.new') }}: {{ preview.new }}</span>
+      <span class="pill-label warn">{{ t('dataimport.st.duplicate') }}: {{ preview.duplicate }}</span>
+      <span class="pill-label error">{{ t('dataimport.st.error') }}: {{ preview.error }}</span>
+    </div>
+    {% if preview.notes %}<p class="small">{% for n, c in preview.notes.items() %}{{ t('dataimport.note.' ~ n) }}: {{ c }}{% if not loop.last %} · {% endif %}{% endfor %}</p>{% endif %}
+    <div class="table-wrap"><table class="table"><thead><tr><th>{{ t('dataimport.line') }}</th><th>{{ t('dataimport.entry') }}</th><th>{{ t('dataimport.result') }}</th><th>{{ t('dataimport.hint') }}</th></tr></thead><tbody>
+      {% for r in preview.rows %}<tr><td class="mono">{{ r.line }}</td><td>{{ r.label }}</td>
+        <td><span class="pill-label {{ {'new': 'ok', 'duplicate': 'warn', 'error': 'error'}[r.status] }}">{{ t('dataimport.st.' ~ r.status) }}</span></td>
+        <td class="small">{% for n in r.notes %}{{ t('dataimport.note.' ~ n) }}{% if not loop.last %}, {% endif %}{% endfor %}</td></tr>{% endfor %}
+    </tbody></table></div>
+    {% if preview.rows | length < job.rows %}<p class="small muted">{{ t('dataimport.first_rows', n=preview.rows | length) }}</p>{% endif %}
+    <div class="row" style="gap:8px;flex-wrap:wrap">
+      <form method="post" data-confirm="{{ t('dataimport.run_confirm', n=preview.new) }}" data-confirm-yes="{{ t('dataimport.run') }}">
+        <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="run">
+        {% if job.kind == 'appointments' %}<label class="check" style="margin-bottom:8px"><input type="checkbox" name="billed_externally" value="1" checked> {{ t('dataimport.billed_externally') }}</label>
+        <div class="banner warn small" style="margin-bottom:8px">{{ t('dataimport.reminders_old') }}</div>{% endif %}
+        <button class="btn" type="submit"{% if not preview.new %} disabled{% endif %}>{{ icon('check', 18) }}{{ t('dataimport.run_n', n=preview.new) }}</button></form>
+      {% if preview.issues %}<a class="btn text" href="{{ S }}/import/{{ job.id }}/hinweise.csv">{{ icon('download', 18) }}{{ t('dataimport.issues_csv') }}</a>{% endif %}
+    </div>
+  </section>
+  {% endif %}
+  <form method="post" data-confirm="{{ t('dataimport.discard_confirm') }}" data-confirm-yes="{{ t('dataimport.discard') }}">
+    <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="discard">
+    <button class="btn text" type="submit" style="color:var(--error)">{{ icon('delete', 18) }}{{ t('dataimport.discard') }}</button></form>
+</div>
+{% else %}
+<section class="card stack-s" style="max-width:720px">
+  <h2>{{ t('dataimport.status.' ~ job.status) }}</h2>
+  {% if job.status == 'done' %}
+  <div class="row" style="gap:8px;flex-wrap:wrap">
+    <span class="pill-label ok">{{ t('dataimport.n_created', n=result.created or 0) }}</span>
+    <span class="pill-label warn">{{ t('dataimport.st.duplicate') }}: {{ result.duplicate or 0 }}</span>
+    <span class="pill-label error">{{ t('dataimport.st.error') }}: {{ result.error or 0 }}</span>
+    {% if result.linked %}<span class="pill-label info">{{ t('dataimport.n_linked', n=result.linked) }}</span>{% endif %}
+  </div>
+  <p class="small muted">{{ t('dataimport.file_deleted') }}</p>
+  {% if result.issues %}<a class="btn text" href="{{ S }}/import/{{ job.id }}/hinweise.csv">{{ icon('download', 18) }}{{ t('dataimport.issues_csv') }}</a>{% endif %}
+  {% else %}<p class="small muted">{{ t('dataimport.discarded') }}</p>{% endif %}
+</section>
+{% endif %}
+{% endblock %}

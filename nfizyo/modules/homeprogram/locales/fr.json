@@ -1,0 +1,179 @@
+{
+  "hp": {
+    "title": "Programme à domicile",
+    "tab": "Programme à domicile",
+    "program": "Programme",
+    "st": {
+      "draft": "brouillon",
+      "active": "validé",
+      "ended": "terminé"
+    },
+    "draft": "Brouillon",
+    "days_done": "fait {n} jours sur 7",
+    "none": "Pas encore de programme à domicile.",
+    "edit": "Modifier",
+    "create": "Créer",
+    "empty": "Pas encore d'exercices. Ajoutez-en depuis la bibliothèque à droite.",
+    "sets": "Séries",
+    "reps": "Rép.",
+    "hold": "Tenir (s)",
+    "per_day": "par jour",
+    "note_ph": "Remarque pour le patient (sera traduite)",
+    "remove": "Retirer",
+    "added": "Exercice ajouté",
+    "approve": "Valider et envoyer dans l'app",
+    "approve_again": "Valider les modifications",
+    "approved": "Programme validé – visible dans l'app",
+    "approve_hint": "Le patient ne voit le programme qu'après votre validation.",
+    "adherence": "Fait dans l'app (14 jours)",
+    "adherence_hint": "Chiffre = exercices faits ce jour-là, rouge = douleur indiquée.",
+    "library": "Bibliothèque d'exercices",
+    "search": "Chercher un exercice",
+    "add": "Ajouter",
+    "manage_library": "Gérer la bibliothèque",
+    "library_hint": "Vos exercices en DE/FR – pour les autres langues, l'IA traduit.",
+    "new_exercise": "Nouvel exercice",
+    "name": "Nom",
+    "instructions": "Instructions",
+    "area_label": "Zone",
+    "exercise_added": "Exercice enregistré",
+    "translate_hint": "Une langue suffit ; sinon l'autre est reprise telle quelle.",
+    "lang_hint": "L'app affiche les exercices en {language} (traduction automatique, original consultable).",
+    "lang_hint_off": "Le patient lit en {language}. Sans modèle de traduction, la version allemande s'affiche.",
+    "area": {
+      "knee": "Genou",
+      "shoulder": "Épaule",
+      "hip": "Hanche",
+      "lumbar": "Rachis lombaire",
+      "cervical": "Rachis cervical / nuque",
+      "ankle": "Cheville / pied",
+      "general": "Général"
+    },
+    "essential": "En priorité si peu de temps (étoile dans l'app)",
+    "essential_short": "priorité",
+    "video_has": "Vidéo personnelle",
+    "video_meta": "{mb} Mo · consentement du {date}",
+    "video_play": "Voir",
+    "video_delete": "Supprimer la vidéo",
+    "video_add": "Filmer une vidéo personnelle",
+    "video_consent": "La patiente / le patient accepte que cette vidéo soit enregistrée au cabinet et affichée dans l'app. Elle / il peut la supprimer à tout moment.",
+    "video_hint": "Filmez l'exercice avec l'appareil du cabinet, tel que la personne le fera à la maison. Seuls elle / lui et votre équipe voient la vidéo. MP4, MOV ou WebM, 60 Mo au maximum.",
+    "video_upload": "Enregistrer la vidéo",
+    "video_need_consent": "Sans consentement, aucune vidéo n'est enregistrée.",
+    "video_bad": "Ce n'est pas une vidéo (MP4, MOV, WebM) ou elle dépasse 60 Mo.",
+    "video_saved": "Vidéo enregistrée – visible dans l'app",
+    "video_deleted": "Vidéo supprimée",
+    "skips_title": "Pas fait – raison indiquée par la patiente / le patient",
+    "skip": {
+      "forgot": "oublié",
+      "unclear": "exercice pas clair",
+      "no_time": "pas le temps",
+      "pain": "trop de douleurs",
+      "app": "problème avec l'app",
+      "no_benefit": "ne voit pas l'utilité"
+    },
+    "duration": "Durée (min)",
+    "dose": {
+      "reps": "{n} rép.",
+      "sets": {
+        "one": "{n} série",
+        "other": "{n} séries"
+      },
+      "hold": "tenir {n} s",
+      "minutes": "{n} min",
+      "per_day": "{n}× par jour"
+    },
+    "exercise_saved": "Modifications enregistrées",
+    "exercise_deactivated": "Exercice désactivé – il n'apparaît plus dans la sélection",
+    "exercise_reactivated": "Exercice de nouveau actif",
+    "inactive_hint": "Exercices désactivés : plus dans la sélection, mais toujours dans les programmes existants et l'historique.",
+    "show_inactive": "Afficher les désactivés ({n})",
+    "show_active": "Vers les exercices actifs",
+    "lib_empty": "Aucun exercice trouvé.",
+    "inactive_badge": "Désactivé – pas dans la sélection",
+    "form_errors": "Veuillez vérifier : nom et consigne dans au moins une langue ; nombres entiers uniquement.",
+    "range": "Nombre entier de 1 à {max}",
+    "edit_usage": {
+      "one": "Utilisé dans {n} programme en cours. Les changements du nom, de la consigne et du dessin y apparaissent aussitôt dans l'app ; le dosage du programme reste.",
+      "other": "Utilisé dans {n} programmes en cours. Les changements du nom, de la consigne et du dessin y apparaissent aussitôt dans l'app ; le dosage des programmes reste."
+    },
+    "dose_title": "Dosage (proposition)",
+    "dose_hint": "Repris lors de l'ajout au programme, adaptable pour chaque patient·e. Les champs vides n'apparaissent pas.",
+    "drawing": "Dessin",
+    "drawing_hint": "Choisissez le dessin qui convient – ou aucun : l'app montre alors une vignette neutre avec la région du corps. La vidéo propre du / de la patient·e passe toujours avant.",
+    "drawing_none": "Pas de dessin (région du corps)",
+    "deactivate": "Désactiver",
+    "deactivate_hint": "Désactiver : l'exercice disparaît de la sélection. Il reste dans les programmes existants et l'historique.",
+    "reactivate": "Réactiver",
+    "reactivate_hint": "Cet exercice est désactivé et n'apparaît pas dans la sélection.",
+    "app_shows": "Dans l'app",
+    "no_dose": "pas de dosage indiqué",
+    "description": "Programme d'exercices à domicile pour l'app"
+  },
+  "p": {
+    "ex": {
+      "title": "Exercices",
+      "intro": "Votre programme du cabinet. Touchez un exercice.",
+      "none": "Aucun programme d'exercices validé pour l'instant.",
+      "not_translated": "Cette instruction n'est pas encore disponible dans votre langue.",
+      "stop_if_pain": "Arrêtez si la douleur augmente fortement et contactez le cabinet.",
+      "pain_after": "Quelle était l'intensité de la douleur ?",
+      "done": "Fait",
+      "done_again": "Fait encore une fois",
+      "logged": "Enregistré – bravo !",
+      "answer": {
+        "forgot": "Ça arrive. Un moment fixe aide, par exemple après vous être brossé les dents. Demain est un autre jour.",
+        "unclear": "Merci. Le cabinet le verra avant votre prochain rendez-vous et vous montrera l'exercice à nouveau.",
+        "no_time": "C'est compréhensible. Un seul exercice vaut mieux qu'aucun.",
+        "no_time_star": "C'est compréhensible. Si le temps manque : faites seulement les exercices avec l'étoile.",
+        "pain": "Ne continuez pas l'exercice tant qu'il fait très mal, et contactez le cabinet. En cas d'urgence, appelez le 144.",
+        "app": "Merci. Demandez à la réception lors de votre prochaine visite – nous vous aiderons volontiers avec l'app.",
+        "no_benefit": "Merci pour votre franchise. Parlez-en au prochain rendez-vous – ensemble, vous regarderez votre objectif."
+      },
+      "write_practice": "Écrire au cabinet",
+      "star_hint": "Si le temps manque : d'abord les exercices avec l'étoile.",
+      "star_one": "Si le temps manque : cet exercice en premier.",
+      "skip_q": "Pas réussi aujourd'hui ?",
+      "skip_saved": "Enregistré : {reason}. Vous pouvez modifier votre réponse.",
+      "skip_intro": "Facultatif. Le cabinet verra votre réponse avant le prochain rendez-vous.",
+      "skip": {
+        "forgot": "Oublié",
+        "unclear": "L'exercice n'était pas clair",
+        "no_time": "Pas le temps",
+        "pain": "Trop de douleurs",
+        "app": "Problème avec l'app",
+        "no_benefit": "Je n'en vois pas l'utilité"
+      },
+      "skip_note": "Voulez-vous ajouter quelque chose ? (facultatif)",
+      "skip_send": "Envoyer",
+      "skip_choose": "Veuillez choisir une raison.",
+      "own_video": "Votre propre vidéo – filmée au cabinet",
+      "video_delete_hint": "Vous pouvez supprimer votre vidéo à tout moment. Elle sera aussi supprimée au cabinet.",
+      "video_delete": "Supprimer ma vidéo",
+      "video_deleted": "Vidéo supprimée",
+      "dose": {
+        "sets": {
+          "one": "{n} série",
+          "other": "{n} séries"
+        },
+        "reps": {
+          "one": "{n} répétition",
+          "other": "{n} répétitions"
+        },
+        "hold": {
+          "one": "tenir {n} s",
+          "other": "tenir {n} s"
+        },
+        "minutes": {
+          "one": "{n} minute",
+          "other": "{n} minutes"
+        },
+        "per_day": {
+          "one": "{n} fois par jour",
+          "other": "{n} fois par jour"
+        },
+        "sets_reps": "{sets} de {reps}"
+      }
+    }
+  }
+}

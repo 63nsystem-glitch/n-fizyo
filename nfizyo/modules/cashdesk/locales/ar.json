@@ -1,0 +1,8 @@
+{
+  "p": {
+    "mail": {
+      "receipt_subject": "الإيصال {number}",
+      "receipt_body": "مرحبًا {name}\n\nتجد في المرفق الإيصال {number}. شكرًا جزيلًا.\n\nمع أطيب التحيات\n{practice}"
+    }
+  }
+}

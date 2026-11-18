@@ -1,0 +1,85 @@
+# N-Fizyo – auf den Server einspielen, nachdem die Tests auf main grün sind (oder von Hand: Actions › Deploy › Run workflow).
+# Eigenes Repository und eigener Server – getrennt von N-Gastro (eigene Secrets, nie die von N-Gastro).
+#
+# Secrets (Settings › Secrets and variables › Actions):
+#   FIZYO_SSH_HOST         IP oder Name des Servers
+#   FIZYO_SSH_KEY          PRIVATER Teil des Deploy-Schlüssels (nur hier, nie im Chat, nie im Repository)
+#   FIZYO_SSH_KNOWN_HOSTS  Zeile «<IP> ssh-ed25519 AAAA…» (gibt deploy/server-bootstrap.sh aus)
+# Server einmalig vorbereiten: deploy/server-bootstrap.sh (Benutzer «deploy», darf nur /usr/local/sbin/n-fizyo-deploy).
+# Das Paket kommt direkt aus dem Repository (git archive) – keine GitHub-Artefakte, also kein Artefakt-Kontingent.
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: [Tests]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-server
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    environment: server
+    steps:
+      - name: Secrets vorhanden?
+        id: check
+        env:
+          HOST: ${{ secrets.FIZYO_SSH_HOST }}
+          KEY: ${{ secrets.FIZYO_SSH_KEY }}
+          KNOWN: ${{ secrets.FIZYO_SSH_KNOWN_HOSTS }}
+        run: |
+          if [ -z "$HOST" ] || [ -z "$KEY" ] || [ -z "$KNOWN" ]; then
+            echo "::notice::FIZYO_SSH_HOST / FIZYO_SSH_KEY / FIZYO_SSH_KNOWN_HOSTS fehlen – nichts eingespielt."
+            echo "ready=0" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=1" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.check.outputs.ready == '1'
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
+
+      - name: Paket bauen (direkt aus dem Repository)
+        if: steps.check.outputs.ready == '1'
+        run: |
+          git archive --format=tar.gz --prefix=n-fizyo/ -o n-fizyo.tar.gz HEAD
+          ls -l n-fizyo.tar.gz
+          echo "Stand: $(git rev-parse --short HEAD) · Version $(sed -n 's/^__version__ = \"\(.*\)\"/\1/p' nfizyo/__init__.py)"
+
+      - name: SSH vorbereiten
+        if: steps.check.outputs.ready == '1'
+        env:
+          KEY: ${{ secrets.FIZYO_SSH_KEY }}
+          KNOWN: ${{ secrets.FIZYO_SSH_KNOWN_HOSTS }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "$KNOWN" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Hochladen und einspielen
+        if: steps.check.outputs.ready == '1'
+        env:
+          HOST: ${{ secrets.FIZYO_SSH_HOST }}
+        run: |
+          SSH_OPTS="-i $HOME/.ssh/deploy_key -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o BatchMode=yes -o ConnectTimeout=20"
+          scp $SSH_OPTS n-fizyo.tar.gz "deploy@$HOST:incoming/n-fizyo.tar.gz"
+          ssh $SSH_OPTS "deploy@$HOST" sudo /usr/local/sbin/n-fizyo-deploy
+
+      - name: Aufräumen
+        if: always()
+        run: rm -f ~/.ssh/deploy_key

@@ -1,0 +1,1 @@
+{% if s.sessions_total %}{{ t('cashdesk.abo.used', used=s.used, total=s.sessions_total) }}{% else %}{{ t('cashdesk.abo.used_unlimited', used=s.used) }}{% endif %} · {{ t('cashdesk.abo.until', date=fmt_date(s.valid_until)) }}{% if s.last_visit %} · {{ t('cashdesk.abo.last', date=fmt_date(s.last_visit)) }}{% endif %}

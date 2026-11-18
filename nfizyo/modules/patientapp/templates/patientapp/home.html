@@ -1,0 +1,9 @@
+{% extends "layouts/patient.html" %}
+{% block title %}{{ t('p.home.hello', name=patient_user.first_name) }}{% endblock %}
+{% block actions %}<a class="icon-btn" href="/p/profil" aria-label="{{ t('p.profile.title') }}">{{ icon('account_circle') }}</a>{% endblock %}
+{% block content %}
+<p class="muted">{{ practice.name }}</p>
+{% for c in cards %}{% with ctx = c.ctx %}{% include c.template %}{% endwith %}{% endfor %}
+{% if practice.phone %}<p class="small muted">{{ icon('call', 14) }} {{ t('p.home.call') }} <a href="tel:{{ practice.phone }}">{{ practice.phone | phone }}</a></p>{% endif %}
+<div class="emergency">{{ icon('emergency', 20) }}<span>{{ t('p.emergency') }}</span></div>
+{% endblock %}

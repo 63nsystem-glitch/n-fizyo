@@ -1,0 +1,56 @@
+{% extends "layouts/staff.html" %}
+{% block title %}{{ t('support.title') }}{% endblock %}
+{% block subtitle %}{{ t('support.subtitle') }}{% endblock %}
+{% block content %}
+<div class="grid-main-side" style="--side:minmax(300px,440px)">
+  <section class="card stack-s">
+    <h2>{{ t('support.ask') }}</h2>
+    {% if not connected %}<div class="banner error" role="alert">{{ icon('cloud_off', 20) }}<span>{{ t('support.offline') }}</span></div>{% endif %}
+    <div class="banner warn" role="note">{{ icon('shield', 20) }}<div><strong>{{ t('support.no_patient_data') }}</strong><br><span class="small">{{ t('support.no_patient_data_hint') }}</span></div></div>
+    {% if blocked %}<div class="banner error" role="alert">{{ icon('error', 20) }}<div><strong>{{ t('support.blocked') }}</strong>
+      <ul class="small" style="padding-inline-start:18px;margin-top:4px">{% for c in blocked %}<li>{{ t('support.found.' ~ c) }}</li>{% endfor %}</ul>
+      <span class="small">{{ t('support.blocked_hint') }}</span></div></div>{% endif %}
+    {% if error %}<div class="banner error" role="alert">{{ icon('error', 20) }}<span>{{ t(error) }}</span></div>{% endif %}
+    <form method="post" class="form"><input type="hidden" name="_csrf" value="{{ csrf }}">
+      <div class="row" style="gap:12px;flex-wrap:wrap">
+        <div class="field grow"><label for="sp-area">{{ t('support.area') }}</label><select id="sp-area" name="area">
+          {% for a in areas %}<option value="{{ a }}"{% if values.area == a %} selected{% endif %}>{{ t('support.areas.' ~ a) }}</option>{% endfor %}</select></div>
+        <div class="field grow"><label for="sp-urg">{{ t('support.urgency') }}</label><select id="sp-urg" name="urgency">
+          {% for u in urgencies %}<option value="{{ u }}"{% if values.urgency == u %} selected{% endif %}>{{ t('support.urgencies.' ~ u) }}</option>{% endfor %}</select></div>
+      </div>
+      <div class="field"><label for="sp-body">{{ t('support.body') }}</label>
+        <textarea id="sp-body" name="body" rows="6" maxlength="2000" required placeholder="{{ t('support.body_ph') }}">{{ values.body }}</textarea></div>
+      {% if access_possible %}
+      <div class="stack-s" style="padding:12px;border-radius:12px;background:var(--surface-container, #eef0f4)">
+        <label class="row" style="gap:8px"><input type="checkbox" name="with_access" value="1"{% if values.with_access %} checked{% endif %}{% if access.open %} disabled{% endif %}>
+          <span>{{ t('support.with_access') }}</span></label>
+        {% if access.open %}<p class="small">{{ t('support.access_already', until=fmt_time(access.until_iso), date=fmt_date(access.until_iso)) }}</p>
+        {% else %}<div class="field"><label for="sp-h">{{ t('support.hours') }}</label><select id="sp-h" name="hours">
+          {% for h in hours_options %}<option value="{{ h }}"{% if h == values.hours %} selected{% endif %}>{{ t('support.hours_n', n=h) }}</option>{% endfor %}</select></div>
+        <p class="small muted">{{ t('support.access_hint') }}</p>{% endif %}
+      </div>
+      {% elif owner %}<p class="small muted">{{ t('support.access_settings') }} <a href="/leitung/einstellungen/nsystem">{{ t('support.to_settings') }}</a></p>{% endif %}
+      <div class="form-actions"><button class="btn" type="submit">{{ icon('send', 18) }}{{ t('support.send') }}</button></div>
+    </form>
+    {% if connected %}<p class="small muted">{{ t('support.how') }}</p>{% endif %}
+  </section>
+  <section class="card flush">
+    <h2 style="padding:16px 16px 8px">{{ t('support.mine') if not owner else t('support.all') }}</h2>
+    {% if requests %}<div class="list">
+      {% for r in requests %}
+      <div class="list-item" style="align-items:flex-start">
+        <span class="lead">{{ icon('help', 20) }}</span>
+        <span class="body"><span class="title">{{ t('support.areas.' ~ r.area) }} · {{ t('support.urgencies.' ~ r.urgency) }}</span><br>
+          <span class="sub">{{ fmt_date(r.created_at) }} {{ fmt_time(r.created_at) }}{% if owner %} · {{ r.user_name }}{% endif %} · {% if r.sent_at %}{{ t('support.st.' ~ r.status) }}{% else %}{{ t('support.st.waiting' if connected else 'support.st.not_sent') }}{% endif %}</span>
+          <span class="small" style="display:block;white-space:pre-wrap;margin-top:4px">{{ r.body }}</span>
+          {% if r.reply %}<span class="small" style="display:block;margin-top:8px;padding:8px 12px;border-radius:12px;background:var(--secondary-container, #dde3f0)">
+            <strong>{{ t('support.reply_from', name=r.reply_by or 'NSystem') }}</strong>{% if r.uid in unread %} <span class="pill-label info">{{ t('support.new') }}</span>{% endif %}<br>
+            <span style="white-space:pre-wrap">{{ r.reply }}</span></span>{% endif %}
+        </span>
+        <span class="trail"><span class="pill-label {{ {'new': 'info', 'in_progress': 'warn', 'done': 'ok'}.get(r.status, '') if (r.sent_at or connected) else 'error' }}">{{ t('support.st.' ~ r.status) if r.sent_at else t('support.st.waiting' if connected else 'support.st.not_sent') }}</span></span>
+      </div>
+      {% endfor %}
+    </div>{% else %}<div class="empty">{{ icon('help', 40) }}<p>{{ t('support.none') }}</p></div>{% endif %}
+  </section>
+</div>
+{% endblock %}

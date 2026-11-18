@@ -1,0 +1,45 @@
+{% extends "ui/settings.html" %}
+{% block settings %}
+{% macro type_form(tt=None) %}
+<form method="post" class="form">
+  <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="{{ 'update' if tt else 'add' }}">{% if tt %}<input type="hidden" name="id" value="{{ tt.id }}">{% endif %}
+  <div class="row" style="gap:12px;flex-wrap:wrap">
+    <div class="field grow"><label>{{ t('settings.name') }} · DE</label><input name="name_de" value="{{ tt.name_de if tt else '' }}" maxlength="120"></div>
+    <div class="field grow"><label>{{ t('settings.name') }} · FR</label><input name="name_fr" value="{{ tt.name_fr if tt else '' }}" maxlength="120"></div>
+  </div>
+  <div class="row" style="gap:12px;flex-wrap:wrap;align-items:flex-end">
+    <div class="field"><label>{{ t('settings.minutes') }}</label><input name="minutes" value="{{ tt.minutes if tt else 30 }}" inputmode="numeric" style="width:90px"></div>
+    <div class="field grow"><label>{{ t('settings.kvg_code') }}</label>
+      <select name="tariff_code"><option value="">–</option>{% for p in kvg_positions %}<option value="{{ p.code }}"{% if tt and tt.tariff_code == p.code %} selected{% endif %}>{{ p.code }} · {{ p.label_fr if lang == 'fr' else p.label_de }}</option>{% endfor %}</select></div>
+    <div class="field"><label>{{ t('settings.color') }}</label><input name="color" type="color" value="{{ tt.color if tt else '#2F5DA8' }}" style="width:64px;height:48px;padding:2px"></div>
+    <label class="check" style="min-height:48px"><input type="checkbox" name="needs_device" value="1"{% if tt and tt.needs_device %} checked{% endif %}> {{ t('settings.needs_device') }}</label>
+  </div>
+  <div class="form-actions"><button class="btn" type="submit">{{ t('common.save') if tt else t('settings.add') }}</button></div>
+</form>
+{% endmacro %}
+<div class="grid-main-side">
+  <section class="card flush">
+    <div class="list">
+      {% for tt in types %}
+      <details class="list-item-details"{% if not tt.active %} style="opacity:.6"{% endif %}>
+        <summary class="list-item">
+          <span class="lead avatar" style="background:{{ tt.color }};color:#fff">{{ icon('healing', 20) }}</span>
+          <span class="body"><span class="title">{{ tt.name_fr if lang == 'fr' else tt.name_de }}</span><br><span class="sub">{{ tt.minutes }} min{% if tt.tariff_code %} · KVG {{ tt.tariff_code }}{% else %} · {{ t('settings.no_code') }}{% endif %}{% if tt.needs_device %} · {{ t('settings.needs_device') }}{% endif %}</span></span>
+          <span class="trail">{% if not tt.active %}<span class="pill-label error">{{ t('settings.inactive') }}</span>{% endif %}{{ icon('keyboard_arrow_down', 20) }}</span>
+        </summary>
+        <div style="padding:0 16px 16px 72px">
+          {{ type_form(tt) }}
+          <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="toggle"><input type="hidden" name="id" value="{{ tt.id }}">
+            <button class="btn text sm" type="submit">{{ t('settings.deactivate') if tt.active else t('settings.activate') }}</button></form>
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+  <section class="card">
+    <h2 style="margin-bottom:4px">{{ t('settings.add_type') }}</h2>
+    <p class="small muted" style="margin-bottom:16px">{{ t('settings.type_hint') }}</p>
+    {{ type_form() }}
+  </section>
+</div>
+{% endblock %}

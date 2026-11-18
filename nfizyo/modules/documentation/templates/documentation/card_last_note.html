@@ -1,0 +1,8 @@
+{% set n = ctx.note %}
+<section class="card" aria-labelledby="h-lastnote">
+  <div class="card-head"><h2 id="h-lastnote">{{ t('notes.last') }}</h2><span class="meta">{{ fmt_date(n.session_date) }} · {{ n.author_name }} · <span class="pill-label {{ 'ok' if n.status == 'approved' else 'warn' }}">{{ t('notes.status_' ~ n.status) }}</span></span></div>
+  {% if n.beurteilung %}<p><span class="muted">{{ t('notes.sec.beurteilung') }}:</span> {{ n.beurteilung | truncate(220) }}</p>{% endif %}
+  {% if n.plan %}<p style="margin-top:6px"><span class="muted">{{ t('notes.sec.plan') }}:</span> {{ n.plan | truncate(220) }}</p>{% endif %}
+  {% if not n.beurteilung and not n.plan %}<p>{{ (n.befund or n.behandlung) | truncate(240) }}</p>{% endif %}
+  <div class="row" style="justify-content:flex-end;margin-top:8px"><a class="btn text" href="{{ S }}/patienten/{{ ctx.patient.id }}/verlauf">{{ t('notes.all') }}</a></div>
+</section>

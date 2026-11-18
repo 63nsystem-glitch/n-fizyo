@@ -1,0 +1,32 @@
+{% extends "layouts/staff.html" %}
+{% import "rxwatch/_block.html" as rx with context %}
+{% block title %}{{ t('rx.title') }}{% endblock %}
+{% block subtitle %}{{ t('rx.subtitle') }}{% endblock %}
+{% block content %}
+<div class="stack" style="max-width:920px">
+  <p class="small muted">{{ icon('info', 16) }} {{ t('rx.hint') }}</p>
+  {% for lvl in ('act', 'soon', 'info') %}
+  {% if groups[lvl] %}
+  <section class="card" aria-labelledby="h-rx-{{ lvl }}">
+    <div class="card-head"><h2 id="h-rx-{{ lvl }}">{{ t('rx.group.' ~ lvl) }}</h2><span class="pill-label {{ {'act': 'error', 'soon': 'warn', 'info': 'info'}[lvl] }}">{{ totals[lvl] }}</span></div>
+    <div class="stack-s">
+      {% for s in groups[lvl] %}{% set r = s.row %}
+      <div style="padding:12px 0;border-top:1px solid var(--outline-variant)">
+        <div class="row-between" style="margin-bottom:4px">
+          <a href="{{ S }}/patienten/{{ r.patient_id }}" style="font-weight:500">{{ r.first_name }} {{ r.last_name }}</a>
+          <span class="small muted">{{ r.main_therapist_name or '' }}</span>
+        </div>
+        {{ rx.rx_block(s, medical, path, vias) }}
+      </div>
+      {% endfor %}
+    </div>
+    {% if totals[lvl] > groups[lvl] | length %}<p style="margin-top:12px"><a class="btn text" href="{{ S }}/verordnungen?alle={{ lvl }}#h-rx-{{ lvl }}">{{ t('rx.show_all', n=totals[lvl]) }}</a></p>{% endif %}
+  </section>
+  {% endif %}
+  {% endfor %}
+  {% if not (groups.act or groups.soon or groups.info) %}
+  <section class="card"><div class="empty">{{ icon('check_circle', 40) }}<p>{{ t('rx.all_ok') }}</p></div></section>
+  {% endif %}
+  {% if ok_count %}<p class="small muted">{{ t('rx.ok_count', n=ok_count) }}</p>{% endif %}
+</div>
+{% endblock %}

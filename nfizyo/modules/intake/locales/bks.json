@@ -1,0 +1,61 @@
+{
+  "intake": {
+    "title": "Moje tegobe",
+    "hello": "Dobar dan, {name}",
+    "intro": "Opišite svoje tegobe – na svom jeziku. Vaša terapeutkinja ili vaš terapeut će to pročitati prije tretmana.",
+    "where": "Gdje imate tegobe?",
+    "where_hint": "Dodirnite mjesta na tijelu (moguće je više). Promijenite sa «Naprijed/Pozadi».",
+    "list_instead": "Lista umjesto slike",
+    "none_selected": "Još nije odabrano nijedno mjesto",
+    "pain": "Koliko je jaka bol?",
+    "pain_0": "nimalo",
+    "pain_2": "blaga",
+    "pain_4": "umjerena",
+    "pain_6": "jaka",
+    "pain_8": "vrlo jaka",
+    "pain_10": "nepodnošljiva",
+    "since": "Od kada?",
+    "since_opt": {
+      "days": "manje od 1 sedmice",
+      "weeks": "1 do 6 sedmica",
+      "months": "više od 6 sedmica",
+      "years": "više od 1 godine"
+    },
+    "worse": "Kada je gore?",
+    "worse_opt": {
+      "move": "pri kretanju",
+      "rest": "u mirovanju",
+      "night": "noću",
+      "sitting": "u sjedenju",
+      "standing": "u stajanju",
+      "walking": "pri hodanju",
+      "stairs": "na stepenicama",
+      "lifting": "pri dizanju",
+      "morning": "ujutro"
+    },
+    "goals": "Šta biste željeli ponovo moći?",
+    "goal_opt": {
+      "sleep": "spavati bez bolova",
+      "walk": "hodati / šetati",
+      "stairs": "penjati se uz stepenice",
+      "work": "raditi",
+      "sport": "baviti se sportom",
+      "lift": "dizati i nositi",
+      "overhead": "podići ruku iznad glave",
+      "household": "kućni poslovi",
+      "drive": "voziti auto"
+    },
+    "text": "Vašim riječima",
+    "text_hint": "Pišite ili govorite na svom jeziku. Bit će prevedeno za praksu.",
+    "text_ph": "Šta se desilo? Šta pogoršava ili poboljšava?",
+    "voice": "Govoriti umjesto pisati",
+    "voice_stop": "Zaustaviti snimanje",
+    "voice_busy": "Prepoznavanje …",
+    "emergency": "Kod jakih ili novih i iznenadnih tegoba javite se svom ljekaru. U hitnom slučaju nazovite 144.",
+    "privacy": "Vaši odgovori ostaju na serveru prakse.",
+    "send": "Poslati",
+    "sent_flash": "Hvala! Praksa je primila vaše odgovore.",
+    "text_hint_same": "Opišite svojim riječima šta vas muči. Možete pisati ili govoriti."
+  },
+  "_review": "Erstübersetzung NSystem – vor Einsatz von Muttersprachler/in prüfen lassen."
+}

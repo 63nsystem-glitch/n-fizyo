@@ -1,0 +1,15 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/patienten" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('patients.new') }}{% endblock %}
+{% block content %}
+<form method="post" action="{{ S }}/patienten/neu" class="stack" style="max-width:960px">
+  {% if errors %}<div class="banner error" role="alert">{{ icon('error') }}<span>{{ t('form.has_errors') }}</span></div>{% endif %}
+  {% if same %}
+  <div class="banner warn" role="alert">{{ icon('warning') }}<div class="stack" style="gap:4px"><strong>{{ t('patients.same_exists') }}</strong>
+    {% for o in same %}<a href="{{ S }}/patienten/{{ o.id }}">{{ o.last_name }} {{ o.first_name }}{% if o.birthdate %} · {{ fmt_date(o.birthdate) }}{% endif %}{% if o.number %} · {{ o.number }}{% endif %}{% if o.archived %} · {{ t('patients.archived_short') }}{% endif %}</a>{% endfor %}
+    <label class="check"><input type="checkbox" name="confirm_new" value="1"> {{ t('patients.same_create_anyway') }}</label></div></div>
+  {% endif %}
+  {% include "patients/_fields.html" %}
+  <div class="form-actions"><a class="btn text" href="{{ S }}/patienten">{{ t('common.cancel') }}</a><button class="btn" type="submit">{{ icon('check', 18) }}{{ t('patients.create') }}</button></div>
+</form>
+{% endblock %}

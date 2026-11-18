@@ -1,0 +1,179 @@
+{
+  "hp": {
+    "title": "Heimprogramm",
+    "tab": "Heimprogramm",
+    "program": "Programm",
+    "st": {
+      "draft": "Entwurf",
+      "active": "freigegeben",
+      "ended": "beendet"
+    },
+    "draft": "Entwurf",
+    "days_done": "{n} von 7 Tagen gemacht",
+    "none": "Noch kein Heimprogramm.",
+    "edit": "Bearbeiten",
+    "create": "Erstellen",
+    "empty": "Noch keine Übungen. Rechts aus der Bibliothek hinzufügen.",
+    "sets": "Serien",
+    "reps": "Wdh.",
+    "hold": "Halten (s)",
+    "per_day": "pro Tag",
+    "note_ph": "Hinweis für die Patientin / den Patienten (wird übersetzt)",
+    "remove": "Entfernen",
+    "added": "Übung hinzugefügt",
+    "approve": "Freigeben und in die App senden",
+    "approve_again": "Änderungen freigeben",
+    "approved": "Heimprogramm freigegeben – in der App sichtbar",
+    "approve_hint": "Erst nach Ihrer Freigabe sieht die Patientin / der Patient das Programm.",
+    "adherence": "Erledigt in der App (14 Tage)",
+    "adherence_hint": "Zahl = erledigte Übungen am Tag, rot = angegebener Schmerz.",
+    "library": "Übungsbibliothek",
+    "search": "Übung suchen",
+    "add": "Hinzufügen",
+    "manage_library": "Bibliothek verwalten",
+    "library_hint": "Eigene Übungen in DE/FR – für andere Sprachen übersetzt die KI.",
+    "new_exercise": "Neue Übung",
+    "name": "Name",
+    "instructions": "Anleitung",
+    "area_label": "Bereich",
+    "exercise_added": "Übung gespeichert",
+    "translate_hint": "Eine Sprache genügt; die andere wird sonst gleich übernommen.",
+    "lang_hint": "Die App zeigt die Übungen auf {language} (maschinell übersetzt, Original abrufbar).",
+    "lang_hint_off": "Die Patientin / der Patient liest {language}. Ohne Übersetzungsmodell erscheint die deutsche Fassung.",
+    "area": {
+      "knee": "Knie",
+      "shoulder": "Schulter",
+      "hip": "Hüfte",
+      "lumbar": "LWS",
+      "cervical": "HWS / Nacken",
+      "ankle": "Sprunggelenk / Fuss",
+      "general": "Allgemein"
+    },
+    "essential": "Bei wenig Zeit zuerst (Stern in der App)",
+    "essential_short": "zuerst",
+    "video_has": "Eigenes Video",
+    "video_meta": "{mb} MB · Einwilligung vom {date}",
+    "video_play": "Ansehen",
+    "video_delete": "Video löschen",
+    "video_add": "Eigenes Video aufnehmen",
+    "video_consent": "Die Patientin / der Patient ist einverstanden, dass dieses Video in der Praxis gespeichert und in der App gezeigt wird. Sie / er kann es jederzeit löschen.",
+    "video_hint": "Filmen Sie die Übung mit dem Gerät der Praxis, so wie die Person sie zu Hause macht. Nur sie / er und das eigene Team sehen das Video. MP4, MOV oder WebM, höchstens 60 MB.",
+    "video_upload": "Video speichern",
+    "video_need_consent": "Ohne Einwilligung wird kein Video gespeichert.",
+    "video_bad": "Das ist kein Video (MP4, MOV, WebM) oder es ist grösser als 60 MB.",
+    "video_saved": "Video gespeichert – in der App sichtbar",
+    "video_deleted": "Video gelöscht",
+    "skips_title": "Nicht geübt – Grund laut Patient/in",
+    "skip": {
+      "forgot": "vergessen",
+      "unclear": "Übung unklar",
+      "no_time": "keine Zeit",
+      "pain": "zu viele Schmerzen",
+      "app": "Problem mit der App",
+      "no_benefit": "sieht keinen Nutzen"
+    },
+    "duration": "Dauer (min)",
+    "dose": {
+      "reps": "{n} Wdh.",
+      "sets": {
+        "one": "{n} Serie",
+        "other": "{n} Serien"
+      },
+      "hold": "{n} s halten",
+      "minutes": "{n} min",
+      "per_day": "{n}× täglich"
+    },
+    "exercise_saved": "Änderungen gespeichert",
+    "exercise_deactivated": "Übung deaktiviert – sie erscheint nicht mehr in der Auswahl",
+    "exercise_reactivated": "Übung wieder aktiv",
+    "inactive_hint": "Deaktivierte Übungen: nicht mehr in der Auswahl, aber weiter in bestehenden Programmen und im Verlauf.",
+    "show_inactive": "Deaktivierte anzeigen ({n})",
+    "show_active": "Zu den aktiven Übungen",
+    "lib_empty": "Keine Übung gefunden.",
+    "inactive_badge": "Deaktiviert – nicht in der Auswahl",
+    "form_errors": "Bitte prüfen: Name und Anleitung in mindestens einer Sprache; Zahlen als ganze Zahlen.",
+    "range": "Ganze Zahl von 1 bis {max}",
+    "edit_usage": {
+      "one": "In {n} laufenden Programm verwendet. Änderungen an Name, Anleitung und Zeichnung erscheinen dort sofort in der App; die Dosierung des Programms bleibt.",
+      "other": "In {n} laufenden Programmen verwendet. Änderungen an Name, Anleitung und Zeichnung erscheinen dort sofort in der App; die Dosierung der Programme bleibt."
+    },
+    "dose_title": "Dosierung (Vorschlag)",
+    "dose_hint": "Wird beim Hinzufügen ins Programm übernommen und lässt sich pro Patient/in anpassen. Leere Felder erscheinen nicht.",
+    "drawing": "Zeichnung",
+    "drawing_hint": "Passende Zeichnung wählen – oder keine: Dann zeigt die App eine neutrale Kachel mit dem Körperbereich. Ein eigenes Video der Patientin / des Patienten geht immer vor.",
+    "drawing_none": "Keine Zeichnung (Körperbereich)",
+    "deactivate": "Deaktivieren",
+    "deactivate_hint": "Deaktivieren: Die Übung verschwindet aus der Auswahl. In bestehenden Programmen und im Verlauf bleibt sie.",
+    "reactivate": "Wieder aktivieren",
+    "reactivate_hint": "Diese Übung ist deaktiviert und erscheint nicht in der Auswahl.",
+    "app_shows": "In der App",
+    "no_dose": "keine Dosierung angegeben",
+    "description": "Heimprogramm mit Übungen für die App"
+  },
+  "p": {
+    "ex": {
+      "title": "Übungen",
+      "intro": "Ihr Programm von der Praxis. Tippen Sie auf eine Übung.",
+      "none": "Noch kein Übungsprogramm freigegeben.",
+      "not_translated": "Diese Anleitung ist noch nicht in Ihrer Sprache verfügbar.",
+      "stop_if_pain": "Hören Sie auf, wenn die Schmerzen stark zunehmen, und melden Sie sich bei der Praxis.",
+      "pain_after": "Wie stark waren die Schmerzen dabei?",
+      "done": "Erledigt",
+      "done_again": "Nochmals erledigt",
+      "logged": "Gespeichert – gut gemacht!",
+      "answer": {
+        "forgot": "Das passiert. Ein fester Zeitpunkt hilft, zum Beispiel nach dem Zähneputzen. Morgen ist ein neuer Tag.",
+        "unclear": "Danke. Die Praxis sieht das vor Ihrem nächsten Termin und zeigt Ihnen die Übung nochmals.",
+        "no_time": "Verständlich. Schon eine Übung ist besser als keine.",
+        "no_time_star": "Verständlich. Wenn die Zeit knapp ist: Machen Sie nur die Übungen mit dem Stern.",
+        "pain": "Machen Sie die Übung nicht weiter, solange sie stark schmerzt, und melden Sie sich bei der Praxis. Im Notfall rufen Sie 144 an.",
+        "app": "Danke. Fragen Sie beim nächsten Besuch am Empfang – wir helfen Ihnen gern mit der App.",
+        "no_benefit": "Danke für Ihre Offenheit. Sprechen Sie es beim nächsten Termin an – gemeinsam schauen Sie auf Ihr Ziel."
+      },
+      "write_practice": "Der Praxis schreiben",
+      "star_hint": "Wenn die Zeit knapp ist: zuerst die Übungen mit dem Stern.",
+      "star_one": "Wenn die Zeit knapp ist: diese Übung zuerst.",
+      "skip_q": "Heute nicht geschafft?",
+      "skip_saved": "Gespeichert: {reason}. Sie können die Antwort ändern.",
+      "skip_intro": "Freiwillig. Die Praxis sieht Ihre Antwort vor dem nächsten Termin.",
+      "skip": {
+        "forgot": "Vergessen",
+        "unclear": "Die Übung war unklar",
+        "no_time": "Keine Zeit",
+        "pain": "Zu viele Schmerzen",
+        "app": "Problem mit der App",
+        "no_benefit": "Ich sehe keinen Nutzen"
+      },
+      "skip_note": "Möchten Sie etwas dazu schreiben? (freiwillig)",
+      "skip_send": "Senden",
+      "skip_choose": "Bitte wählen Sie einen Grund.",
+      "own_video": "Ihr eigenes Video – in der Praxis aufgenommen",
+      "video_delete_hint": "Sie können Ihr Video jederzeit löschen. Es wird dann auch in der Praxis gelöscht.",
+      "video_delete": "Mein Video löschen",
+      "video_deleted": "Video gelöscht",
+      "dose": {
+        "sets": {
+          "one": "{n} Serie",
+          "other": "{n} Serien"
+        },
+        "reps": {
+          "one": "{n} Wiederholung",
+          "other": "{n} Wiederholungen"
+        },
+        "hold": {
+          "one": "{n} s halten",
+          "other": "{n} s halten"
+        },
+        "minutes": {
+          "one": "{n} Minute",
+          "other": "{n} Minuten"
+        },
+        "per_day": {
+          "one": "{n}× täglich",
+          "other": "{n}× täglich"
+        },
+        "sets_reps": "{sets} à {reps}"
+      }
+    }
+  }
+}

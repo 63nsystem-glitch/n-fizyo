@@ -1,0 +1,8 @@
+{
+  "p": {
+    "mail": {
+      "receipt_subject": "Квитанція {number}",
+      "receipt_body": "Добрий день, {name}\n\nУ додатку ви знайдете квитанцію {number}. Щиро дякуємо.\n\nЗ повагою\n{practice}"
+    }
+  }
+}

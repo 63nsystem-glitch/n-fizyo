@@ -1,0 +1,54 @@
+{% extends "ui/settings.html" %}
+{% block settings %}
+<div class="grid-main-side">
+  <div class="col stack">
+    <section class="card">
+      <h2 style="margin-bottom:4px">{{ t('notify.how') }}</h2>
+      <p class="small muted" style="margin-bottom:16px">{{ t('notify.how_hint') }}</p>
+      <form method="post" class="form">
+        <input type="hidden" name="_csrf" value="{{ csrf }}">
+        <div class="stack-s" role="radiogroup" aria-label="{{ t('notify.how') }}">
+          {% for m in modes %}
+          <label class="list-item" style="padding-inline:0">
+            <span class="lead"><input type="radio" name="mode" value="{{ m }}"{% if st.mode == m %} checked{% endif %}></span>
+            <span class="body"><span class="title">{{ t('notify.mode.' ~ m) }}{% if m == 'email_or_sms' %} · {{ t('notify.default') }}{% endif %}</span><br>
+              <span class="sub">{{ t('notify.mode.' ~ m ~ '_hint') }}</span></span>
+          </label>
+          {% endfor %}
+        </div>
+        <label class="check"><input type="checkbox" name="appointments" value="1"{% if st.appointments %} checked{% endif %}> {{ t('notify.appointments') }}</label>
+        <p class="small muted" style="margin-top:-8px;padding-inline-start:32px">{{ t('notify.appointments_hint') }}</p>
+        <div class="form-actions"><button class="btn" type="submit">{{ t('common.save') }}</button></div>
+      </form>
+    </section>
+    <section class="card stack-s">
+      <h2>{{ t('notify.example') }}</h2>
+      <p class="small muted">{{ t('notify.example_hint') }}</p>
+      <p class="mono small" style="white-space:pre-wrap;background:var(--surface-high);padding:12px;border-radius:12px">{{ example.text }}</p>
+      {% if not sms_live or not mail_live %}<p class="small muted">{{ icon('info', 14) }} {{ t('notify.test_mode') }}</p>{% endif %}
+    </section>
+  </div>
+  <div class="col stack">
+    <section class="card stack-s">
+      <h2>{{ t('notify.last30') }}</h2>
+      <dl class="facts">
+        <dt>{{ t('notify.sent_sms') }}</dt><dd>{{ sent.get('sms', 0) }}</dd>
+        <dt>{{ t('notify.sent_email') }}</dt><dd>{{ sent.get('email', 0) }}</dd>
+        <dt>{{ t('notify.waiting') }}</dt><dd>{{ pending }}</dd>
+      </dl>
+      {% if skipped %}<p class="small muted" style="margin-top:8px">{{ t('notify.not_sent') }}</p>
+      <dl class="facts">{% for s in skipped %}<dt>{{ t('notify.reason.' ~ (s.reason or 'off')) }}</dt><dd>{{ s.n }}</dd>{% endfor %}</dl>{% endif %}
+    </section>
+    <section class="card stack-s">
+      <h2>{{ t('notify.rules_title') }}</h2>
+      <ul class="small stack-s" style="padding-inline-start:18px">
+        <li>{{ t('notify.rule_content') }}</li>
+        <li>{{ t('notify.rule_app') }}</li>
+        <li>{{ t('notify.rule_bundle') }}</li>
+        <li>{{ t('notify.rule_night') }}</li>
+        <li>{{ t('notify.rule_read') }}</li>
+      </ul>
+    </section>
+  </div>
+</div>
+{% endblock %}

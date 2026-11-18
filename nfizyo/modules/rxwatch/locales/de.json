@@ -1,0 +1,78 @@
+{
+  "rx": {
+    "title": "Verordnungen im Blick",
+    "description": "Freie Sitzungen, Fristen und Anfragen an Ärztinnen und Ärzte – bevor eine Sitzung ohne Verordnung stattfindet.",
+    "nav": "Verordnungen",
+    "subtitle": "Was jetzt zu tun ist",
+    "hint": "Hinweise nach den Regeln für die Schweiz (höchstens 9 Sitzungen pro Verordnung, Beginn innerhalb von 5 Wochen, ab der 37. Sitzung Kostengutsprache). Ergänzen oder beantragen kann nur die Ärztin / der Arzt.",
+    "card_title": "Verordnung",
+    "todo": "Verordnungen prüfen",
+    "sessions_done": "Sitzungen",
+    "no_referrer": "ohne Zuweiser/in",
+    "level": {
+      "act": "jetzt handeln",
+      "soon": "bald",
+      "ok": "in Ordnung"
+    },
+    "group": {
+      "act": "Jetzt handeln",
+      "soon": "Bald",
+      "info": "Angefragt – wartet auf Antwort"
+    },
+    "all_ok": "Alle Verordnungen sind in Ordnung.",
+    "via_label": "Wie angefragt?",
+    "via": {
+      "phone": "Telefon",
+      "fax": "Fax",
+      "mail": "E-Mail",
+      "hin": "HIN",
+      "report": "Bericht",
+      "other": "anders"
+    },
+    "mark_requested": "Als angefragt markieren",
+    "create_request_letter": "Gesuch an Ärztin / Arzt erstellen",
+    "open_draft": "Entwurf öffnen",
+    "req": {
+      "renewal": "Folgeverordnung angefragt",
+      "kogu": "Kostengutsprache angefragt",
+      "correction": "Korrektur angefragt",
+      "new": "Neue Verordnung angefragt"
+    },
+    "req_done": "Erledigt",
+    "requested": "Als angefragt vermerkt",
+    "closed": "Anfrage abgeschlossen",
+    "nudge": "Seit {days} Tagen keine Antwort – nachfassen.",
+    "field": {
+      "diagnosis": "Diagnose",
+      "referrer": "Ärztin / Arzt",
+      "issued_on": "Ausstellungsdatum"
+    },
+    "flag": {
+      "incomplete": "Verordnung unvollständig: {fields} fehlt. Nur die Ärztin / der Arzt kann sie ergänzen.",
+      "start_missed": "Die Behandlung hätte bis {deadline} beginnen müssen. Es braucht eine neue Verordnung.",
+      "start_late": "Erster Termin am {date} – das ist nach der 5-Wochen-Frist ({deadline}).",
+      "start_soon": "Die Behandlung muss bis {deadline} beginnen (noch {days} Tage). Noch kein Termin gebucht.",
+      "uncovered": "Ab {date} ohne gültige Verordnung: {booked} Termine gebucht, nur noch {left} Sitzungen frei.",
+      "renew": "Noch {left} von {total} Sitzungen frei – an die Folgeverordnung denken.",
+      "renewal_requested": "Folgeverordnung angefragt am {date} ({via}).",
+      "kogu_requested": "Kostengutsprache angefragt am {date} ({via}).",
+      "correction_requested": "Korrektur der Verordnung angefragt am {date} ({via}).",
+      "new_requested": "Neue Verordnung angefragt am {date} ({via}).",
+      "renewal_draft": "Ein Gesuch um Folgeverordnung liegt als Entwurf bereit.",
+      "kogu": "Bisher {n} Sitzungen. Ab der 37. Sitzung ({date}) braucht es eine Kostengutsprache – die Ärztin / der Arzt beantragt sie.",
+      "kogu_nodate": "Bisher {n} Sitzungen. Ab der 37. Sitzung braucht es eine Kostengutsprache – die Ärztin / der Arzt beantragt sie.",
+      "kogu_soon": "Bereits {n} von {limit} Sitzungen ohne Kostengutsprache."
+    },
+    "move_first": "Ersten Termin vorverlegen",
+    "booked": {
+      "one": "{n} gebucht",
+      "other": "{n} gebucht"
+    },
+    "ok_count": {
+      "one": "{n} weitere Verordnung ist in Ordnung.",
+      "other": "{n} weitere Verordnungen sind in Ordnung."
+    },
+    "show_all": "Alle {n} anzeigen",
+    "nav_short": "Verordn."
+  }
+}

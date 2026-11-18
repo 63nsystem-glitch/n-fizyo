@@ -1,0 +1,23 @@
+{% set rows = ctx.rows %}
+<section class="card {{ 'error' if rows | selectattr('kind', 'ne', 'clearance') | list else 'tonal' }}{{ '' if rows else ' card-empty' }}" aria-labelledby="h-restr">
+  <div class="card-head"><h2 id="h-restr">{{ icon('warning', 20) }}{{ t('patients.restrictions') }}</h2>
+    <button type="button" class="btn text sm" data-dialog="dlg-finding" data-fill='{"kind": "restriction"}'>{{ icon('add', 18) }}{{ t('patients.restriction_add') }}</button></div>
+  {% if rows %}
+  <div class="stack-s">
+    {% for f in rows %}
+    <div>
+      <p style="font-weight:500">{% if f.kind == 'clearance' %}{{ icon('check_circle', 16) }} {% elif f.kind == 'red_flag' %}{{ icon('emergency', 16) }} {% endif %}{{ f.title }}</p>
+      <p class="small">
+        {% if f.kind == 'clearance' %}{{ t('finding.clearance') }}{% if f.on_date %} {{ t('patients.from_date') }} {{ fmt_date(f.on_date) }}{% endif %}
+        {% elif f.until %}{{ t('patients.until') }} {{ fmt_date(f.until) }}{% if f.days_left is not none and f.days_left >= 0 %} · {{ t('patients.days_left', n=f.days_left) }}{% endif %}
+        {% endif %}
+        {% if f.source == 'document' and f.source_document_id %} · <a href="{{ S }}/posteingang/{{ f.source_document_id }}" data-sheet="{{ S }}/posteingang/{{ f.source_document_id }}/blatt" style="color:inherit">{{ t('patients.source_document') }}</a>{% endif %}
+      </p>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="small muted">{{ t('patients.no_restrictions') }}</p>
+  {% endif %}
+  {% if ctx.expired %}<p class="small" style="margin-top:8px;opacity:.75">{{ t('patients.expired_count', n=ctx.expired | length) }}</p>{% endif %}
+</section>

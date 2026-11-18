@@ -1,0 +1,40 @@
+{% extends "ui/settings.html" %}
+{% block settings %}
+<form method="post" class="grid-main-side">
+  <input type="hidden" name="_csrf" value="{{ csrf }}">
+  <section class="card stack">
+    <h2>{{ t('settings.practice_data') }}</h2>
+    <div class="field"><label for="name">{{ t('settings.practice_name') }}</label><input id="name" name="name" value="{{ practice.name }}" required maxlength="200"></div>
+    <div class="row" style="gap:12px;flex-wrap:wrap">
+      <div class="field grow"><label for="street">{{ t('settings.street') }}</label><input id="street" name="street" value="{{ practice.street or '' }}" maxlength="70"></div>
+      <div class="field"><label for="house_no">{{ t('settings.house_no') }}</label><input id="house_no" name="house_no" value="{{ practice.house_no or '' }}" maxlength="16" style="width:90px"></div>
+    </div>
+    <div class="row" style="gap:12px;flex-wrap:wrap">
+      <div class="field"><label for="zip">{{ t('settings.zip') }}</label><input id="zip" name="zip" value="{{ practice.zip or '' }}" maxlength="9" inputmode="numeric" style="width:110px"></div>
+      <div class="field grow"><label for="city">{{ t('settings.city') }}</label><input id="city" name="city" value="{{ practice.city or '' }}" maxlength="35"></div>
+    </div>
+    <div class="row" style="gap:12px;flex-wrap:wrap">
+      <div class="field grow"><label for="phone">{{ t('settings.phone') }}</label><input id="phone" name="phone" value="{{ practice.phone or '' }}" inputmode="tel"></div>
+      <div class="field grow"><label for="email">{{ t('settings.email') }}</label><input id="email" name="email" type="email" value="{{ practice.email or '' }}"></div>
+    </div>
+    <div class="row" style="gap:12px;flex-wrap:wrap">
+      <div class="field"><label for="canton">{{ t('settings.canton') }}</label><input id="canton" name="canton" value="{{ practice.canton }}" maxlength="2" style="width:80px;text-transform:uppercase" required></div>
+      <div class="field grow"><label for="gln">GLN</label><input id="gln" name="gln" value="{{ practice.gln or '' }}" inputmode="numeric" maxlength="13"></div>
+      <div class="field grow"><label for="zsr">ZSR</label><input id="zsr" name="zsr" value="{{ practice.zsr or '' }}" maxlength="20"></div>
+    </div>
+    <div class="field"><label for="default_lang">{{ t('settings.default_lang') }}</label>
+      <select id="default_lang" name="default_lang"><option value="de"{% if practice.default_lang == 'de' %} selected{% endif %}>Deutsch</option><option value="fr"{% if practice.default_lang == 'fr' %} selected{% endif %}>Français</option></select></div>
+  </section>
+  <section class="card stack grid-side">
+    <h2>{{ t('settings.texts') }}</h2>
+    <div class="field"><label for="reply_time">{{ t('settings.reply_time') }}</label>
+      <select id="reply_time" name="reply_time" aria-describedby="rt-hint">
+        <option value=""{% if not practice.reply_time %} selected{% endif %}>{{ t('settings.reply_default') }}</option>
+        {% for rt in reply_times %}<option value="{{ rt }}"{% if practice.reply_time == rt %} selected{% endif %}>{{ t('settings.reply.' ~ rt) }}</option>{% endfor %}
+      </select>
+      <p class="hint" id="rt-hint">{{ t('settings.reply_time_hint') }}</p></div>
+    <p class="small muted">{{ t('settings.reply_preview') }} «{% if practice.reply_time in reply_times %}{{ t('p.msg.reply.' ~ practice.reply_time) }} {{ t('p.msg.no_emergency') }}{% else %}{{ t('p.msg.reply_time') }}{% endif %}»</p>
+  </section>
+  <div class="form-actions form-foot"><button class="btn" type="submit">{{ t('common.save') }}</button></div>
+</form>
+{% endblock %}

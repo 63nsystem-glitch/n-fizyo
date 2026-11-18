@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <title>Beckenkippen</title>
+  <g id="fig" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 186 L300 186" stroke-width="3" opacity="0.3"/>
+    <path d="M158 180 Q134.75 154 95.5 180" stroke-width="13" opacity="0.2"/>
+    <path d="M158 180 L95.5 180" stroke-width="13" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M95.5 180 L76.4 170.8" stroke-width="10"/>
+    <circle cx="76.4" cy="170.8" r="13.8" fill="currentColor" stroke="none"/>
+    <path d="M158 180 L196.3 144.1 L230 181" stroke-width="10"/>
+    <path d="M230 181 L247.5 182" stroke-width="8"/>
+    <path d="M134.8 128 L134.8 160.5" stroke-width="4" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M134.8 166 L130.1 157.1 L139.4 157.1 Z" stroke-width="2.5" style="fill:var(--ex-accent, #D9661F);stroke:var(--ex-accent, #D9661F)"/>
+  </g>
+</svg>

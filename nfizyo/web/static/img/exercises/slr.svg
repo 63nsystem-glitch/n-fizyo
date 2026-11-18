@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <title>Gestrecktes Bein heben</title>
+  <g id="fig" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 186 L300 186" stroke-width="3" opacity="0.3"/>
+    <path d="M128 180 L180.5 181 L230.5 181" stroke-width="10" opacity="0.2"/>
+    <path d="M230.5 181 L233.5 163.8" stroke-width="8" opacity="0.2"/>
+    <path d="M128 180 L163.5 141.4 L194 181" stroke-width="10" opacity="0.45"/>
+    <path d="M194 181 L211.5 182" stroke-width="8" opacity="0.45"/>
+    <path d="M128 180 L65.5 180" stroke-width="13"/>
+    <path d="M65.5 180 L46.4 170.8" stroke-width="10"/>
+    <circle cx="46.4" cy="170.8" r="13.8" fill="currentColor" stroke="none"/>
+    <path d="M128 180 L176 158.6 L221.6 138.3" stroke-width="10" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M221.6 138.3 L218 121.2" stroke-width="8" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M246.2 171.7 L245.9 168 L245.5 164.3 L244.9 160.6 L244.2 157 L243.5 153.3 L242.6 149.7 L241.6 146.1 L240.4 142.6 L239.8 140.8" stroke-width="4" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M237.9 135.6 L245.3 142.3 L236.6 145.5 Z" stroke-width="2.5" style="fill:var(--ex-accent, #D9661F);stroke:var(--ex-accent, #D9661F)"/>
+  </g>
+</svg>

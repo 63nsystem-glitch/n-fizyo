@@ -1,0 +1,10 @@
+{% set pill = {'active': 'ok', 'used_up': 'warn', 'expired': 'error', 'cancelled': 'error', 'future': 'info'}[s.state] %}
+<span class="pill-label {{ pill }}">{{ t('cashdesk.abo.state_' ~ s.state) }}</span>
+{% if s.state == 'active' and not s.visited_today %}
+<form method="post" action="{{ S }}/kasse"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="visit"><input type="hidden" name="sub_id" value="{{ s.id }}">{% if back is defined %}<input type="hidden" name="back" value="{{ back }}">{% endif %}
+  <button class="btn tonal sm" type="submit">{{ icon('how_to_reg', 18) }}{{ t('cashdesk.abo.visit') }}</button></form>
+{% elif s.visited_today %}
+<form method="post" action="{{ S }}/kasse"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="visit_undo"><input type="hidden" name="sub_id" value="{{ s.id }}">{% if back is defined %}<input type="hidden" name="back" value="{{ back }}">{% endif %}
+  <button class="btn text sm" type="submit" title="{{ t('cashdesk.abo.undo_hint') }}">{{ icon('undo', 18) }}{{ t('cashdesk.abo.undo') }}</button></form>
+{% endif %}
+{% if s.state in ('used_up', 'expired') %}<a class="btn text sm" href="{{ S }}/kasse?patient={{ s.patient_id }}">{{ t('cashdesk.abo.renew') }}</a>{% endif %}

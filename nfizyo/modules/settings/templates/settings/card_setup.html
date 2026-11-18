@@ -1,0 +1,26 @@
+{# Einrichtungs-Checkliste (Übersicht der Leitung und eigene Seite). ctx: items, done, total, complete, page #}
+<section class="card stack-s" aria-labelledby="h-setup">
+  <div class="card-head"><h2 id="h-setup">{{ icon('task_alt', 20) }} {{ t('setup.title') }}</h2>
+    <span class="meta">{{ t('setup.progress', done=ctx.done, total=ctx.total) }}</span></div>
+  <span class="meter" role="meter" aria-valuemin="0" aria-valuemax="{{ ctx.total }}" aria-valuenow="{{ ctx.done }}" aria-label="{{ t('setup.title') }}"><span style="width:{{ (ctx.done / ctx.total * 100) | round | int if ctx.total else 0 }}%"></span></span>
+  <p class="small muted">{{ t('setup.hint') }}</p>
+  <div class="list">
+    {% for it in ctx['items'] %}
+    <a class="list-item" href="{{ it.href }}" style="padding-inline:0">
+      <span class="lead" style="color:{{ 'var(--ok, var(--primary))' if it.done else 'var(--on-surface-variant)' }}">{{ icon('check_circle' if it.done else 'radio_button_unchecked', 22) }}</span>
+      <span class="body"><span class="title"{% if it.done %} style="color:var(--on-surface-variant)"{% endif %}>{{ t('setup.item.' ~ it.key) }}</span><br>
+        <span class="sub">{{ t('setup.hint_' ~ it.key) }}{% if it.key == 'messaging' %} · {{ t('setup.mail_on') if it.mail else t('setup.mail_off') }}{% endif %}{% if it.no_rooms %} · {{ t('setup.no_rooms') }}{% endif %}</span></span>
+      <span class="trail">{% if it.done %}<span class="pill-label ok">{{ t('setup.done') }}</span>{% elif it.optional %}<span class="pill-label">{{ t('setup.optional') }}</span>{% else %}<span class="pill-label warn">{{ t('setup.open') }}</span>{% endif %}{{ icon('chevron_right', 20, 'flip-rtl') }}</span>
+    </a>
+    {% endfor %}
+  </div>
+  {% if not (ctx.page and hidden) %}
+  <form method="post" action="{{ S }}/einrichtung" class="row" style="justify-content:space-between;gap:8px;flex-wrap:wrap">
+    <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="dismiss">
+    {% if ctx.complete %}<span class="small">{{ icon('verified', 16) }} {{ t('setup.all_done') }}</span>
+    {% else %}<span class="small muted">{{ t('setup.dismiss_open') }}</span>{% endif %}
+    <button class="btn {{ 'tonal' if ctx.complete else 'text' }}" type="submit">{{ t('setup.dismiss') }}</button>
+  </form>
+  {% endif %}
+  {% if not ctx.page %}<a class="btn text sm" href="{{ S }}/einrichtung" style="align-self:flex-start">{{ t('setup.open_page') }}</a>{% endif %}
+</section>

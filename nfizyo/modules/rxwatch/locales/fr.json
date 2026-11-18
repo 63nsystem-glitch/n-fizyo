@@ -1,0 +1,78 @@
+{
+  "rx": {
+    "title": "Suivi des prescriptions",
+    "description": "Séances restantes, délais et demandes aux médecins – avant qu'une séance ait lieu sans prescription.",
+    "nav": "Prescriptions",
+    "subtitle": "Ce qu'il faut faire maintenant",
+    "hint": "Rappels selon les règles suisses (9 séances au plus par prescription, début dans les 5 semaines, garantie de prise en charge dès la 37e séance). Seul·e le/la médecin peut compléter ou demander.",
+    "card_title": "Prescription",
+    "todo": "Vérifier les prescriptions",
+    "sessions_done": "séances",
+    "no_referrer": "sans médecin prescripteur",
+    "level": {
+      "act": "à traiter",
+      "soon": "bientôt",
+      "ok": "en ordre"
+    },
+    "group": {
+      "act": "À traiter maintenant",
+      "soon": "Bientôt",
+      "info": "Demandé – en attente de réponse"
+    },
+    "all_ok": "Toutes les prescriptions sont en ordre.",
+    "via_label": "Demandé comment ?",
+    "via": {
+      "phone": "Téléphone",
+      "fax": "Fax",
+      "mail": "E-mail",
+      "hin": "HIN",
+      "report": "Rapport",
+      "other": "autre"
+    },
+    "mark_requested": "Marquer comme demandé",
+    "create_request_letter": "Rédiger la demande au médecin",
+    "open_draft": "Ouvrir le brouillon",
+    "req": {
+      "renewal": "Prescription de suivi demandée",
+      "kogu": "Garantie de prise en charge demandée",
+      "correction": "Correction demandée",
+      "new": "Nouvelle prescription demandée"
+    },
+    "req_done": "Réglé",
+    "requested": "Demande enregistrée",
+    "closed": "Demande clôturée",
+    "nudge": "Sans réponse depuis {days} jours – relancer.",
+    "field": {
+      "diagnosis": "diagnostic",
+      "referrer": "médecin",
+      "issued_on": "date d'émission"
+    },
+    "flag": {
+      "incomplete": "Prescription incomplète : {fields} manquant. Seul·e le/la médecin peut la compléter.",
+      "start_missed": "Le traitement aurait dû commencer avant le {deadline}. Une nouvelle prescription est nécessaire.",
+      "start_late": "Premier rendez-vous le {date} – après le délai de 5 semaines ({deadline}).",
+      "start_soon": "Le traitement doit commencer avant le {deadline} (encore {days} jours). Aucun rendez-vous réservé.",
+      "uncovered": "Dès le {date} sans prescription valable : {booked} rendez-vous réservés, plus que {left} séances disponibles.",
+      "renew": "Plus que {left} séances sur {total} – penser à la prescription de suivi.",
+      "renewal_requested": "Prescription de suivi demandée le {date} ({via}).",
+      "kogu_requested": "Garantie de prise en charge demandée le {date} ({via}).",
+      "correction_requested": "Correction de la prescription demandée le {date} ({via}).",
+      "new_requested": "Nouvelle prescription demandée le {date} ({via}).",
+      "renewal_draft": "Une demande de prescription de suivi est prête en brouillon.",
+      "kogu": "{n} séances jusqu'ici. Dès la 37e séance ({date}), une garantie de prise en charge est nécessaire – le/la médecin la demande.",
+      "kogu_nodate": "{n} séances jusqu'ici. Dès la 37e séance, une garantie de prise en charge est nécessaire – le/la médecin la demande.",
+      "kogu_soon": "Déjà {n} séances sur {limit} sans garantie de prise en charge."
+    },
+    "move_first": "Avancer le premier rendez-vous",
+    "booked": {
+      "one": "{n} réservée",
+      "other": "{n} réservées"
+    },
+    "ok_count": {
+      "one": "{n} autre prescription est en ordre.",
+      "other": "{n} autres prescriptions sont en ordre."
+    },
+    "show_all": "Afficher les {n}",
+    "nav_short": "Prescr."
+  }
+}

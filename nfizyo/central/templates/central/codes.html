@@ -1,0 +1,9 @@
+{% extends "central/layout.html" %}
+{% block content %}
+<section class="card" style="max-width:480px;margin:32px auto">
+  <h1 style="margin-bottom:8px">Wiederherstellungscodes</h1>
+  <p class="small muted">Nur jetzt sichtbar. Ausdrucken oder im Tresor ablegen.</p>
+  <ol class="mono" style="columns:2;line-height:1.9;margin:12px 0 16px 18px">{% for c in codes %}<li>{{ c }}</li>{% endfor %}</ol>
+  <a class="btn block" href="/">Notiert – weiter</a>
+</section>
+{% endblock %}

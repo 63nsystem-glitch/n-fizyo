@@ -1,0 +1,44 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/agenda" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('agenda.ical.title') }}{% endblock %}
+{% block subtitle %}{{ t('agenda.ical.subtitle') }}{% endblock %}
+{% block content %}
+<div class="grid-main-side">
+  <div class="col stack">
+    {% if new_url %}
+    <section class="card stack-s">
+      <div class="banner ok">{{ icon('task_alt', 20) }}<span>{{ t('agenda.ical.created') }}</span></div>
+      <p class="mono small" style="user-select:all;word-break:break-all">{{ new_url }}</p>
+      <div class="row" style="gap:8px;flex-wrap:wrap">
+        <a class="btn" href="{{ webcal }}">{{ icon('event_upcoming', 18) }}{{ t('agenda.ical.subscribe') }}</a>
+      </div>
+      <p class="small muted">{{ t('agenda.ical.once') }}</p>
+    </section>
+    {% endif %}
+    <section class="card flush">
+      <h2 style="padding:16px 16px 8px">{{ t('agenda.ical.mine') }}</h2>
+      <div class="list">
+        {% for tk in tokens %}
+        <div class="list-item"><span class="lead avatar">{{ icon('event_upcoming', 20) }}</span>
+          <span class="body"><span class="title">{{ tk.label or t('agenda.ical.no_label') }}</span><br>
+            <span class="sub">{{ t('agenda.ical.detail_' ~ tk.detail) }} · {{ t('agenda.ical.since', date=fmt_date(tk.created_at)) }}{% if tk.last_used_at %} · {{ t('agenda.ical.used', date=fmt_date(tk.last_used_at)) }}{% endif %}</span></span>
+          <form method="post" class="trail" data-confirm="{{ t('agenda.ical.revoke_confirm') }}" data-confirm-yes="{{ t('agenda.ical.revoke') }}"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="revoke"><input type="hidden" name="token_id" value="{{ tk.id }}">
+            <button class="btn text sm" type="submit">{{ t('agenda.ical.revoke') }}</button></form>
+        </div>
+        {% else %}<p class="small muted" style="padding:0 16px 16px">{{ t('agenda.ical.none') }}</p>{% endfor %}
+      </div>
+    </section>
+  </div>
+  <section class="card stack">
+    <h2>{{ t('agenda.ical.new') }}</h2>
+    <form method="post" class="form"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="create">
+      <div class="field"><label for="il">{{ t('agenda.ical.label') }}</label><input id="il" name="label" maxlength="60" placeholder="{{ t('agenda.ical.label_ph') }}"></div>
+      <fieldset style="border:0;padding:0;margin:0" class="stack-s"><legend class="small">{{ t('agenda.ical.detail') }}</legend>
+        <label class="check"><input type="radio" name="detail" value="initials" checked>{{ t('agenda.ical.detail_initials') }}</label>
+        <label class="check"><input type="radio" name="detail" value="none">{{ t('agenda.ical.detail_none') }}</label></fieldset>
+      <div class="form-actions"><button class="btn" type="submit">{{ icon('add', 18) }}{{ t('agenda.ical.create') }}</button></div>
+    </form>
+    <p class="small muted">{{ t('agenda.ical.privacy') }}</p>
+  </section>
+</div>
+{% endblock %}

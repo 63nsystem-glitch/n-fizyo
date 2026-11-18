@@ -1,0 +1,61 @@
+{
+  "intake": {
+    "title": "Shqetësimet e mia",
+    "hello": "Mirëdita, {name}",
+    "intro": "Përshkruani shqetësimet tuaja – në gjuhën tuaj. Terapistja ose terapisti juaj e lexon para trajtimit.",
+    "where": "Ku keni shqetësime?",
+    "where_hint": "Prekni vendet në trup (mund të zgjidhni disa). Ndërroni me «Para/Prapa».",
+    "list_instead": "Listë në vend të figurës",
+    "none_selected": "Ende nuk është zgjedhur asnjë vend",
+    "pain": "Sa e fortë është dhimbja?",
+    "pain_0": "aspak",
+    "pain_2": "e lehtë",
+    "pain_4": "mesatare",
+    "pain_6": "e fortë",
+    "pain_8": "shumë e fortë",
+    "pain_10": "e padurueshme",
+    "since": "Që kur?",
+    "since_opt": {
+      "days": "më pak se 1 javë",
+      "weeks": "1 deri në 6 javë",
+      "months": "më shumë se 6 javë",
+      "years": "më shumë se 1 vit"
+    },
+    "worse": "Kur është më keq?",
+    "worse_opt": {
+      "move": "kur lëviz",
+      "rest": "në qetësi",
+      "night": "natën",
+      "sitting": "ulur",
+      "standing": "në këmbë",
+      "walking": "kur eci",
+      "stairs": "në shkallë",
+      "lifting": "kur ngre pesha",
+      "morning": "në mëngjes"
+    },
+    "goals": "Çfarë dëshironi të bëni përsëri?",
+    "goal_opt": {
+      "sleep": "të fle pa dhimbje",
+      "walk": "të eci / të shëtis",
+      "stairs": "të ngjitem në shkallë",
+      "work": "të punoj",
+      "sport": "të bëj sport",
+      "lift": "të ngre dhe të mbaj",
+      "overhead": "të ngre krahun mbi kokë",
+      "household": "punët e shtëpisë",
+      "drive": "të ngas makinën"
+    },
+    "text": "Me fjalët tuaja",
+    "text_hint": "Shkruani ose flisni në gjuhën tuaj. Do të përkthehet për praktikën.",
+    "text_ph": "Çfarë ndodhi? Çfarë e përkeqëson ose e përmirëson?",
+    "voice": "Flisni në vend që të shkruani",
+    "voice_stop": "Ndalo regjistrimin",
+    "voice_busy": "Duke u njohur …",
+    "emergency": "Nëse keni dhimbje të forta ose të reja e të papritura, kontaktoni mjekun tuaj. Në rast urgjence telefononi 144.",
+    "privacy": "Përgjigjet tuaja mbeten në serverin e praktikës.",
+    "send": "Dërgo",
+    "sent_flash": "Faleminderit! Praktika i ka marrë përgjigjet tuaja.",
+    "text_hint_same": "Përshkruani me fjalët tuaja se çfarë ju shqetëson. Mund të shkruani ose të flisni."
+  },
+  "_review": "Erstübersetzung NSystem – vor Einsatz von Muttersprachler/in prüfen lassen."
+}

@@ -1,0 +1,36 @@
+{% extends "central/layout.html" %}
+{% block content %}
+<h1 style="margin-bottom:8px">Wartungshinweise</h1>
+<p class="small muted" style="margin-bottom:16px">Erscheinen beim Personal der Praxis als Banner im gewählten Zeitfenster (nicht in der Patienten-App), pro Person ausblendbar. Die Box holt sie mit der nächsten Meldung (max. 5 Minuten).</p>
+{% if flash %}<div class="banner ok" style="margin-bottom:12px">{{ icon('check_circle', 20) }}<span>Hinweis gespeichert.</span></div>{% endif %}
+{% if error %}<div class="banner error" style="margin-bottom:12px">{{ icon('error', 20) }}<span>{{ error }}</span></div>{% endif %}
+<div class="grid-main-side">
+  <div class="col stack">
+    <section class="card" style="padding:0;overflow:hidden"><div class="table-wrap"><table class="table">
+      <thead><tr><th>Zeitfenster</th><th>Text</th><th>Boxen</th><th></th></tr></thead><tbody>
+      {% for n in rows %}<tr>
+        <td class="small">{{ local(n.starts_at) }}<br>{{ local(n.ends_at) }}</td>
+        <td class="small">{{ n.text_de }}<br><span class="muted">{{ n.text_fr }}</span></td>
+        <td class="small">{{ 'alle' if n.all_boxes else n.box_names }}</td>
+        <td>{% if n.withdrawn_at %}<span class="pill-label">zurückgezogen</span>{% elif n.ends_at < now %}<span class="pill-label">vorbei</span>{% else %}
+          <form method="post" action="/hinweise/{{ n.id }}/zurueckziehen"><input type="hidden" name="_csrf" value="{{ csrf }}"><button class="btn text sm" type="submit">Zurückziehen</button></form>{% endif %}</td>
+      </tr>{% else %}<tr><td colspan="4" class="muted">Noch keine Hinweise.</td></tr>{% endfor %}
+    </tbody></table></div></section>
+  </div>
+  <div class="col stack">
+    <section class="card stack-s">
+      <h2>Neuer Hinweis</h2>
+      <form method="post" class="form"><input type="hidden" name="_csrf" value="{{ csrf }}">
+        <div class="field"><label for="de">Text Deutsch</label><textarea id="de" name="text_de" rows="3" maxlength="600" required></textarea></div>
+        <div class="field"><label for="fr">Text Französisch</label><textarea id="fr" name="text_fr" rows="3" maxlength="600" required></textarea></div>
+        <div class="field"><label for="s">Ab (Zürcher Zeit, leer = jetzt)</label><input id="s" type="datetime-local" name="starts_at"></div>
+        <div class="field"><label for="e">Bis (Zürcher Zeit)</label><input id="e" type="datetime-local" name="ends_at" required></div>
+        <label class="small" style="display:flex;gap:8px;align-items:center"><input type="radio" name="target" value="all" checked style="width:auto"> alle Boxen</label>
+        <label class="small" style="display:flex;gap:8px;align-items:center"><input type="radio" name="target" value="selected" style="width:auto"> nur diese:</label>
+        <div class="stack-s" style="padding-inline-start:24px">{% for b in boxes %}<label class="small" style="display:flex;gap:8px;align-items:center"><input type="checkbox" name="box" value="{{ b.id }}" style="width:auto"> {{ b.name }}</label>{% endfor %}</div>
+        <button class="btn block" type="submit">{{ icon('send', 18) }}Hinweis speichern</button>
+      </form>
+    </section>
+  </div>
+</div>
+{% endblock %}

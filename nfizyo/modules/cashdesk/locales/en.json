@@ -1,0 +1,8 @@
+{
+  "p": {
+    "mail": {
+      "receipt_subject": "Receipt {number}",
+      "receipt_body": "Hello {name}\n\nPlease find attached receipt {number}. Thank you very much.\n\nKind regards\n{practice}"
+    }
+  }
+}

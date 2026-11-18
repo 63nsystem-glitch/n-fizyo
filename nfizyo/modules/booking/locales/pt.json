@@ -1,0 +1,61 @@
+{
+  "p": {
+    "booking": {
+      "title": "Pedir uma consulta",
+      "closed": "De momento não é possível marcar online. Por favor, ligue-nos.",
+      "choose_type": "Para que deseja uma consulta?",
+      "minutes": "{n} minutos",
+      "other_type": "Outro tratamento",
+      "choose_slot": "Escolha um horário livre. O consultório confirma depois a consulta por SMS.",
+      "no_slots": "Esta semana já não há horários livres.",
+      "earlier": "Antes",
+      "later": "Depois",
+      "other_slot": "Escolher outro horário",
+      "err_fields": "Por favor, verifique os campos assinalados.",
+      "first_name": "Nome próprio",
+      "last_name": "Apelido",
+      "birthdate": "Data de nascimento",
+      "phone": "Telemóvel",
+      "phone_hint": "Vai receber um código por SMS.",
+      "email": "E-mail (opcional)",
+      "email_ok": "Receber também a confirmação e os lembretes por e-mail (o e-mail não é encriptado).",
+      "insurance": "Seguro",
+      "ins_KVG": "Seguro de base (doença)",
+      "ins_UVG": "Seguro de acidentes",
+      "ins_IVG": "Seguro de invalidez",
+      "ins_VVG": "Seguro complementar",
+      "ins_privat": "Pago por mim",
+      "prescription": "Tenho uma prescrição médica de fisioterapia.",
+      "note": "Observação (opcional)",
+      "note_hint": "Por favor, não indique detalhes de saúde – falaremos disso no consultório.",
+      "consent": "Aceito que {practice} guarde os meus dados para marcar a consulta.",
+      "send_code": "Enviar código por SMS",
+      "code_intro": "Enviámos-lhe um código por SMS. Introduza-o aqui.",
+      "confirm": "Enviar pedido",
+      "sent_title": "Pedido recebido",
+      "sent_text": "{practice} verifica o seu pedido e confirma a consulta por SMS. Só então a consulta fica marcada.",
+      "err_slot": "Este horário já não é válido. Escolha de novo.",
+      "err_taken": "Este horário acabou de ser ocupado. Escolha outro.",
+      "err_blocked": "Demasiadas tentativas. Tente mais tarde ou ligue-nos.",
+      "err_phone": "Indique um número de telemóvel suíço ou do Liechtenstein (p. ex. 079 123 45 67).",
+      "err_sms_limit": "Já foram enviados vários códigos para este número. Tente novamente dentro de uma hora ou ligue-nos.",
+      "err_code": "O código não está correto.",
+      "err_expired": "O pedido expirou. Por favor, comece de novo.",
+      "all_places": "Todos os locais",
+      "closure": "O consultório está fechado: {dates}.",
+      "original": "Mostrar o original",
+      "err_busy": "Neste momento não podemos enviar mais códigos. Tente mais tarde ou ligue-nos."
+    },
+    "sms": {
+      "booking_code": "{practice}: o seu código para o pedido de consulta: {code}",
+      "booking_confirmed": "{practice}: a sua consulta de {when} está confirmada ({place}). Desmarcar pelo menos 24 h antes: {phone}",
+      "booking_declined": "{practice}: infelizmente não podemos confirmar a consulta de {when}. Por favor, ligue-nos: {phone}"
+    },
+    "mail": {
+      "booking_confirmed_subject": "Consulta confirmada: {when}",
+      "booking_confirmed_body": "Bom dia {name}\n\nA sua consulta de {when} está confirmada ({place}).\nDesmarcar pelo menos 24 horas antes: {phone}\n\nCumprimentos\n{practice}",
+      "booking_declined_subject": "O seu pedido de consulta",
+      "booking_declined_body": "Bom dia {name}\n\nInfelizmente não podemos confirmar a consulta de {when}. Por favor, ligue-nos: {phone}\n\nCumprimentos\n{practice}"
+    }
+  }
+}

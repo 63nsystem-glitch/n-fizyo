@@ -1,0 +1,56 @@
+{% extends "layouts/staff.html" %}
+{% block title %}{{ t('inbox.title') }}{% endblock %}
+{% block subtitle %}{{ t('inbox.subtitle') }}{% endblock %}
+{% block actions %}<button class="btn" type="button" data-dialog="dlg-upload">{{ icon('upload_file', 18) }}<span>{{ t('inbox.upload') }}</span></button>{% endblock %}
+{% block content %}
+<div class="grid-main-side">
+  <div class="col">
+    <div class="chips">
+      <a class="chip{% if f == 'open' %} selected{% endif %}" href="{{ S }}/posteingang">{{ t('inbox.f_open') }}{% if n_open %} · {{ n_open }}{% endif %}</a>
+      <a class="chip{% if f == 'done' %} selected{% endif %}" href="{{ S }}/posteingang?f=done">{{ t('inbox.f_done') }}</a>
+    </div>
+    <section class="card">
+      <div class="list">
+        {% for d in docs %}
+        <a class="list-item" href="{{ S }}/posteingang/{{ d.id }}">
+          <span class="lead avatar" style="background:{{ 'var(--primary-container)' if d.status == 'review' else 'var(--surface-highest)' }}">{{ icon({'scan': 'document_scanner', 'patient': 'mobile', 'hin': 'mail'}.get(d.source, 'description'), 20) }}</span>
+          <span class="body"><span class="title">{{ d.title or t('inbox.kind.' ~ d.kind) }}</span><br>
+            <span class="sub">{% if d.first_name %}{{ d.first_name }} {{ d.last_name }}{% else %}<span style="color:var(--error)">{{ t('inbox.no_patient') }}</span>{% endif %}{% if d.sender %} · {{ d.sender | truncate(40) }}{% endif %} · {{ fmt_date(d.created_at) }}</span></span>
+          <span class="trail">
+            {% if d.status in ('new', 'processing') %}<span class="pill-label">{{ icon('hourglass_top', 14) }} {{ t('inbox.st.' ~ d.status) }}</span>
+            {% elif d.status == 'failed' %}<span class="pill-label error">{{ t('inbox.st.failed') }}</span>
+            {% elif d.open_count %}<span class="pill-label info">{{ t('inbox.n_suggestions', n=d.open_count) }}</span>
+            {% else %}<span class="pill-label ok">{{ t('inbox.st.' ~ d.status) }}</span>{% endif %}
+            {{ icon('chevron_right', 20, 'flip-rtl') }}</span>
+        </a>
+        {% else %}
+        <div class="empty">{{ icon('inbox', 40) }}<p>{{ t('inbox.empty') }}</p></div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+  <div class="col">
+    <section class="card">
+      <h2 style="margin-bottom:8px">{{ icon('inbox', 20) }}{{ t('inbox.how_t') }}</h2>
+      <p class="small">{{ t('inbox.how_t_text') }}</p>
+    </section>
+    <section class="card tonal">
+      <h2 style="margin-bottom:8px">{{ t('inbox.ai') }}</h2>
+      <p class="small">{{ icon('check_circle', 14) }} {{ t('inbox.ai_rules') }}</p>
+      <p class="small">{{ icon('check_circle' if ai_status.llm.available else 'radio_button_unchecked', 14) }} {{ t('inbox.ai_llm') }}</p>
+      <p class="small">{{ icon('check_circle' if ai_status.ocr.available else 'radio_button_unchecked', 14) }} {{ t('inbox.ai_ocr') }}</p>
+      <p class="ai-note" style="margin-top:8px">{% if ai_cloud %}{{ icon('cloud_sync', 14) }}{{ t('ai.cloud_demo', host=ai_cloud) }}{% else %}{{ icon('lock', 14) }}{{ t('ai.remote') if ai_remote else t('ai.local') }}{% endif %}</p>
+    </section>
+  </div>
+</div>
+<dialog class="dlg" id="dlg-upload">
+  <h2>{{ t('inbox.upload') }}</h2>
+  <form method="post" action="{{ S }}/posteingang/hochladen" enctype="multipart/form-data" class="form">
+    <input type="hidden" name="_csrf" value="{{ csrf }}">
+    <div class="field"><label for="files">{{ t('inbox.files') }}</label><input id="files" name="files" type="file" multiple accept=".pdf,.txt,.png,.jpg,.jpeg,.tif,.tiff,.webp" required></div>
+    <div class="field"><label for="up-p">{{ t('inbox.patient') }}</label><select id="up-p" name="patient_id"><option value="">{{ t('inbox.patient_later') }}</option>{% for p in patients %}<option value="{{ p.id }}">{{ p.last_name }}, {{ p.first_name }}</option>{% endfor %}</select></div>
+    <p class="small muted">{{ t('inbox.upload_hint') }}</p>
+    <div class="form-actions"><button type="button" class="btn text" data-close>{{ t('common.cancel') }}</button><button class="btn" type="submit">{{ icon('upload_file', 18) }}{{ t('inbox.upload_go') }}</button></div>
+  </form>
+</dialog>
+{% endblock %}

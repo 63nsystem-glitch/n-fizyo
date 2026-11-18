@@ -1,0 +1,61 @@
+{
+  "p": {
+    "booking": {
+      "title": "Kërkoni një termin",
+      "closed": "Rezervimi online nuk është i mundur tani. Ju lutemi na telefononi.",
+      "choose_type": "Për çfarë dëshironi një termin?",
+      "minutes": "{n} minuta",
+      "other_type": "Trajtim tjetër",
+      "choose_slot": "Zgjidhni një orë të lirë. Praktika e konfirmon terminin më pas me SMS.",
+      "no_slots": "Këtë javë nuk ka më orë të lira.",
+      "earlier": "Më herët",
+      "later": "Më vonë",
+      "other_slot": "Zgjidhni një orë tjetër",
+      "err_fields": "Ju lutemi kontrolloni fushat e shënuara.",
+      "first_name": "Emri",
+      "last_name": "Mbiemri",
+      "birthdate": "Data e lindjes",
+      "phone": "Celulari",
+      "phone_hint": "Do të merrni një kod me SMS.",
+      "email": "E-mail (opsionale)",
+      "email_ok": "Merr konfirmimin dhe kujtesat edhe me e-mail (e-maili nuk është i enkriptuar).",
+      "insurance": "Sigurimi",
+      "ins_KVG": "Sigurimi bazë (sëmundje)",
+      "ins_UVG": "Sigurimi kundër aksidenteve",
+      "ins_IVG": "Sigurimi i invaliditetit",
+      "ins_VVG": "Sigurimi plotësues",
+      "ins_privat": "Paguaj vetë",
+      "prescription": "Kam një recetë mjekësore për fizioterapi.",
+      "note": "Shënim (opsionale)",
+      "note_hint": "Ju lutemi mos shkruani hollësi shëndetësore – do t’i diskutojmë në praktikë.",
+      "consent": "Pajtohem që {practice} të ruajë të dhënat e mia për caktimin e terminit.",
+      "send_code": "Dërgo kodin me SMS",
+      "code_intro": "Ju dërguam një kod me SMS. Shkruajeni këtu.",
+      "confirm": "Dërgo kërkesën",
+      "sent_title": "Kërkesa u mor",
+      "sent_text": "{practice} e shqyrton kërkesën tuaj dhe e konfirmon terminin me SMS. Vetëm atëherë termini është i caktuar.",
+      "err_slot": "Kjo orë nuk është më e vlefshme. Zgjidhni përsëri.",
+      "err_taken": "Kjo orë sapo u zu. Zgjidhni një tjetër.",
+      "err_blocked": "Shumë përpjekje. Provoni më vonë ose na telefononi.",
+      "err_phone": "Ju lutemi shkruani një numër celulari zviceran ose të Lihtenshtajnit (p.sh. 079 123 45 67).",
+      "err_sms_limit": "Në këtë numër janë dërguar tashmë disa kode. Provoni përsëri pas një ore ose na telefononi.",
+      "err_code": "Kodi nuk është i saktë.",
+      "err_expired": "Kërkesa ka skaduar. Ju lutemi filloni përsëri.",
+      "all_places": "Të gjitha vendet",
+      "closure": "Praktika është e mbyllur: {dates}.",
+      "original": "Shfaq origjinalin",
+      "err_busy": "Për momentin nuk mund të dërgojmë kode të tjera. Ju lutemi provoni më vonë ose na telefononi."
+    },
+    "sms": {
+      "booking_code": "{practice}: kodi juaj për kërkesën e terminit: {code}",
+      "booking_confirmed": "{practice}: termini juaj më {when} është konfirmuar ({place}). Anulimi të paktën 24 orë më parë: {phone}",
+      "booking_declined": "{practice}: fatkeqësisht nuk mund ta konfirmojmë terminin më {when}. Ju lutemi na telefononi: {phone}"
+    },
+    "mail": {
+      "booking_confirmed_subject": "Termini u konfirmua: {when}",
+      "booking_confirmed_body": "Përshëndetje {name}\n\nTermini juaj më {when} është konfirmuar ({place}).\nAnulimi të paktën 24 orë më parë: {phone}\n\nMe respekt\n{practice}",
+      "booking_declined_subject": "Kërkesa juaj për termin",
+      "booking_declined_body": "Përshëndetje {name}\n\nFatkeqësisht nuk mund ta konfirmojmë terminin më {when}. Ju lutemi na telefononi: {phone}\n\nMe respekt\n{practice}"
+    }
+  }
+}

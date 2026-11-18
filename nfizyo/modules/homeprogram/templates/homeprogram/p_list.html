@@ -1,0 +1,41 @@
+{% extends "layouts/patient.html" %}
+{% import "homeprogram/_pic.html" as pic with context %}
+{% block head %}{{ super() }}<link rel="stylesheet" href="{{ static('css/homeprogram.css') }}">{% endblock %}
+{% block title %}{{ t('p.ex.title') }}{% endblock %}
+{% block content %}
+{% if answer %}
+{% if answer == 'pain' %}
+<div class="banner error" role="status">{{ icon('emergency') }}<div class="stack-s"><p>{{ t('p.ex.answer.pain') }}</p>{% if module_on('messages') %}<a class="btn tonal sm" href="/p/nachrichten">{{ icon('chat_bubble', 18) }}{{ t('p.ex.write_practice') }}</a>{% endif %}</div></div>
+{% else %}
+<div class="banner info" role="status">{{ icon('waving_hand') }}<p>{{ t('p.ex.answer.' ~ answer) if not (answer == 'no_time' and has_essential) else t('p.ex.answer.no_time_star') }}</p></div>
+{% endif %}
+{% endif %}
+{% if rows %}
+<p class="muted">{{ t('p.ex.intro') }}</p>
+{% if has_essential %}<p class="small" style="display:flex;gap:6px;align-items:center">{{ icon('star', 18) }}{{ t('p.ex.star_hint') }}</p>{% endif %}
+{% for r in rows | sort(attribute='it.essential', reverse=true) %}
+<a class="card hp-ex-row" href="/p/uebungen/{{ r.it.id }}">
+  {{ pic.thumb(r.pic, '', r.it.video_path) }}
+  <span class="grow"><span class="hp-ex-name" dir="auto">{% if r.it.essential %}<span class="hp-star" title="{{ t('p.ex.star_one') }}">{{ icon('star', 18) }}</span>{% endif %}<span>{{ r.name.text }}</span></span>{% if r.dose %}<span class="small muted hp-ex-dose" dir="auto">{{ r.dose }}</span>{% endif %}</span>
+  {% if r.done %}<span class="pill-label ok">{{ icon('check', 16) }}</span>{% else %}{{ icon('chevron_right', 24, 'flip-rtl') }}{% endif %}
+</a>
+{% endfor %}
+{% if not done_all %}
+<details class="card"{{ ' open' if skip and not answer else '' }}>
+  <summary style="font-size:17px;cursor:pointer">{{ t('p.ex.skip_q') }}</summary>
+  {% if skip %}<p class="small muted" style="margin-top:8px">{{ t('p.ex.skip_saved', reason=t('p.ex.skip.' ~ skip.reason)) }}</p>{% endif %}
+  <form method="post" action="/p/uebungen/nicht-geschafft" class="stack-s" style="margin-top:12px">
+    <input type="hidden" name="_csrf" value="{{ csrf }}">
+    <p class="small muted">{{ t('p.ex.skip_intro') }}</p>
+    <div class="optgrid">{% for r in reasons %}<label class="opt"><input type="radio" name="reason" value="{{ r }}"{{ ' checked' if skip and skip.reason == r else '' }}>{{ t('p.ex.skip.' ~ r) }}</label>{% endfor %}</div>
+    <label class="small" for="skip-note">{{ t('p.ex.skip_note') }}</label>
+    <textarea class="input" id="skip-note" name="note" rows="2" maxlength="300" dir="auto">{{ skip.note if skip and skip.note else '' }}</textarea>
+    <button class="btn tonal" type="submit">{{ icon('send', 18) }}{{ t('p.ex.skip_send') }}</button>
+  </form>
+</details>
+{% endif %}
+{% else %}
+<section class="card"><p>{{ t('p.ex.none') }}</p></section>
+{% endif %}
+<div class="emergency">{{ icon('emergency', 20) }}<span>{{ t('p.ex.stop_if_pain') }}</span></div>
+{% endblock %}

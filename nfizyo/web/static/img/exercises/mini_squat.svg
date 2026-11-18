@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <title>Mini-Kniebeuge</title>
+  <g id="fig" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 186 L300 186" stroke-width="3" opacity="0.3"/>
+    <path d="M194 186 L194 92" stroke-width="4" opacity="0.45"/>
+    <path d="M194 140 L238 140 L238 186" stroke-width="4" opacity="0.45"/>
+    <path d="M150 98 L150 48" stroke-width="13" opacity="0.2"/>
+    <path d="M150 48 L150 31" stroke-width="10" opacity="0.2"/>
+    <circle cx="150" cy="31" r="11" fill="currentColor" stroke="none" opacity="0.2"/>
+    <path d="M150 98 L150 140 L150 180" stroke-width="10" opacity="0.2"/>
+    <path d="M150 180 L164 182" stroke-width="8" opacity="0.2"/>
+    <path d="M134 114 L146.1 65.5" stroke-width="13"/>
+    <path d="M146.1 65.5 L150.8 49.1" stroke-width="10"/>
+    <circle cx="150.8" cy="49.1" r="11" fill="currentColor" stroke="none"/>
+    <path d="M134 114 L164.6 142.8 L150 180" stroke-width="10" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M150 180 L164 182" stroke-width="8" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M146.1 65.5 L160 94.3 L188 102" stroke-width="10"/>
+    <path d="M104 80 L104 106.5" stroke-width="4" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M104 112 L99.4 103.1 L108.6 103.1 Z" stroke-width="2.5" style="fill:var(--ex-accent, #D9661F);stroke:var(--ex-accent, #D9661F)"/>
+  </g>
+</svg>

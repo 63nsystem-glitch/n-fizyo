@@ -1,0 +1,4 @@
+<div class="stack-s">
+  <a class="btn tonal lg block" href="/p/melden" style="justify-content:flex-start">{{ icon('report', 22) }}{{ t('p.home.report') }}</a>
+  <a class="btn tonal lg block" href="/p/nachrichten" style="justify-content:flex-start">{{ icon('forum', 22) }}{{ t('p.home.messages') }}{% if ctx.unread %} <span class="pill-label error" style="margin-inline-start:auto">{{ ctx.unread }}</span>{% endif %}</a>
+</div>

@@ -1,0 +1,5 @@
+<div class="row" style="margin-top:10px;gap:8px;align-items:center">
+  <span class="pill-label info">{{ icon('videocam', 14) }} {{ t('video.title') }}</span>
+  {% if ctx.open and ctx.configured %}<a class="btn sm" href="{{ S }}/video/{{ ctx.aid }}/start" target="_blank" rel="noopener">{{ icon('play_arrow', 16) }}{{ t('video.start') }}</a>
+  {% else %}<a class="btn text sm" href="{{ S }}/video/{{ ctx.aid }}">{{ t('video.details') }}</a>{% endif %}
+</div>

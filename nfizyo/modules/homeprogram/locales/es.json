@@ -1,0 +1,68 @@
+{
+  "p": {
+    "ex": {
+      "title": "Ejercicios",
+      "intro": "Su programa de la consulta. Toque un ejercicio.",
+      "none": "Todavía no hay ningún programa de ejercicios aprobado.",
+      "not_translated": "Estas instrucciones aún no están disponibles en su idioma.",
+      "stop_if_pain": "Pare si el dolor aumenta mucho y contacte con la consulta.",
+      "pain_after": "¿Qué intensidad tenía el dolor?",
+      "done": "Hecho",
+      "done_again": "Hecho otra vez",
+      "logged": "Guardado – ¡muy bien!",
+      "answer": {
+        "forgot": "Pasa. Una hora fija ayuda, por ejemplo después de lavarse los dientes. Mañana es un nuevo día.",
+        "unclear": "Gracias. La consulta lo verá antes de su próxima cita y le enseñará el ejercicio de nuevo.",
+        "no_time": "Es comprensible. Un solo ejercicio es mejor que ninguno.",
+        "no_time_star": "Es comprensible. Si hay poco tiempo: haga solo los ejercicios con la estrella.",
+        "pain": "No siga con el ejercicio mientras duela mucho y contacte con la consulta. En caso de emergencia, llame al 144.",
+        "app": "Gracias. Pregunte en recepción en su próxima visita – le ayudamos con gusto con la app.",
+        "no_benefit": "Gracias por su sinceridad. Coméntelo en la próxima cita – juntos revisarán su objetivo."
+      },
+      "write_practice": "Escribir a la consulta",
+      "star_hint": "Si hay poco tiempo: primero los ejercicios con la estrella.",
+      "star_one": "Si hay poco tiempo: este ejercicio primero.",
+      "skip_q": "¿Hoy no lo ha conseguido?",
+      "skip_saved": "Guardado: {reason}. Puede cambiar su respuesta.",
+      "skip_intro": "Opcional. La consulta verá su respuesta antes de la próxima cita.",
+      "skip": {
+        "forgot": "Lo olvidé",
+        "unclear": "El ejercicio no estaba claro",
+        "no_time": "No tuve tiempo",
+        "pain": "Demasiado dolor",
+        "app": "Problema con la app",
+        "no_benefit": "No le veo utilidad"
+      },
+      "skip_note": "¿Quiere añadir algo? (opcional)",
+      "skip_send": "Enviar",
+      "skip_choose": "Por favor, elija un motivo.",
+      "own_video": "Su propio vídeo – grabado en la consulta",
+      "video_delete_hint": "Puede borrar su vídeo en cualquier momento. También se borrará en la consulta.",
+      "video_delete": "Borrar mi vídeo",
+      "video_deleted": "Vídeo borrado",
+      "dose": {
+        "sets": {
+          "one": "{n} serie",
+          "other": "{n} series"
+        },
+        "reps": {
+          "one": "{n} repetición",
+          "other": "{n} repeticiones"
+        },
+        "hold": {
+          "one": "mantener {n} s",
+          "other": "mantener {n} s"
+        },
+        "minutes": {
+          "one": "{n} minuto",
+          "other": "{n} minutos"
+        },
+        "per_day": {
+          "one": "{n} vez al día",
+          "other": "{n} veces al día"
+        },
+        "sets_reps": "{sets} de {reps}"
+      }
+    }
+  }
+}

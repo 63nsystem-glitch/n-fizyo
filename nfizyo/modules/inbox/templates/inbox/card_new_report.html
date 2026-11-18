@@ -1,0 +1,15 @@
+{% import "inbox/_suggestion.html" as sg with context %}
+{% for d in ctx.docs %}
+<section class="card" aria-labelledby="h-doc-{{ d.id }}">
+  <div class="row" style="gap:16px;align-items:flex-start;flex-wrap:nowrap">
+    <span class="avatar" style="background:var(--primary-container);color:var(--on-primary-container)">{{ icon('article', 20) }}</span>
+    <div class="grow">
+      <div class="row-between"><h2 id="h-doc-{{ d.id }}">{% if d.title or (d.kind and d.kind != 'report') %}{{ t('inbox.new_report_of', title=d.title or t('inbox.kind.' ~ d.kind)) }}{% else %}{{ t('inbox.new_report') }}{% endif %}</h2>
+        <a class="btn text" href="{{ S }}/posteingang/{{ d.id }}" data-sheet="{{ S }}/posteingang/{{ d.id }}/blatt">{{ t('inbox.original') }}</a></div>
+      <p class="small muted">{{ d.sender or '' }}{% if d.sender %} · {% endif %}{{ fmt_date(d.created_at) }} · {{ t('inbox.n_suggestions', n=d['items'] | length) }}</p>
+    </div>
+  </div>
+  {% for s in d['items'][:4] %}{{ sg.row(s, S ~ '/patienten/' ~ ctx.patient.id, can_decide=True, compact=True) }}{% endfor %}
+  {% if d['items'] | length > 4 %}<a class="btn text" href="{{ S }}/posteingang/{{ d.id }}">{{ t('inbox.more', n=d['items'] | length - 4) }}</a>{% endif %}
+</section>
+{% endfor %}

@@ -1,0 +1,33 @@
+{
+  "p": {
+    "progress": {
+      "title": "I suoi progressi",
+      "hint": "Condiviso dalla sua fisioterapista / dal suo fisioterapista. Se ha domande, ne parli al prossimo appuntamento.",
+      "from_to": "{first} il {first_on} → {last} il {last_on}",
+      "goal": "Obiettivo {goal}",
+      "kind": {
+        "flexion": "Piegare",
+        "extension": "Stendere",
+        "abduction": "Alzare di lato",
+        "external_rotation": "Ruotare verso l'esterno",
+        "internal_rotation": "Ruotare verso l'interno",
+        "elevation": "Alzare il braccio",
+        "pain_vas": "Dolore (0–10)"
+      },
+      "joint": {
+        "knee": "ginocchio",
+        "shoulder": "spalla",
+        "hip": "anca",
+        "elbow": "gomito",
+        "ankle": "caviglia",
+        "wrist": "polso",
+        "cervical": "collo",
+        "lumbar": "parte bassa della schiena"
+      },
+      "side": {
+        "l": "sinistra",
+        "r": "destra"
+      }
+    }
+  }
+}

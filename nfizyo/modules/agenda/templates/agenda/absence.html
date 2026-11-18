@@ -1,0 +1,36 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/agenda/abwesenheiten" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('agenda.abs.kind.' ~ ('other' if row.kind == 'sick' and screen.key != 'leitung' else row.kind)) }}{% if row.user_id %} – {{ row.user_name }}{% endif %}{% endblock %}
+{% block subtitle %}{{ fmt_date(row.starts_on, weekday=True) }}{% if row.ends_on != row.starts_on %} – {{ fmt_date(row.ends_on, weekday=True) }}{% endif %}{% if row.start_time %} · {{ row.start_time }}–{{ row.end_time }}{% endif %}{% endblock %}
+{% block content %}
+<div class="grid-main-side">
+  <div class="col">
+    {% if affected %}
+    <section class="card" data-affected>
+      <div class="banner warn" role="status" style="margin-bottom:12px">{{ icon('warning') }}<span>{{ t('agenda.abs.affected', n=affected | length) }}</span></div>
+      <div class="list">
+        {% for x in affected %}<a class="list-item" style="padding-inline:0" href="{{ S }}/agenda/termine/{{ x.a.id }}"><span class="lead">{{ icon('event', 20) }}</span>
+          <span class="body"><span class="title">{{ fmt_date(x.start, weekday=True) }} · {{ fmt_time(x.start) }}–{{ fmt_time(x.end) }}</span><br><span class="sub">{{ x.a.first_name }} {{ x.a.last_name }} · {{ x.a.therapist_name }}</span></span>
+          <span class="trail">{{ icon('chevron_right', 20, 'flip-rtl') }}</span></a>{% endfor %}
+      </div>
+    </section>
+    {% elif just_saved %}
+    <div class="banner info" role="status">{{ icon('task_alt') }}<span>{{ t('agenda.abs.no_affected') }}</span></div>
+    {% endif %}
+    <section class="card">
+      <h2 style="margin-bottom:16px">{{ t('agenda.abs.edit') }}</h2>
+      <form method="post" class="form">
+        {% include "agenda/_absence_form.html" %}
+        <div class="form-actions"><a class="btn text" href="{{ S }}/agenda/abwesenheiten">{{ t('common.cancel') }}</a><button class="btn" type="submit" name="do" value="save">{{ icon('check', 18) }}{{ t('common.save') }}</button></div>
+      </form>
+    </section>
+  </div>
+  <div class="col">
+    <section class="card">
+      <form method="post" data-confirm="{{ t('agenda.abs.delete_confirm') }}" data-confirm-yes="{{ t('common.delete') }}"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="delete">
+        <button class="btn danger outlined" type="submit">{{ icon('delete', 18) }}{{ t('common.delete') }}</button></form>
+      <p class="small muted" style="margin-top:12px">{{ t('agenda.abs.created', name=row.created_by_name or '–', date=fmt_date(row.created_at)) }}</p>
+    </section>
+  </div>
+</div>
+{% endblock %}

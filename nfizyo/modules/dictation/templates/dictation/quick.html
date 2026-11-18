@@ -1,0 +1,23 @@
+{% extends "layouts/staff.html" %}
+{% import "dictation/_recorder.html" as r with context %}
+{% block title %}{{ t('dictation.quick') }}{% endblock %}
+{% block subtitle %}{{ t('dictation.quick_hint') }}{% endblock %}
+{% block content %}
+<div data-offline-shell class="stack" style="max-width:720px">
+  <div class="banner warn" data-offline hidden>{{ icon('wifi_off') }}<span>{{ t('dictation.offline_banner') }}</span></div>
+  {% if not stt and stt_state != 'checking' %}<div class="banner {{ 'info' if demo_stt else 'warn' }}">{{ icon('info') }}<span>{{ t('dictation.demo_stt') if demo_stt else (t('dictation.stt_down') if stt_state == 'down' else t('dictation.no_stt')) }}</span></div>{% endif %}
+  <section class="card">
+    {% set sel %}<div class="field" style="width:100%;max-width:420px"><label for="pq">{{ t('dictation.patient_today') }}</label>
+      <select id="pq" data-patient-select><option value="">{{ t('dictation.choose') }}</option>
+        {% if appts %}<optgroup label="{{ t('dictation.today_group') }}">{% for a in appts %}<option value="{{ a.patient_id }}" data-appointment="{{ a.id }}"{% if preselect == a.patient_id %} selected{% endif %}>{{ fmt_time(a.starts_at) }} · {{ a.first_name }} {{ a.last_name }}</option>{% endfor %}</optgroup>{% endif %}
+        <optgroup label="{{ t('nav.my_patients') }}">{% for p in patients %}<option value="{{ p.id }}"{% if preselect == p.id and not (appts | selectattr('patient_id', 'equalto', p.id) | list) %} selected{% endif %}>{{ p.last_name }}, {{ p.first_name }}</option>{% endfor %}</optgroup>
+      </select></div>{% endset %}
+    {{ r.recorder(go_after=False, select_html=sel) }}
+  </section>
+  <section class="card"><div class="card-head"><h2>{{ t('dictation.queue') }}</h2><a class="btn text" href="{{ S }}/diktat/entwuerfe">{{ t('dictation.drafts') }}</a></div>
+    <div data-queue></div>
+    {% for rec in pending[:6] %}<div class="queue-item"><span class="pill-label {{ 'ok' if rec.status == 'drafted' else ('error' if rec.status == 'failed' else 'warn') }}">{{ t('dictation.st.' ~ rec.status) }}</span><span class="grow small">{{ rec.first_name or '' }} {{ rec.last_name or '' }} · {{ fmt_time(rec.created_at) }}</span><a class="btn text" href="{{ S }}/diktat/{{ rec.id }}">{{ t('dictation.open') }}</a></div>{% endfor %}
+  </section>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ static('js/dictation.js') }}" defer></script>{% endblock %}

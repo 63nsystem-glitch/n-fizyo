@@ -1,0 +1,83 @@
+{% extends "patients/_file.html" %}
+{% import "mtt/_sugg.html" as sg with context %}
+{% block content %}
+<div class="grid-main-side">
+  <div class="col">
+    {% if suggestions %}
+    <section class="card warn" aria-labelledby="h-sugg">
+      <h2 id="h-sugg" style="margin-bottom:4px">{{ t('mtt.sugg_title') }}</h2>
+      <p class="small muted">{{ t('mtt.sugg_hint') }}</p>
+      {% for g in suggestions %}{{ sg.sugg(g, request.path) }}{% endfor %}
+    </section>
+    {% endif %}
+    <section class="card">
+      <div class="card-head"><h2>{{ t('mtt.plan') }}</h2>
+        {% if plan %}<span class="pill-label {{ 'ok' if plan.status == 'active' else 'warn' }}">{{ t('mtt.st.' ~ plan.status) }}{% if plan.approved_at %} · {{ fmt_date(plan.approved_at) }}{% endif %}</span>{% endif %}</div>
+      {% for r in rows %}{% set it = r.it %}
+      <form method="post" action="{{ S }}/mtt/plan/{{ it.id }}" class="suggestion" style="align-items:flex-start">
+        <input type="hidden" name="_csrf" value="{{ csrf }}">
+        <span class="avatar" style="border-radius:12px;width:48px;height:40px;background:#262A33;color:#fff">{{ icon('directions_walk' if it.kind == 'cardio' else ('accessibility_new' if it.kind == 'free' else 'fitness_center'), 20) }}</span>
+        <div class="what">
+          <strong style="font-weight:500">{{ it.machine_name }}</strong>
+          <div class="row" style="margin-top:8px">
+            {% if it.kind == 'cardio' %}
+            <label class="small">{{ t('mtt.minutes') }} <input class="input" name="minutes" value="{{ it.minutes or '' }}" inputmode="numeric" style="width:64px;min-height:36px;padding:4px 8px"></label>
+            {% else %}
+            <label class="small">{{ t('mtt.sets') }} <input class="input" name="sets" value="{{ it.sets or '' }}" inputmode="numeric" style="width:56px;min-height:36px;padding:4px 8px"></label>
+            <label class="small">{{ t('mtt.reps') }} <input class="input" name="reps" value="{{ it.reps or '' }}" inputmode="numeric" style="width:56px;min-height:36px;padding:4px 8px"></label>
+            {% if it.kind == 'strength' %}<label class="small">{{ t('mtt.load') }} <input class="input" name="load" value="{{ it.load | num if it.load is not none else '' }}" inputmode="decimal" style="width:72px;min-height:36px;padding:4px 8px"></label>{% endif %}
+            {% endif %}
+            <label class="small">{{ t('mtt.setting') }} <input class="input" name="setting" value="{{ it.setting or '' }}" placeholder="{{ t('mtt.setting_ph') }}" style="width:150px;min-height:36px;padding:4px 8px"></label>
+          </div>
+          <input class="input" name="note" value="{{ it.note or '' }}" placeholder="{{ t('mtt.note_ph') }}" style="margin-top:8px;min-height:40px;padding:6px 12px">
+          {% if r.last %}
+          <div class="row small muted" style="margin-top:6px;gap:8px;align-items:center">
+            {% if r.svg %}<span style="width:160px;display:inline-block">{{ r.svg | safe }}</span>{% endif %}
+            <span>{{ t('mtt.last_time', date=fmt_date(r.last.day, weekday=True, year=False)) }}:
+              {% for s in r.last.sets %}{% if it.kind == 'cardio' %}{{ s.minutes or '–' }} min{% elif s.load is not none %}{{ s.reps or '–' }} × {{ dec(s.load) }} kg{% else %}{{ s.reps or '–' }}{% endif %}{{ ', ' if not loop.last else '' }}{% endfor %}
+              {% if r.last_effort is not none %} · {{ t('mtt.effort_short', n=r.last_effort) }}{% endif %}
+              {% if r.last_pain is not none %} · <span style="{{ 'color:var(--error)' if r.last_pain >= 5 else '' }}">{{ t('mtt.pain_short', n=r.last_pain) }}</span>{% endif %}</span>
+          </div>
+          {% endif %}
+        </div>
+        <div class="stack-s"><button class="btn tonal sm" type="submit">{{ t('common.save') }}</button><button class="btn text sm" type="submit" name="remove" value="1" style="color:var(--error)">{{ t('mtt.remove') }}</button></div>
+      </form>
+      {% else %}<p class="muted">{{ t('mtt.empty') }}</p>{% endfor %}
+      {% if plan and rows %}
+      <form method="post" class="stack-s" style="margin-top:12px">
+        <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="action" value="approve">
+        <div class="field"><label for="goal">{{ t('mtt.goal') }}</label><input id="goal" name="goal" value="{{ plan.goal or '' }}" placeholder="{{ t('mtt.goal_ph') }}"></div>
+        <div class="form-actions"><button class="btn" type="submit">{{ icon('send', 18) }}{{ t('mtt.approve') if plan.status != 'active' else t('mtt.approve_again') }}</button></div>
+        <p class="small muted" style="text-align:end">{{ t('mtt.approve_hint') }}</p>
+      </form>
+      {% endif %}
+    </section>
+  </div>
+  <div class="col">
+    <section class="card">
+      <h2 style="margin-bottom:8px">{{ t('mtt.add_machine') }}</h2>
+      {% if machines %}
+      <div class="list">
+        {% for m in machines %}
+        <form method="post" class="list-item"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="machine_id" value="{{ m.id }}">
+          <span class="lead avatar" style="border-radius:10px">{{ icon('directions_walk' if m.kind == 'cardio' else 'fitness_center', 20) }}</span>
+          <span class="body"><span>{{ m.name }}</span><br><span class="sub small">{{ t('mtt.kind.' ~ m.kind) }}</span></span>
+          <button class="icon-btn tonal" type="submit" aria-label="{{ t('mtt.add') }}" title="{{ t('mtt.add') }}">{{ icon('add') }}</button>
+        </form>
+        {% endfor %}
+      </div>
+      {% elif not has_machines %}<p class="small muted">{{ t('mtt.no_machines') }}</p>{% endif %}
+      <a class="btn text" href="{{ S }}/mtt/geraete">{{ t('mtt.manage_machines') }}</a>
+    </section>
+    <section class="card">
+      <h2 style="margin-bottom:8px">{{ t('mtt.visits') }}</h2>
+      {% for v in visits %}
+      <div class="row-between small" style="padding:6px 0;border-top:1px solid var(--surface-highest)">
+        <span style="display:inline-flex;gap:4px;align-items:center;white-space:nowrap">{{ fmt_date(v.day, weekday=True, year=False) }}{% if v.source == 'qr' %}<span title="QR">{{ icon('qr_code', 14) }}</span>{% endif %}</span>
+        <span>{{ t('mtt.n_sets', n=v.n_sets) }}{% if v.max_effort is not none %} · {{ t('mtt.effort_short', n=v.max_effort) }}{% endif %}{% if v.max_pain is not none %} · <span style="{{ 'color:var(--error)' if v.max_pain >= 5 else '' }}">{{ t('mtt.pain_short', n=v.max_pain) }}</span>{% endif %}</span>
+      </div>
+      {% else %}<p class="small muted">{{ t('mtt.no_visits') }}</p>{% endfor %}
+    </section>
+  </div>
+</div>
+{% endblock %}

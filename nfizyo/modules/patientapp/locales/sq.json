@@ -1,0 +1,98 @@
+{
+  "p": {
+    "app_name": "Fizioterapia ime",
+    "nav": {
+      "main": "Navigimi",
+      "today": "Sot",
+      "exercises": "Ushtrimet",
+      "appointments": "Terminet",
+      "messages": "Mesazhet",
+      "today_short": "Sot",
+      "appointments_short": "Terminet",
+      "messages_short": "Mesazhet"
+    },
+    "emergency": "Në rast urgjence telefononi 144. Aplikacioni nuk është për urgjenca.",
+    "machine_translated": "përkthim automatik",
+    "home": {
+      "hello": "Mirëdita, {name}",
+      "next": "Termini juaj i ardhshëm",
+      "exercises": "Ushtrimet e mia sot",
+      "exercises_hint": "Shënoni ushtrimet e bëra – praktika e sheh ecurinë tuaj.",
+      "describe": "Përshkruani shqetësimet",
+      "report": "Njoftoni një problem",
+      "messages": "Mesazhet",
+      "appointment": "Terminet",
+      "call": "Pyetje? Na telefononi:"
+    },
+    "profile": {
+      "title": "Profili",
+      "language": "Gjuha",
+      "language_hint": "Nëse nevojitet, tekstet e praktikës përkthehen automatikisht në gjuhën tuaj.",
+      "privacy": "Mbrojtja e të dhënave",
+      "privacy_text": "Të dhënat tuaja mbeten në serverin e praktikës suaj në Zvicër. Përkthimi dhe njohja e zërit bëhen atje – asgjë nuk dërgohet te shërbime të jashtme.",
+      "privacy_text_remote": "Të dhënat tuaja mbeten në serverin e praktikës suaj në Zvicër. Përkthimi dhe njohja e zërit punojnë në një server të NSystem në Zvicër që nuk ruan asgjë.",
+      "logout": "Dilni",
+      "revoke": "Përfundoni qasjen në aplikacion",
+      "revoke_confirm": "Vërtet ta përfundoni qasjen? Më vonë mund të merrni një ftesë të re."
+    },
+    "login": {
+      "title": "Hyrja",
+      "intro": "Shkruani numrin tuaj të celularit dhe datën e lindjes. Do të merrni një kod me SMS.",
+      "phone": "Numri i celularit",
+      "birthdate": "Data e lindjes",
+      "send_code": "Dërgo kodin",
+      "code_intro": "Shkruani kodin me 6 shifra nga SMS-ja.",
+      "code": "Kodi",
+      "submit": "Hyni",
+      "demo_code": "Demo: nuk dërgohet asnjë SMS. Kodi juaj është {code}.",
+      "wrong_code": "Kodi është i gabuar ose ka skaduar.",
+      "blocked": "Shumë përpjekje. Ju lutemi provoni më vonë.",
+      "too_many_codes": "Në këtë numër janë dërguar tashmë disa kode. Ju lutemi prisni një orë ose na telefononi."
+    },
+    "invite": {
+      "title": "Mirë se vini",
+      "hello": "Mirëdita, {name}. {practice} ju fton të përdorni aplikacionin.",
+      "what": "Në aplikacion shihni ushtrimet dhe terminet, përshkruani shqetësimet në gjuhën tuaj dhe i shkruani praktikës.",
+      "code": "Kodi nga praktika",
+      "code_hint": "Kodin me 6 shifra e keni marrë në praktikë ose me SMS.",
+      "privacy_title": "Të dhënat tuaja",
+      "privacy_text": "Të dhënat tuaja mbeten në serverin e praktikës suaj në Zvicër. Terapistja ose terapisti juaj sheh atë që shkruani. Mund ta përfundoni qasjen në çdo kohë.",
+      "consent": "Pajtohem të përdor aplikacionin.",
+      "consent_translation": "Tekstet e mia mund të përkthehen automatikisht në serverin e praktikës.",
+      "consent_translation_remote": "Tekstet e mia mund të përkthehen automatikisht – në serverin e IA-së në Zvicër (dërgohen të koduara, aty nuk ruhet asgjë).",
+      "start": "Nisni aplikacionin",
+      "need_consent": "Ju lutemi konfirmoni pëlqimin tuaj.",
+      "wrong_code": "Kodi është i gabuar.",
+      "invalid": "Kjo ftesë ka skaduar ose është përdorur tashmë.",
+      "invalid_hint": "Kërkoni nga praktika një ftesë të re ose hyni me numrin tuaj të celularit."
+    },
+    "sms": {
+      "invite": "Mirëdita {name}, aplikacioni juaj i fizioterapisë: {url} – kodi: {code}",
+      "login": "Kodi juaj i hyrjes: {code} (i vlefshëm 15 minuta)"
+    },
+    "privacy": {
+      "title": "Mbrojtja e të dhënave",
+      "link": "Deklarata për mbrojtjen e të dhënave",
+      "controller_title": "Përgjegjës",
+      "controller_generic": "Përgjegjëse është praktika që ju ftoi në aplikacion. Të dhënat e kontaktit i gjeni në aplikacion te «Profili».",
+      "data_title": "Cilat të dhëna",
+      "data": "Të dhënat tuaja personale dhe të kontaktit, të dhënat e sigurimit, recetat dhe raportet mjekësore, shënimet e trajtimit dhe matjet, si dhe çfarë shkruani në aplikacion (ushtrime, dhimbje, mesazhe, kërkesa, seri stërvitjeje). Të dhënat shëndetësore janë veçanërisht të ndjeshme.",
+      "purpose_title": "Për çfarë",
+      "purpose": "Për trajtimin tuaj, planifikimin e takimeve, faturimin me sigurimin tuaj dhe bashkëpunimin me mjekun tuaj – jo për reklama.",
+      "where_title": "Ku ruhen të dhënat",
+      "where": "Në serverin e praktikës në Zvicër. Të dhënat tuaja nuk dërgohen jashtë vendit. Seancat me video kalojnë nëpër serverin e videos së vetë praktikës në Zvicër dhe nuk regjistrohen.",
+      "who_title": "Kush i sheh",
+      "who": "Vetëm profesionistët e ekipit tuaj të trajtimit dhe, për takime e fatura, recepsioni. Raportet për mjekët dërgohen të koduara përmes HIN, faturat te sigurimi juaj. SMS-të i dërgon një ofrues në Zvicër; e-mailet vetëm me pëlqimin tuaj. Të gjithë i nënshtrohen sekretit profesional.",
+      "processor_title": "Softueri dhe teknika",
+      "processor": "Softueri N-Fizyo është i NSystem GmbH, Biel/Bienne. NSystem e operon teknikën në emër të praktikës, është e detyruar të ruajë sekretin dhe në punën normale nuk sheh të dhëna pacientësh. Përkthimi dhe njohja e zërit punojnë në serverin e praktikës ose në një server të NSystem në Zvicër që nuk ruan asgjë.",
+      "consent_title": "Pëlqimi juaj",
+      "consent": "Për aplikacionin, e-mailet, videot tuaja të ushtrimeve dhe seancat me video ju kërkojmë pëlqimin. Mund ta tërhiqni në çdo kohë – në aplikacion te «Profili» ose te praktika.",
+      "retention_title": "Për sa kohë",
+      "retention": "Praktika e ruan dokumentacionin e trajtimit për aq kohë sa e kërkon ligji. Videot tuaja të ushtrimeve mund t'i fshini në çdo kohë. Kodet e hyrjes dhe linket skadojnë pas pak kohe.",
+      "rights_title": "Të drejtat tuaja",
+      "rights": "Mund të kërkoni informacion për të dhënat tuaja, të korrigjoni të dhëna të gabuara dhe të kundërshtoni përpunimin, për aq kohë sa nuk e kërkon një ligj. Drejtojuni praktikës. Për pyetje mbi mbrojtjen e të dhënave mund t'i drejtoheni edhe Komisionerit Federal për Mbrojtjen e të Dhënave dhe Transparencën (EDÖB).",
+      "version": "Gjendja: nëntor 2026"
+    }
+  },
+  "_review": "Erstübersetzung NSystem – vor Einsatz von Muttersprachler/in prüfen lassen."
+}

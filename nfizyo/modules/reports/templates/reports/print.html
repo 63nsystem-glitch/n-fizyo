@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="{{ r.lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>{{ tl('reports.kind.' ~ r.kind) }} · {{ r.first_name }} {{ r.last_name }}</title>
+<link rel="stylesheet" href="{{ static('css/app.css') }}">
+</head>
+<body class="print-body">
+<div class="print-bar no-print">
+  <a class="btn text" href="{{ S }}/berichte/{{ r.id }}">{{ icon('arrow_back', 18) }}{{ t('common.back') }}</a>
+  <span class="grow"></span>
+  {% if r.status == 'draft' %}<span class="pill-label warn">{{ t('reports.status.draft') }}</span>{% endif %}
+  <button class="btn" type="button" data-print>{{ icon('print', 18) }}{{ t('reports.print_now') }}</button>
+</div>
+<article class="letter{{ ' is-draft' if r.status == 'draft' else '' }}">
+  <header class="letter-head">
+    <div class="sender">
+      <strong>{{ pr.name }}</strong><br>
+      {% if pr.address %}{{ pr.address }}<br>{% endif %}
+      {% if pr.phone %}{{ pr.phone | phone }}{% endif %}{% if pr.email %} · {{ pr.email }}{% endif %}
+    </div>
+    <div class="recipient">
+      {% if r.referrer_name %}{{ r.referrer_name }}<br>{% endif %}
+      {% if r.referrer_practice %}{{ r.referrer_practice }}<br>{% endif %}
+      {% if r.referrer_address %}<span style="white-space:pre-line">{{ r.referrer_address }}</span>{% endif %}
+    </div>
+  </header>
+  <p class="letter-date">{{ fmt_date(r.finalized_at or r.updated_at) }}</p>
+  <h1 class="letter-title">{{ tl('reports.kind.' ~ r.kind) }}</h1>
+  <p class="letter-subject">{{ r.subject }}</p>
+  <p>{{ r.salutation }}</p>
+  {% for s in sections if r[s] %}
+  <section class="letter-sec"><h2>{{ tl('reports.sec.' ~ s) }}</h2><p>{{ r[s] }}</p></section>
+  {% endfor %}
+  <p class="letter-close">{{ tl('reports.closing') }}</p>
+  <p class="letter-sign">{{ author.name }}<br><span>{{ tl('reports.signature_role') }}</span></p>
+  <footer class="letter-foot">
+    {{ pr.name }}{% if pr.gln %} · GLN {{ pr.gln }}{% endif %}{% if pr.zsr %} · ZSR {{ pr.zsr }}{% endif %}{% if author.gln %} · {{ tl('reports.therapist_gln') }} {{ author.gln }}{% endif %}
+    {% if demo %}<br><strong>{{ tl('reports.demo_footer') }}</strong>{% endif %}
+  </footer>
+</article>
+<script src="{{ static('js/app.js') }}" defer></script>
+</body>
+</html>

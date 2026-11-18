@@ -1,0 +1,12 @@
+<section class="card stack-s" aria-labelledby="h-progress">
+  <h2 id="h-progress">{{ icon('trending_up', 20) }} {{ t('p.progress.title') }}</h2>
+  {% for s in ctx.rows %}
+  <div class="p-progress">
+    <div class="row-between"><span>{{ t('p.progress.kind.' ~ s.kind) }}{% if s.joint %} · {{ t('p.progress.joint.' ~ s.joint) }}{% endif %}{% if s.side %} · {{ t('p.progress.side.' ~ s.side) }}{% endif %}</span>
+      <strong class="mono">{{ s.last | num }}{{ s.unit }}</strong></div>
+    {{ s.svg | safe }}
+    <p class="small muted">{{ t('p.progress.from_to', first=(s.first | num) ~ s.unit, first_on=fmt_date(s.first_on, year=False), last=(s.last | num) ~ s.unit, last_on=fmt_date(s.last_on, year=False)) }}{% if s.goal is not none %} · {{ t('p.progress.goal', goal=(s.goal | num) ~ s.unit) }}{% endif %}</p>
+  </div>
+  {% endfor %}
+  <p class="small muted">{{ t('p.progress.hint') }}</p>
+</section>

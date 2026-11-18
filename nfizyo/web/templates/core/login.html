@@ -1,0 +1,21 @@
+{% extends "layouts/auth.html" %}
+{% block title %}{{ t('login.title') }}{% endblock %}
+{% block content %}
+<h1 style="margin-bottom:4px">{{ t('login.title') }}</h1>
+<p class="muted" style="margin-bottom:24px">{{ t('login.intro') }}</p>
+{% if error %}<div class="banner error" role="alert" style="margin-bottom:16px">{{ icon('error') }}<span>{{ t(error) }}</span></div>{% endif %}
+<form method="post" action="/login" class="form">
+  <input type="hidden" name="_csrf" value="{{ csrf }}">
+  <input type="hidden" name="next" value="{{ next }}">
+  <div class="field"><label for="email">{{ t('login.email') }}</label>
+    <input id="email" name="email" type="email" autocomplete="username" required value="{{ email }}" autofocus></div>
+  <div class="field"><label for="password">{{ t('login.password') }}</label>
+    <input id="password" name="password" type="password" autocomplete="current-password" required></div>
+  <button class="btn lg block" type="submit">{{ t('login.submit') }}</button>
+</form>
+<p class="muted small" style="margin-top:16px">{{ t('login.forgot') }}</p>
+{% if demo %}<div class="banner info" style="margin-top:16px">{{ icon('info') }}<span>{{ t('login.demo_hint') }}</span></div>{% endif %}
+<div class="row" style="margin-top:24px;justify-content:center">
+  {% for code in STAFF_LANGS %}<a class="chip{% if code == lang %} selected{% endif %}" href="/lang/{{ code }}?next=/login">{{ LANG_NAMES[code] }}</a>{% endfor %}
+</div>
+{% endblock %}

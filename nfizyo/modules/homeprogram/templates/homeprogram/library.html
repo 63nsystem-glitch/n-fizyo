@@ -1,0 +1,22 @@
+{% extends "layouts/staff.html" %}
+{% import "homeprogram/_pic.html" as pic with context %}
+{% block head %}<link rel="stylesheet" href="{{ static('css/homeprogram.css') }}">{% endblock %}
+{% block title %}{{ t('hp.library') }}{% endblock %}
+{% block subtitle %}{{ t('hp.library_hint') }}{% endblock %}
+{% block actions %}<a class="btn" href="{{ S }}/uebungen/neu{% if area %}?bereich={{ area }}{% endif %}">{{ icon('add', 18) }}<span>{{ t('hp.new_exercise') }}</span></a>{% endblock %}
+{% block content %}
+<section class="card" style="max-width:960px">
+  <form method="get" class="search" style="margin-bottom:8px">{{ icon('search') }}<input name="q" value="{{ q }}" placeholder="{{ t('hp.search') }}" aria-label="{{ t('hp.search') }}">{% if area %}<input type="hidden" name="bereich" value="{{ area }}">{% endif %}{% if inactive %}<input type="hidden" name="inaktiv" value="1">{% endif %}</form>
+  <div class="chips" style="margin-bottom:8px">{% for a in areas %}<a class="chip{{ ' selected' if a == area else '' }}" href="?bereich={{ '' if a == area else a }}{% if q %}&q={{ q | urlencode }}{% endif %}{% if inactive %}&inaktiv=1{% endif %}">{{ t('hp.area.' ~ a) }}</a>{% endfor %}</div>
+  {% if inactive %}<p class="banner info" style="margin-bottom:8px">{{ icon('visibility_off') }}<span>{{ t('hp.inactive_hint') }}</span></p>{% endif %}
+  <div class="list">{% for e in lib %}
+    <a class="list-item hp-lib-item" href="{{ S }}/uebungen/{{ e.id }}">{{ pic.thumb(pic_of(e), 'sm lead') }}
+      <span class="body"><span class="title">{{ e.name_fr if lang == 'fr' else e.name_de }}</span><span class="sub">{{ e.instructions_fr if lang == 'fr' else e.instructions_de }}</span>{% set d = dose_text(e) %}{% if d %}<span class="hp-dose small">{{ d }}</span>{% endif %}</span>
+      <span class="trail">{{ icon('edit', 20) }}</span></a>
+  {% else %}<p class="muted" style="padding:12px 0">{{ t('hp.lib_empty') }}</p>{% endfor %}</div>
+  <div class="row" style="justify-content:flex-end;margin-top:8px">
+    {% if inactive %}<a class="btn text" href="?{% if area %}bereich={{ area }}{% endif %}">{{ icon('arrow_back', 18, 'flip-rtl') }}{{ t('hp.show_active') }}</a>
+    {% elif n_inactive %}<a class="btn text" href="?inaktiv=1">{{ icon('visibility_off', 18) }}{{ t('hp.show_inactive', n=n_inactive) }}</a>{% endif %}
+  </div>
+</section>
+{% endblock %}

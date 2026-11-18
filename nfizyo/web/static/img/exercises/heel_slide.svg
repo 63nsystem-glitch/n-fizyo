@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <title>Fersenrutschen</title>
+  <g id="fig" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 186 L300 186" stroke-width="3" opacity="0.3"/>
+    <path d="M138 180 L190.5 181 L240.5 181" stroke-width="10" opacity="0.45"/>
+    <path d="M240.5 181 L243.5 163.8" stroke-width="8" opacity="0.45"/>
+    <path d="M138 180 L75.5 180" stroke-width="13"/>
+    <path d="M75.5 180 L56.4 170.8" stroke-width="10"/>
+    <circle cx="56.4" cy="170.8" r="13.8" fill="currentColor" stroke="none"/>
+    <path d="M138 180 L172.6 140.5 L202 181" stroke-width="10" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M202 181 L219.5 182" stroke-width="8" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M242.5 163 L233.5 163" stroke-width="4" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M228 163 L236.9 158.4 L236.9 167.6 Z" stroke-width="2.5" style="fill:var(--ex-accent, #D9661F);stroke:var(--ex-accent, #D9661F)"/>
+  </g>
+</svg>

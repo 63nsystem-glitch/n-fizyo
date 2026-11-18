@@ -1,0 +1,30 @@
+{% extends "layouts/staff.html" %}
+{% block title %}{{ t('patients.my_title') }}{% endblock %}
+{% block subtitle %}{{ t('patients.my_subtitle') }}{% endblock %}
+{% block content %}
+<div class="stack">
+  {% for d in delegations %}
+  <div class="banner info">{{ icon('swap_horiz', 20) }}<div>{{ t('patients.delegation_banner', name=d.from_name, until=fmt_date(d.ends_on)) }}</div></div>
+  {% endfor %}
+  <form class="search" method="get" action="{{ S }}/patienten" role="search">
+    {{ icon('search') }}<input name="q" value="{{ q }}" placeholder="{{ t('patients.search_mine') }}" aria-label="{{ t('patients.search_mine') }}">
+  </form>
+  <div class="card">
+    <div class="list">
+      {% for p in patients %}
+      <a class="list-item" href="{{ S }}/patienten/{{ p.id }}">
+        <span class="lead avatar">{{ (p.first_name[:1] ~ p.last_name[:1]) | upper }}</span>
+        <span class="body"><span class="title">{{ p.last_name }}, {{ p.first_name }}</span><br>
+          <span class="sub">{% if p.birthdate %}{{ fmt_date(p.birthdate) }} ({{ age(p.birthdate) }}){% endif %}{% if p.law or p.insurer_name %} · {{ p.law | law }} {{ p.insurer_name or '' }}{% endif %}</span></span>
+        <span class="trail">
+          {% if p.delegated %}<span class="pill-label warn">{{ t('patients.delegated') }}</span>{% endif %}
+          {% if p.spoken_lang and p.spoken_lang not in ('de', 'fr', 'gsw') %}<span class="lang-tag">{{ icon('translate', 14) }}{{ p.spoken_lang | upper }}</span>{% endif %}
+          {{ icon('chevron_right', 20, 'flip-rtl') }}</span>
+      </a>
+      {% else %}
+      <div class="empty">{{ icon('person_search', 40) }}<p>{{ t('patients.none_found') if q else t('patients.none_mine') }}</p></div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

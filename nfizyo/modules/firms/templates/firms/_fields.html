@@ -1,0 +1,27 @@
+{% set f = firm if firm is defined else none %}
+<div class="field"><label for="fname">{{ t('firms.f.name') }} *</label><input id="fname" name="name" required maxlength="120" value="{{ f.name if f else '' }}"></div>
+<div class="row" style="gap:8px;flex-wrap:wrap">
+  <div class="field grow"><label for="fdept">{{ t('firms.f.department') }}</label><input id="fdept" name="department" maxlength="120" value="{{ f.department or '' if f else '' }}"></div>
+  <div class="field grow"><label for="fcontact">{{ t('firms.f.contact') }}</label><input id="fcontact" name="contact" maxlength="120" value="{{ f.contact or '' if f else '' }}"></div>
+</div>
+<div class="row" style="gap:8px;flex-wrap:wrap">
+  <div class="field grow"><label for="fstreet">{{ t('firms.f.street') }}</label><input id="fstreet" name="street" maxlength="120" value="{{ f.street or '' if f else '' }}"></div>
+  <div class="field" style="width:80px"><label for="fhouse">{{ t('firms.f.house_no') }}</label><input id="fhouse" name="house_no" maxlength="16" value="{{ f.house_no or '' if f else '' }}"></div>
+</div>
+<div class="row" style="gap:8px;flex-wrap:wrap">
+  <div class="field" style="width:96px"><label for="fzip">{{ t('firms.f.zip') }}</label><input id="fzip" name="zip" maxlength="5" inputmode="numeric" value="{{ f.zip or '' if f else '' }}"></div>
+  <div class="field grow"><label for="fcity">{{ t('firms.f.city') }}</label><input id="fcity" name="city" maxlength="120" value="{{ f.city or '' if f else '' }}"></div>
+</div>
+<div class="row" style="gap:8px;flex-wrap:wrap">
+  <div class="field grow"><label for="femail">{{ t('firms.f.email') }}</label><input id="femail" name="email" type="email" maxlength="160" value="{{ f.email or '' if f else '' }}"></div>
+  <div class="field grow"><label for="fphone">{{ t('firms.f.phone') }}</label><input id="fphone" name="phone" maxlength="40" value="{{ f.phone or '' if f else '' }}"></div>
+</div>
+<div class="row" style="gap:8px;flex-wrap:wrap">
+  <div class="field grow"><label for="fuid">{{ t('firms.f.uid') }}</label><input id="fuid" name="uid" maxlength="30" placeholder="CHE-123.456.789" value="{{ f.uid or '' if f else '' }}"></div>
+  <div class="field grow"><label for="fref">{{ t('firms.f.their_reference') }}</label><input id="fref" name="their_reference" maxlength="80" value="{{ f.their_reference or '' if f else '' }}"></div>
+</div>
+<div class="row" style="gap:8px;flex-wrap:wrap">
+  <div class="field" style="width:140px"><label for="fdays">{{ t('firms.f.payment_days') }}</label><input id="fdays" name="payment_days" inputmode="numeric" maxlength="3" placeholder="{{ default_days if default_days is defined else 30 }}" value="{{ f.payment_days if f and f.payment_days is not none else '' }}"></div>
+  <div class="field"><label for="flang">{{ t('firms.f.lang') }}</label><select id="flang" name="lang">{% for l in ('de', 'fr') %}<option value="{{ l }}"{% if f and f.lang == l %} selected{% endif %}>{{ t('firms.lang_' ~ l) }}</option>{% endfor %}</select></div>
+</div>
+<div class="field"><label for="fnote">{{ t('firms.f.note') }}</label><textarea id="fnote" name="note" rows="2" maxlength="1000">{{ f.note or '' if f else '' }}</textarea></div>

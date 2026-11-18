@@ -1,0 +1,42 @@
+{% extends "patients/_file.html" %}
+{% import "documentation/_sections.html" as sec with context %}
+{% block content %}
+<div class="grid-main-side">
+  <section class="card">
+    <div class="card-head"><h2>{{ t('notes.timeline') }}</h2>
+      <a class="btn tonal" href="{{ S }}/patienten/{{ patient.id }}/notizen/neu">{{ icon('edit_note', 18) }}{{ t('notes.new') }}</a></div>
+    <div class="timeline">
+      {% for n in notes %}
+      <div class="t-item">
+        <div><strong>{{ fmt_date(n.session_date, weekday=True, year=False) }}</strong><br><span class="small muted">{{ n.author_name }}</span></div>
+        <div>
+          <div class="row-between">
+            <div class="row">
+              <span class="pill-label {{ 'ok' if n.status == 'approved' else 'warn' }}">{{ t('notes.status_' ~ n.status) }}</span>
+              {% if n.source == 'dictation' %}<span class="pill-label">{{ icon('mic', 14) }} {{ t('notes.from_dictation') }}</span>{% endif %}
+              {% if n.version > 1 and n.status == 'approved' and n.reason %}<span class="pill-label info">{{ t('notes.has_addendum') }}</span>{% endif %}
+            </div>
+            <a class="btn text" href="{{ S }}/notizen/{{ n.id }}">{{ t('notes.open') if n.status == 'approved' else t('notes.edit_draft') }}</a>
+          </div>
+          {{ sec.show(n) }}
+        </div>
+      </div>
+      {% else %}
+      <div class="empty">{{ icon('clinical_notes', 40) }}<p>{{ t('notes.none') }}</p></div>
+      {% endfor %}
+    </div>
+  </section>
+  <div class="col">
+    <section class="card">
+      <h2 style="margin-bottom:12px">{{ t('patients.measurements') }}</h2>
+      {% for s in series %}
+      <div style="margin-bottom:12px">
+        <div class="row-between"><span>{{ t('measure.' ~ s.kind) }}{% if s.joint %} · {{ t('joint.' ~ s.joint) }}{% endif %}{% if s.side %} {{ t('common.side.' ~ s.side) }}{% endif %}</span><strong class="mono">{{ s.last | num }}{{ s.unit }}</strong></div>
+        {{ s.svg | safe }}
+        <p class="small muted">{{ t('patients.measure_from', first=(s.first | num) ~ s.unit, n=s.count) }}{% if s.goal is not none %} · {{ t('patients.goal_value') }} {{ s.goal | num }}{{ s.unit }}{% endif %}</p>
+      </div>
+      {% else %}<p class="muted small">{{ t('patients.no_measurements') }}</p>{% endfor %}
+    </section>
+  </div>
+</div>
+{% endblock %}

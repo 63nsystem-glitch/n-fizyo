@@ -1,0 +1,44 @@
+{% extends "ui/settings.html" %}
+{% block settings %}
+<form method="post" class="grid-main-side">
+  <input type="hidden" name="_csrf" value="{{ csrf }}">
+  <div class="col stack">
+    <section class="card stack">
+      <h2>{{ t('billing.set.account') }}</h2>
+      {% for p in problems %}<div class="banner warn">{{ icon('warning', 20) }}<div>{{ t('billing.problem.' ~ p) }}</div></div>{% endfor %}
+      <div class="field"><label for="iban">{{ t('billing.set.iban') }}</label>
+        <input id="iban" name="iban" value="{{ iban_fmt }}" maxlength="34" autocomplete="off" placeholder="CH00 0000 0000 0000 0000 0">
+        <p class="hint">{{ t('billing.set.iban_qr') if qr else t('billing.set.iban_hint') }}</p></div>
+      <div class="row" style="gap:12px;flex-wrap:wrap">
+        <div class="field"><label for="pd">{{ t('billing.set.payment_days') }}</label><input id="pd" name="payment_days" type="number" min="5" max="120" value="{{ st.payment_days }}" style="width:110px"></div>
+      </div>
+      <div class="field"><label for="uid">{{ t('billing.set.vat_number') }}</label>
+        <input id="uid" name="vat_number" value="{{ st.vat_number or '' }}" maxlength="24" autocomplete="off" placeholder="CHE-123.456.788">
+        <p class="hint">{{ t('billing.set.vat_hint') }}</p></div>
+    </section>
+    <section class="card stack">
+      <h2>{{ t('billing.set.reminders') }}</h2>
+      <p class="small muted">{{ t('billing.set.reminders_hint') }}</p>
+      <div class="row" style="gap:12px;flex-wrap:wrap">
+        <div class="field"><label for="rd">{{ t('billing.set.reminder_days') }}</label><input id="rd" name="reminder_days" type="number" min="5" max="60" value="{{ st.reminder_days }}" style="width:110px"></div>
+        <div class="field"><label for="f2">{{ t('billing.set.fee_2') }}</label><input id="f2" name="reminder_fee_2" inputmode="decimal" value="{{ '%.2f' | format(st.reminder_fee_2) }}" style="width:110px"></div>
+        <div class="field"><label for="f3">{{ t('billing.set.fee_3') }}</label><input id="f3" name="reminder_fee_3" inputmode="decimal" value="{{ '%.2f' | format(st.reminder_fee_3) }}" style="width:110px"></div>
+      </div>
+    </section>
+  </div>
+  <div class="col stack grid-side">
+    <section class="card stack">
+      <h2>{{ t('billing.set.electronic') }}</h2>
+      <p class="small">{{ t('billing.xml.mode_' ~ md_mode) }}</p>
+      {% if md_mode != 'off' and not md_configured %}<div class="banner warn">{{ icon('warning', 20) }}<span>{{ t('billing.set.md_incomplete') }}</span></div>{% endif %}
+      <div><a class="btn text sm" href="{{ S }}/einstellungen/medidata">{{ icon('verified_user', 16) }}{{ t('billing.md.link') }}</a></div>
+      <label class="check"><input type="checkbox" name="copy_to_insurer" value="1"{% if st.copy_to_insurer %} checked{% endif %}>{{ t('billing.set.copy') }}</label>
+      <div class="field"><label for="xm">{{ t('billing.set.xml_modus') }}</label>
+        <select id="xm" name="xml_modus"><option value="test"{% if st.xml_modus == 'test' %} selected{% endif %}>{{ t('billing.set.modus_test') }}</option>
+          <option value="production"{% if st.xml_modus == 'production' %} selected{% endif %}>{{ t('billing.set.modus_production') }}</option></select>
+        <p class="hint">{{ t('billing.set.modus_hint') }}</p></div>
+    </section>
+  </div>
+  <div class="form-actions form-foot"><button class="btn" type="submit">{{ t('common.save') }}</button></div>
+</form>
+{% endblock %}

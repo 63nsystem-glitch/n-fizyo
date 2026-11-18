@@ -1,0 +1,25 @@
+{% extends "ui/settings.html" %}
+{% block settings %}
+<div class="grid-main-side">
+  <section class="card stack-s">
+    <h2>{{ t('video.server') }}</h2>
+    <div class="kv" style="grid-template-columns:minmax(140px,35%) 1fr">
+      <div class="k">{{ t('video.s.url') }}</div><div class="mono">{{ url or '–' }}</div>
+      <div class="k">{{ t('video.s.secret') }}</div><div>{{ t('video.s.secret_set') if has_secret else t('video.s.secret_missing') }}</div>
+    </div>
+    {% if not configured %}<div class="banner warn">{{ icon('warning') }}<p>{{ t('video.not_configured') }}</p></div>{% endif %}
+    <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><button class="btn tonal" type="submit">{{ icon('fact_check', 18) }}{{ t('video.s.check') }}</button></form>
+    {% if checks %}
+    <div class="stack-s">
+      {% for key, ok in checks %}<div class="rx-line {{ 'info' if ok else 'act' }}" style="{{ 'background:var(--ok-container)' if ok else '' }}">{{ icon('check_circle' if ok else 'error', 18) }}<span>{{ t('video.c.' ~ key) }}</span></div>{% endfor %}
+    </div>
+    {% endif %}
+  </section>
+  <section class="card stack-s">
+    <h2>{{ t('video.s.how') }}</h2>
+    <p class="small">{{ t('video.s.how_text') }}</p>
+    <p class="small muted">{{ t('video.s.secret_rule') }}</p>
+    <p class="small">{{ t('staff.nsystem_contact') }}</p>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,98 @@
+{
+  "p": {
+    "app_name": "My physiotherapy",
+    "nav": {
+      "main": "Navigation",
+      "today": "Today",
+      "exercises": "Exercises",
+      "appointments": "Appointments",
+      "messages": "Messages",
+      "today_short": "Today",
+      "appointments_short": "Visits",
+      "messages_short": "Messages"
+    },
+    "emergency": "In an emergency, call 144. The app is not meant for emergencies.",
+    "machine_translated": "machine-translated",
+    "home": {
+      "hello": "Hello, {name}",
+      "next": "Your next appointment",
+      "exercises": "My exercises today",
+      "exercises_hint": "Tick off the exercises you have done – the practice sees your progress.",
+      "describe": "Describe my symptoms",
+      "report": "Report a problem",
+      "messages": "Messages",
+      "appointment": "Appointments",
+      "call": "Questions? Call us:"
+    },
+    "profile": {
+      "title": "Profile",
+      "language": "Language",
+      "language_hint": "If needed, texts from the practice are machine-translated into your language.",
+      "privacy": "Privacy",
+      "privacy_text": "Your data stays on your practice's server in Switzerland. Translation and speech recognition run there – nothing is sent to outside services.",
+      "privacy_text_remote": "Your data stays on your practice's server in Switzerland. Translation and speech recognition run on an NSystem server in Switzerland that stores nothing.",
+      "logout": "Sign out",
+      "revoke": "End app access",
+      "revoke_confirm": "Really end app access? You can receive a new invitation later."
+    },
+    "login": {
+      "title": "Sign in",
+      "intro": "Enter your mobile number and date of birth. You will receive a code by text message.",
+      "phone": "Mobile number",
+      "birthdate": "Date of birth",
+      "send_code": "Send code",
+      "code_intro": "Enter the 6-digit code from the text message.",
+      "code": "Code",
+      "submit": "Sign in",
+      "demo_code": "Demo: no text message is sent. Your code is {code}.",
+      "wrong_code": "The code is wrong or has expired.",
+      "blocked": "Too many attempts. Please try again later.",
+      "too_many_codes": "Several codes have already been sent to this number. Please wait an hour or call us."
+    },
+    "invite": {
+      "title": "Welcome",
+      "hello": "Hello, {name}. {practice} invites you to use the app.",
+      "what": "In the app you see your exercises and appointments, describe your symptoms in your own language and write to the practice.",
+      "code": "Code from the practice",
+      "code_hint": "You received the 6-digit code at the practice or by text message.",
+      "privacy_title": "Your data",
+      "privacy_text": "Your data stays on your practice's server in Switzerland. Your therapist sees what you enter. You can end access at any time.",
+      "consent": "I agree to use the app.",
+      "consent_translation": "My texts may be machine-translated on the practice server.",
+      "consent_translation_remote": "My texts may be machine-translated – on the AI server in Switzerland (sent encrypted, nothing is stored there).",
+      "start": "Start the app",
+      "need_consent": "Please confirm your agreement.",
+      "wrong_code": "The code is wrong.",
+      "invalid": "This invitation has expired or has already been used.",
+      "invalid_hint": "Ask the practice for a new invitation or sign in with your mobile number."
+    },
+    "sms": {
+      "invite": "Hello {name}, your physiotherapy app: {url} – code: {code}",
+      "login": "Your sign-in code: {code} (valid for 15 minutes)"
+    },
+    "privacy": {
+      "title": "Data protection",
+      "link": "Privacy notice",
+      "controller_title": "Responsible",
+      "controller_generic": "The practice that invited you to the app is responsible. You will find its contact details in the app under “Profile”.",
+      "data_title": "Which data",
+      "data": "Your personal and contact details, insurance details, medical prescriptions and reports, treatment notes and measurements, and what you enter in the app (exercises, pain ratings, messages, requests, training sets). Health data is particularly sensitive.",
+      "purpose_title": "What for",
+      "purpose": "For your treatment, appointment planning, billing with your insurance and working together with your doctor – not for advertising.",
+      "where_title": "Where the data is stored",
+      "where": "On the practice's server in Switzerland. Your data is not transferred abroad. Video sessions run on the practice's own video server in Switzerland and are not recorded.",
+      "who_title": "Who sees it",
+      "who": "Only the professionals in your treatment team and, for appointments and invoices, the reception. Reports to doctors are sent encrypted via HIN, invoices to your insurance. Text messages are sent by a provider in Switzerland; e-mails only with your consent. Everyone is bound by professional secrecy.",
+      "processor_title": "Software and technology",
+      "processor": "The N-Fizyo software comes from NSystem GmbH, Biel/Bienne. NSystem runs the technology on behalf of the practice, is bound to confidentiality and does not see patient data in normal operation. Translation and speech recognition run on the practice's server or on an NSystem server in Switzerland that stores nothing.",
+      "consent_title": "Your consent",
+      "consent": "We ask for your consent for the app, e-mails, your own exercise videos and video sessions. You can withdraw it at any time – in the app under “Profile” or at the practice.",
+      "retention_title": "How long",
+      "retention": "The practice keeps the treatment records as long as the law requires. You can delete your own exercise videos at any time. Login codes and links expire after a short time.",
+      "rights_title": "Your rights",
+      "rights": "You can request information about your data, have incorrect data corrected and object to processing unless a law requires it. Please contact the practice. For data protection questions you can also contact the Federal Data Protection and Information Commissioner (FDPIC).",
+      "version": "As of November 2026"
+    }
+  },
+  "_review": "Erstübersetzung NSystem – vor Einsatz von Muttersprachler/in prüfen lassen."
+}

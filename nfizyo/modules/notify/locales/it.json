@@ -1,0 +1,14 @@
+{
+  "p": {
+    "notify": {
+      "message": "Ha un nuovo messaggio da {practice}. Apri: {url}",
+      "info": "Ha una nuova informazione da {practice}. Apri: {url}",
+      "appointment": "Ha un nuovo appuntamento presso {practice}. Dettagli: {url}",
+      "several": "Ci sono novità da {practice} nella sua app. Apri: {url}",
+      "mail_subject": "Novità da {practice}",
+      "mail_hello": "Buongiorno",
+      "mail_privacy": "Per proteggere i suoi dati, il contenuto si trova solo nell'app. Acceda all'app per leggerlo.",
+      "mail_bye": "Cordiali saluti\n{practice}"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "p": {
+    "appt": {
+      "title": "Randevular",
+      "none": "Planlanmış randevu yok.",
+      "cancel_hint": "Randevuyu iptal etmek veya ertelemek için lütfen en az 24 saat önce arayın.",
+      "request": "Randevu iste",
+      "wish": "İsteğiniz",
+      "wish_ph": "örn. daha erken bir randevu",
+      "preferred": "Size ne zaman uyar?",
+      "preferred_ph": "örn. pazartesi veya çarşamba sabahı",
+      "send": "İsteği gönder",
+      "requested": "İstek gönderildi. Muayenehane sizinle iletişime geçecek.",
+      "closure": "Muayenehane kapalı: {dates}."
+    },
+    "sms": {
+      "reminder": "Hatırlatma: {when} tarihindeki fizyoterapi randevunuz ({place}). İptal için lütfen en az 24 saat önce arayın.",
+      "offer": "{practice}: bir randevu boşaldı – {when}, {place}. İster misiniz? Buradan cevap verin: {url}",
+      "offer_booked": "{practice}: {when} tarihindeki randevunuz onaylandı. İptal için en az 24 saat önce arayın: {phone}",
+      "offer_gone": "{practice}: {when} için önerilen randevu artık boş değil. Bekleme listesinde kalıyorsunuz.",
+      "cancelled": "{practice}: Randevularınız iptal edildi: {dates}. Sorularınız için bizi arayın: {phone}"
+    },
+    "mail": {
+      "reminder_subject": "Hatırlatma: {when} tarihindeki randevu",
+      "reminder_body": "Merhaba {name}\n\n{when} tarihindeki fizyoterapi randevunuzu hatırlatırız ({place}).\nİptal için lütfen en az 24 saat önce arayın: {phone}\n\nSaygılarımızla\n{practice}"
+    },
+    "offer": {
+      "title": "Boş randevu",
+      "minutes": "{n} dakika",
+      "first_wins": "Bu randevu birkaç kişiye önerildi. İlk onaylayan alır.",
+      "accept": "Evet, randevuyu alıyorum",
+      "decline": "Hayır, teşekkürler",
+      "booked_title": "Randevunuz alındı",
+      "booked_text": "SMS ile bir onay alacaksınız. İptal için en az 24 saat önce arayın.",
+      "declined": "Cevabınız için teşekkürler. Bekleme listesinde kalıyorsunuz.",
+      "changed_mind": "Yine de randevuyu istiyorum",
+      "taken": "Maalesef randevu başkasına verildi. Bekleme listesinde kalıyorsunuz.",
+      "expired": "Bu teklifin süresi doldu. Bekleme listesinde kalıyorsunuz.",
+      "invalid": "Bu bağlantı geçersiz veya süresi dolmuş.",
+      "call": "Sorunuz mu var? Bizi arayın:"
+    }
+  }
+}

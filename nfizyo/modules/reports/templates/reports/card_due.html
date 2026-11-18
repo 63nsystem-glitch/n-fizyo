@@ -1,0 +1,9 @@
+<section class="card info" aria-labelledby="h-report-due">
+  <div class="card-head"><h2 id="h-report-due">{{ icon('description', 20) }}{{ t('reports.due_title') }}</h2></div>
+  <p>{{ t('reports.due_text', done=ctx.done, total=ctx.total) }}{% if ctx.ref %} · {{ ctx.ref }}{% endif %}</p>
+  <form method="post" action="{{ S }}/patienten/{{ ctx.patient.id }}/berichte" class="row" style="justify-content:flex-end;margin-top:12px">
+    <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="kind" value="renewal">
+    {% if ctx.referrer_id %}<input type="hidden" name="referrer_id" value="{{ ctx.referrer_id }}">{% endif %}
+    <button class="btn sm" type="submit">{{ icon('note_add', 18) }}{{ t('reports.due_create') }}</button>
+  </form>
+</section>

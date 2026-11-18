@@ -1,0 +1,20 @@
+{
+  "p": {
+    "info": {
+      "title": "Info od vaše terapije",
+      "intro": "Ovo je vaš terapeut napisao za vas.",
+      "new": "novo",
+      "home": "Šta možete raditi kod kuće",
+      "contact": "Kada nam se trebate javiti",
+      "original": "Original",
+      "translation_soon": "Prijevod slijedi uskoro.",
+      "none": "Još nema informacija.",
+      "card": "Info od vaše terapije",
+      "card_hint": "Za čitanje ili slušanje",
+      "not_translated": "Ovaj tekst nije preveden. Ako nešto nije jasno, pitajte na sljedećem terminu."
+    },
+    "nav": {
+      "info": "Info"
+    }
+  }
+}

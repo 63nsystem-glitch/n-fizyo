@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <title>Quadrizeps anspannen</title>
+  <g id="fig" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 186 L300 186" stroke-width="3" opacity="0.3"/>
+    <path d="M92 180 L141.1 161.4 L187.5 180" stroke-width="10" opacity="0.2"/>
+    <path d="M187.5 180 L191.1 162.9" stroke-width="8" opacity="0.2"/>
+    <path d="M92 180 L80.1 118.6" stroke-width="13"/>
+    <path d="M80.1 118.6 L77.5 97.6" stroke-width="10"/>
+    <circle cx="77.5" cy="97.6" r="13.8" fill="currentColor" stroke="none"/>
+    <path d="M92 180 L144.5 180 L194.5 180" stroke-width="10" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M194.5 180 L198.1 162.9" stroke-width="8" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M80.1 118.6 L50.2 145.2 L56 181" stroke-width="10"/>
+    <path d="M148.5 122 L148.5 160.5" stroke-width="4" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M148.5 166 L143.9 157.1 L153.1 157.1 Z" stroke-width="2.5" style="fill:var(--ex-accent, #D9661F);stroke:var(--ex-accent, #D9661F)"/>
+  </g>
+</svg>

@@ -1,0 +1,9 @@
+{% extends "layouts/auth.html" %}
+{# Patienten-Bereich (/p): Texte in der Sprache der Patientin / des Patienten, Link zur App statt zur Anmeldung des Personals #}
+{% set pre = 'p.error.' if patient_area|default(false) else 'error.' %}
+{% block title %}{{ t(pre ~ 'title_' ~ status) }}{% endblock %}
+{% block content %}
+<h1 style="margin-bottom:8px">{{ t(pre ~ 'title_' ~ status) }}</h1>
+<p class="muted" style="margin-bottom:24px">{{ t(pre ~ 'text_' ~ status) }}</p>
+<a class="btn" href="{{ home_href|default('/') }}">{{ icon('home', 18) }}{{ t(pre ~ 'home') }}</a>
+{% endblock %}

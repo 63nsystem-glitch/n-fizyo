@@ -1,0 +1,45 @@
+{% extends "ui/settings.html" %}
+{% block settings %}
+<div class="grid-main-side">
+  <section class="card stack-s">
+    <h2>{{ t('billing.tp_title') }}</h2>
+    <p class="small muted">{{ t('billing.tp_hint') }}</p>
+    <div class="list">
+      {% for key, tr in tariffs.items() %}
+      <div class="list-item" style="padding-inline:0">
+        <span class="body"><span class="title">{{ tr.name_fr if lang == 'fr' else tr.name_de }}</span><br>
+          <span class="sub">{% if tr.tp_value %}{{ chf(tr.tp_value) }} · {{ t('billing.tp_fixed') }}{% else %}{% set v = tp_values | selectattr('tariff', 'equalto', key) | selectattr('insurer_group', 'equalto', '') | first %}{% if v %}{{ chf(v.value) }} · {{ t('billing.since', date=fmt_date(v.valid_from)) }}{% else %}{{ t('billing.tp_missing') }}{% endif %}{% endif %}</span></span>
+      </div>
+      {% endfor %}
+    </div>
+    <h3 class="small" style="margin-top:12px">{{ t('billing.tpg.title') }}</h3>
+    <p class="small muted">{{ t('billing.tpg.hint') }}</p>
+    <div class="table-wrap"><table class="table">
+      <thead><tr>{% if own_tariffs | length > 1 %}<th>{{ t('billing.tariff') }}</th>{% endif %}<th>{{ t('billing.tpg.group') }}</th><th class="num">CHF</th><th>{{ t('billing.valid_from') }}</th><th class="hide-compact">{{ t('billing.tpg.insurers') }}</th></tr></thead>
+      <tbody>
+      {% for v in tp_values if v.tariff in own_keys %}
+        <tr>{% if own_tariffs | length > 1 %}<td class="small">{{ tariffs[v.tariff].name_fr if lang == 'fr' else tariffs[v.tariff].name_de }}</td>{% endif %}<td>{{ t('billing.tpg.' ~ (v.insurer_group or 'practice')) }}</td><td class="num mono">{{ v.value | money }}</td><td>{{ fmt_date(v.valid_from) }}{% if v.note %} <span class="small muted">· {{ v.note }}</span>{% endif %}</td>
+          <td class="hide-compact small">{% if v.insurer_group %}{{ group_insurers[v.insurer_group] | join(', ') or '–' }}{% else %}{{ t('billing.tpg.all_others') }}{% endif %}</td></tr>
+      {% else %}<tr><td colspan="5" class="small muted">{{ t('billing.tp_missing') }}</td></tr>{% endfor %}
+      </tbody></table></div>
+    <p class="small muted">{{ t('billing.tpg.assign_hint') }} <a href="{{ S }}/einstellungen/versicherer">{{ t('billing.tpg.insurers_link') }}</a></p>
+    <p class="small muted">{{ t('billing.source_note') }}</p>
+  </section>
+  <section class="card">
+    <h2 style="margin-bottom:12px">{{ t('billing.tp_kvg') }}</h2>
+    <form method="post" class="form">
+      <input type="hidden" name="_csrf" value="{{ csrf }}">
+      {% if own_tariffs | length > 1 %}
+      <div class="field"><label for="tpt">{{ t('billing.tariff') }}</label><select id="tpt" name="tariff">{% for tr in own_tariffs %}<option value="{{ tr.key }}"{% if tr.key == current_kvg %} selected{% endif %}>{{ tr.name_fr if lang == 'fr' else tr.name_de }}</option>{% endfor %}</select></div>
+      {% else %}<input type="hidden" name="tariff" value="{{ current_kvg }}">{% endif %}
+      <div class="field"><label for="tpg">{{ t('billing.tpg.group') }}</label><select id="tpg" name="group"><option value="">{{ t('billing.tpg.practice') }}</option>{% for g in groups %}<option value="{{ g }}">{{ t('billing.tpg.' ~ g) }}</option>{% endfor %}</select></div>
+      <div class="row" style="gap:8px;align-items:flex-end">
+        <div class="field grow"><label for="tpv">{{ t('billing.tp_value') }}</label><input id="tpv" name="value" inputmode="decimal" placeholder="1.00" required></div>
+        <div class="field"><label for="tpf">{{ t('billing.valid_from') }}</label><input id="tpf" name="valid_from" type="date" value="{{ today }}" required></div>
+      </div>
+      <div class="field"><label for="tpn">{{ t('billing.tp_note') }}</label><input id="tpn" name="note" maxlength="200" placeholder="{{ t('billing.tp_note_ph') }}"></div>
+      <div class="form-actions"><button class="btn" type="submit">{{ t('common.save') }}</button></div>
+    </form>
+  </section>
+</div>
+{% endblock %}

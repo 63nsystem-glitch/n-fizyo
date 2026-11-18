@@ -1,0 +1,6 @@
+{% extends "layouts/patient.html" %}
+{% block back %}<a class="icon-btn" href="{{ next }}" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('p.profile.language') }}{% endblock %}
+{% block content %}
+<div class="langgrid">{% for code in langs %}<a href="/lang/{{ code }}?area=patient&next={{ next | urlencode }}" lang="{{ code }}" dir="{{ 'rtl' if code == 'ar' else 'ltr' }}" class="{{ 'on' if code == lang else '' }}">{{ LANG_NAMES[code] }}</a>{% endfor %}</div>
+{% endblock %}

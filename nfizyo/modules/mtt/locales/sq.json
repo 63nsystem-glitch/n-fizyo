@@ -1,0 +1,44 @@
+{
+  "p": {
+    "mtt": {
+      "title": "Stërvitja (MTT)",
+      "none": "Ende nuk ka plan stërvitjeje të miratuar.",
+      "running": "në vazhdim",
+      "card_hint": "{n} aparate – skanoni kodin QR te aparati.",
+      "left": "edhe {n} hyrje",
+      "start": "Fillo stërvitjen",
+      "continue": "Vazhdo stërvitjen",
+      "start_hint": "Ose skanoni kodin QR te aparati i parë. Me abonim, kjo llogaritet si një hyrje.",
+      "qr_hint": "Skanoni kodin QR te aparati ose prekni një aparat.",
+      "minutes": "{n} minuta",
+      "end": "Përfundo stërvitjen",
+      "stop": "Ndaloni nëse keni dhimbje të forta dhe lajmëroni mbikëqyrësin. Në rast urgjence telefononi 144.",
+      "setting": "Rregullimi",
+      "last_time": "Herën e fundit {date}",
+      "today": "Sot",
+      "set_n": "Seria {n}",
+      "log_set": "Shëno serinë {n}",
+      "log_cardio": "Shëno",
+      "minutes_label": "Minuta",
+      "reps": "Përsëritje",
+      "load": "Pesha (kg)",
+      "effort_q": "Sa e lodhshme ishte?",
+      "effort": {
+        "light": "e lehtë",
+        "medium": "mesatare",
+        "hard": "e rëndë",
+        "very_hard": "shumë e rëndë",
+        "max": "maksimale"
+      },
+      "pain_q": "Dhimbje?",
+      "save_set": "Ruaj",
+      "saved": "U ruajt",
+      "started": "Stërvitja filloi – suksese!",
+      "ended": "Stërvitja përfundoi – të lumtë!",
+      "qr_unknown": "Ky kod QR është i panjohur.",
+      "qr_no_plan": "Ende nuk keni plan stërvitjeje të miratuar.",
+      "qr_not_in_plan": "Ky aparat nuk është në planin tuaj. Pyesni mbikëqyrësin.",
+      "to_plan": "Te plani im"
+    }
+  }
+}

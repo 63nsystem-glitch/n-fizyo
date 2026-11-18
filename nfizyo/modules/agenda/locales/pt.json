@@ -1,0 +1,43 @@
+{
+  "p": {
+    "appt": {
+      "title": "Consultas",
+      "none": "Nenhuma consulta marcada.",
+      "cancel_hint": "Para cancelar ou mudar uma consulta, ligue pelo menos 24 horas antes.",
+      "request": "Pedir uma consulta",
+      "wish": "O seu pedido",
+      "wish_ph": "p. ex. consulta mais cedo",
+      "preferred": "Quando lhe convém?",
+      "preferred_ph": "p. ex. segunda ou quarta de manhã",
+      "send": "Enviar pedido",
+      "requested": "Pedido enviado. A clínica vai contactá-lo/a.",
+      "closure": "O consultório está fechado: {dates}."
+    },
+    "sms": {
+      "reminder": "Lembrete: consulta de fisioterapia em {when} ({place}). Cancele por telefone pelo menos 24 horas antes.",
+      "offer": "{practice}: ficou livre uma consulta – {when}, {place}. Quer ficar com ela? Responda aqui: {url}",
+      "offer_booked": "{practice}: a sua consulta de {when} está confirmada. Para cancelar, ligue pelo menos 24 horas antes: {phone}",
+      "offer_gone": "{practice}: a consulta proposta de {when} já não está livre. Continua na lista de espera.",
+      "cancelled": "{practice}: as suas consultas foram canceladas: {dates}. Se tiver dúvidas, ligue-nos: {phone}"
+    },
+    "mail": {
+      "reminder_subject": "Lembrete: consulta em {when}",
+      "reminder_body": "Bom dia {name}\n\nLembramos a sua consulta de fisioterapia em {when} ({place}).\nDesmarcar pelo menos 24 horas antes: {phone}\n\nCumprimentos\n{practice}"
+    },
+    "offer": {
+      "title": "Consulta livre",
+      "minutes": "{n} minutos",
+      "first_wins": "Esta consulta foi oferecida a várias pessoas. Quem confirmar primeiro fica com ela.",
+      "accept": "Sim, fico com a consulta",
+      "decline": "Não, obrigado",
+      "booked_title": "A sua consulta está marcada",
+      "booked_text": "Vai receber uma confirmação por SMS. Para cancelar, ligue pelo menos 24 horas antes.",
+      "declined": "Obrigado pela resposta. Continua na lista de espera.",
+      "changed_mind": "Afinal, quero a consulta",
+      "taken": "Lamentamos, a consulta já foi atribuída. Continua na lista de espera.",
+      "expired": "Esta oferta expirou. Continua na lista de espera.",
+      "invalid": "Este link não é válido ou expirou.",
+      "call": "Dúvidas? Ligue-nos:"
+    }
+  }
+}

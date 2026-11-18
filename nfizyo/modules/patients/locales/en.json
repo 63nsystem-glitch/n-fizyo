@@ -1,0 +1,33 @@
+{
+  "p": {
+    "progress": {
+      "title": "Your progress",
+      "hint": "Shared by your physiotherapist. If you have questions, talk about it at your next appointment.",
+      "from_to": "{first} on {first_on} → {last} on {last_on}",
+      "goal": "Goal {goal}",
+      "kind": {
+        "flexion": "Bending",
+        "extension": "Straightening",
+        "abduction": "Lifting to the side",
+        "external_rotation": "Turning outwards",
+        "internal_rotation": "Turning inwards",
+        "elevation": "Raising the arm",
+        "pain_vas": "Pain (0–10)"
+      },
+      "joint": {
+        "knee": "knee",
+        "shoulder": "shoulder",
+        "hip": "hip",
+        "elbow": "elbow",
+        "ankle": "ankle",
+        "wrist": "wrist",
+        "cervical": "neck",
+        "lumbar": "lower back"
+      },
+      "side": {
+        "l": "left",
+        "r": "right"
+      }
+    }
+  }
+}

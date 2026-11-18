@@ -1,0 +1,24 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/uebersicht" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('inbox.l_title') }}{% endblock %}
+{% block subtitle %}{{ t('inbox.l_subtitle') }}{% endblock %}
+{% block content %}
+<div class="grid-main-side">
+  <section class="card flush">
+    {% if rows %}
+    <div class="table-wrap"><table class="table">
+      <thead><tr><th>{{ t('inbox.l_received') }}</th><th>{{ t('inbox.l_patient') }}</th><th>{{ t('inbox.l_status') }}</th><th>{{ t('inbox.l_team') }}</th></tr></thead>
+      <tbody>{% for r in rows %}<tr><td>{{ fmt_date(r.d.created_at) }} · {{ t('inbox.src.' ~ r.d.source) }}</td>
+        <td>{% if r.d.patient_id %}{{ r.d.first_name }} {{ r.d.last_name }}{% else %}<span style="color:var(--error)">{{ t('inbox.no_patient') }}</span>{% endif %}</td>
+        <td><span class="pill-label{{ ' error' if r.d.status == 'failed' else '' }}">{{ t('inbox.st.' ~ r.d.status) }}</span></td>
+        <td>{% if r.team %}{{ r.team | join(', ') }}{% else %}{{ t('inbox.l_reception') }}{% endif %}</td></tr>{% endfor %}</tbody>
+    </table></div>
+    {% else %}<div class="empty">{{ icon('task_alt', 40) }}<p>{{ t('stats.nothing_open') }}</p></div>{% endif %}
+  </section>
+  <section class="card stack-s">
+    <h2>{{ t('inbox.l_per') }}</h2>
+    <dl class="facts">{% for name, n in per %}<dt>{{ name or t('inbox.l_reception') }}</dt><dd>{{ n }}</dd>{% else %}<dt>–</dt><dd></dd>{% endfor %}</dl>
+    <p class="small muted">{{ t('inbox.l_privacy') }}</p>
+  </section>
+</div>
+{% endblock %}

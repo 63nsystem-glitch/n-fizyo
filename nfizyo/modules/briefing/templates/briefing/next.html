@@ -1,0 +1,14 @@
+{# Im Feld «Als Nächstes» auf «Heute»: das Wichtigste in einem Blick #}
+{% import "briefing/_parts.html" as bp with context %}
+<div class="brief" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--outline-variant)">
+  {% if ctx.takeover %}<div class="brief-row alert">{{ icon('swap_horiz', 20) }}<div><span class="lbl">{{ t('brief.takeover') }}</span>{{ t('brief.takeover_text', name=ctx.last_by_name, date=fmt_date(ctx.last_day, weekday=True, year=False)) }} <a href="{{ S }}/patienten/{{ ctx.patient.id }}/uebergabe">{{ t('brief.open_handover') }}</a></div></div>{% endif %}
+  {% if ctx.last_note %}<div class="brief-row">{{ icon('history', 20) }}<div><span class="lbl">{{ t('brief.last_time', date=fmt_date(ctx.last_note.session_date, weekday=True, year=False), name=ctx.last_note.author_name) }}</span>{{ ctx.last_note.plan or ctx.last_note.beurteilung }}</div></div>
+  {% elif not ctx.last %}<div class="brief-row">{{ icon('person', 20) }}<div><span class="lbl">{{ t('brief.first_time') }}</span>{{ t('brief.first_text') }}</div></div>{% endif %}
+  {% if ctx.hp %}<div class="brief-row{{ ' good' if ctx.hp.done * 2 >= ctx.hp.total else '' }}">{{ icon('fitness_center', 20) }}<div><span class="lbl">{{ t('brief.since_label') if ctx.hp_since_last else t('brief.last_days') }}</span>{{ bp.hp_line(ctx.hp) }}</div></div>{% endif %}
+  {{ bp.mtt_row(ctx.mtt, S, ctx.patient.id) }}
+  {% for m in ctx.messages[:2] %}{{ bp.msg_row(m) }}{% endfor %}
+  {% for i in ctx.intakes[:1] %}<div class="brief-row">{{ icon('record_voice_over', 20) }}<div><span class="lbl">{{ t('brief.intake') }}{% if i.pain is not none %} · {{ t('brief.pain', n=i.pain) }}{% endif %}</span><span dir="auto">«{{ i.text | truncate(140) }}»</span></div></div>{% endfor %}
+  {% if ctx.rx and ctx.rx.top %}<div class="brief-row alert">{{ icon('assignment_late', 20) }}<div><span class="lbl">{{ t('brief.rx') }} · {{ ctx.rx.used }}/{{ ctx.rx.total }}</span>{{ ctx.rx.top.text }}</div></div>{% endif %}
+  {% if ctx.trends %}<div class="brief-row">{{ icon('trending_up', 20) }}<div><span class="lbl">{{ t('brief.measures') }}</span>{% for s in ctx.trends[:2] %}{{ bp.trend_line(s) }}{% if not loop.last %}<br>{% endif %}{% endfor %}</div></div>{% endif %}
+  {{ bp.goal_row(ctx.goal) }}
+</div>

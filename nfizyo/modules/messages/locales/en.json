@@ -1,0 +1,30 @@
+{
+  "p": {
+    "msg": {
+      "title": "Messages",
+      "empty": "No messages yet.",
+      "write": "Your message",
+      "write_ph": "Write in your own language.",
+      "reply_time": "The practice usually replies within one working day. No emergencies via the app.",
+      "too_many": "You have sent a lot of messages in a short time. Please try again later or call the practice.",
+      "sent": "Message sent.",
+      "report_sent": "Report sent. The practice will see it next time they open it.",
+      "problem": "Problem reported",
+      "machine": "Show original (machine translation)",
+      "reply": {
+        "same_day": "The practice usually replies on the same working day.",
+        "next_day": "The practice usually replies by the next working day.",
+        "two_days": "The practice usually replies within two working days.",
+        "three_days": "The practice usually replies within three working days.",
+        "week": "The practice usually replies within one week."
+      },
+      "no_emergency": "No emergencies via the app."
+    },
+    "report": {
+      "title": "Report a problem",
+      "what": "What happened?",
+      "what_ph": "e.g. knee swollen after climbing stairs",
+      "send": "Send"
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "_review": "Maschinennahe Erstübersetzung durch NSystem – vor Einsatz von Muttersprachler/in prüfen lassen.",
+  "common": {
+    "demo_ribbon": "Demo · fictitious data",
+    "save": "Save",
+    "saved": "Saved",
+    "cancel": "Cancel",
+    "close": "Close",
+    "back": "Back",
+    "yes": "Yes",
+    "no": "No",
+    "next": "Next",
+    "done": "Done",
+    "send": "Send",
+    "edit": "Edit",
+    "delete": "Delete",
+    "loading": "Loading …",
+    "offline": "No connection – will be sent later",
+    "retry": "Try again",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "yesterday": "Yesterday",
+    "region": {
+      "head": "Head",
+      "neck": "Neck",
+      "trapezius": "Neck / shoulder",
+      "chest": "Chest",
+      "abs": "Belly",
+      "obliques": "Side of the body",
+      "front_deltoids": "Shoulder (front)",
+      "back_deltoids": "Shoulder (back)",
+      "biceps": "Upper arm (front)",
+      "triceps": "Upper arm (back)",
+      "forearm": "Forearm / hand",
+      "upper_back": "Upper back",
+      "lower_back": "Lower back",
+      "gluteal": "Buttock / hip",
+      "abductors": "Groin / inner thigh",
+      "quadriceps": "Thigh (front)",
+      "hamstring": "Thigh (back)",
+      "knees": "Knee",
+      "calves": "Lower leg / foot",
+      "soleus": "Calf / heel"
+    },
+    "side": {
+      "l": "(left)",
+      "r": "(right)"
+    },
+    "hold_s": "hold {n} s",
+    "per_day": "{n}× a day",
+    "search": "Search"
+  },
+  "p": {
+    "mail": {
+      "footer": "This message was sent automatically by {practice}. In an emergency, call 144."
+    },
+    "error": {
+      "title_403": "No access",
+      "text_403": "You cannot open this page.",
+      "title_404": "Not found",
+      "text_404": "This page does not exist (any more).",
+      "title_500": "Something went wrong",
+      "text_500": "Please try again later. If you have questions, call the practice.",
+      "home": "Go to the start page"
+    },
+    "body": {
+      "view": "View",
+      "front": "Front",
+      "back": "Back",
+      "figure": "Body",
+      "right_short": "R",
+      "left_short": "L",
+      "zoom": "Enlarge"
+    },
+    "listen": "Read aloud"
+  }
+}

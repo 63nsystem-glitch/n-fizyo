@@ -1,0 +1,61 @@
+{
+  "intake": {
+    "title": "Mis molestias",
+    "hello": "Buenos días, {name}",
+    "intro": "Describa sus molestias – en su idioma. Su terapeuta lo leerá antes del tratamiento.",
+    "where": "¿Dónde tiene molestias?",
+    "where_hint": "Toque los lugares del cuerpo (puede elegir varios). Cambie con «Delante/Detrás».",
+    "list_instead": "Lista en lugar de imagen",
+    "none_selected": "Todavía no ha elegido ningún lugar",
+    "pain": "¿Qué intensidad tiene el dolor?",
+    "pain_0": "ninguno",
+    "pain_2": "leve",
+    "pain_4": "moderado",
+    "pain_6": "fuerte",
+    "pain_8": "muy fuerte",
+    "pain_10": "insoportable",
+    "since": "¿Desde cuándo?",
+    "since_opt": {
+      "days": "menos de 1 semana",
+      "weeks": "de 1 a 6 semanas",
+      "months": "más de 6 semanas",
+      "years": "más de 1 año"
+    },
+    "worse": "¿Cuándo empeora?",
+    "worse_opt": {
+      "move": "al moverme",
+      "rest": "en reposo",
+      "night": "por la noche",
+      "sitting": "sentado/a",
+      "standing": "de pie",
+      "walking": "al caminar",
+      "stairs": "en las escaleras",
+      "lifting": "al levantar peso",
+      "morning": "por la mañana"
+    },
+    "goals": "¿Qué le gustaría volver a poder hacer?",
+    "goal_opt": {
+      "sleep": "dormir sin dolor",
+      "walk": "caminar / pasear",
+      "stairs": "subir escaleras",
+      "work": "trabajar",
+      "sport": "hacer deporte",
+      "lift": "levantar y cargar",
+      "overhead": "levantar el brazo por encima de la cabeza",
+      "household": "tareas de casa",
+      "drive": "conducir"
+    },
+    "text": "Con sus propias palabras",
+    "text_hint": "Escriba o hable en su idioma. Se traducirá para la consulta.",
+    "text_ph": "¿Qué ha pasado? ¿Qué lo empeora o lo mejora?",
+    "voice": "Hablar en lugar de escribir",
+    "voice_stop": "Detener la grabación",
+    "voice_busy": "Reconociendo …",
+    "emergency": "Si tiene dolores fuertes o nuevos y repentinos, contacte con su médico. En caso de emergencia, llame al 144.",
+    "privacy": "Sus respuestas se quedan en el servidor de la consulta.",
+    "send": "Enviar",
+    "sent_flash": "¡Gracias! La consulta ha recibido sus respuestas.",
+    "text_hint_same": "Describa con sus propias palabras lo que le preocupa. Puede escribir o hablar."
+  },
+  "_review": "Erstübersetzung NSystem – vor Einsatz von Muttersprachler/in prüfen lassen."
+}

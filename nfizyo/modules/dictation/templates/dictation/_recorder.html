@@ -1,0 +1,20 @@
+{# Aufnahme-Knopf; Texte für dictation.js #}
+{% macro recorder(patient=None, appointment=None, go_after=True, select_html='') %}
+<div class="rec" data-recorder data-user="{{ user.id }}"{% if patient %} data-patient-id="{{ patient.id }}" data-patient-name="{{ patient.first_name }} {{ patient.last_name }}"{% endif %}{% if appointment %} data-appointment-id="{{ appointment.id }}"{% endif %} data-go-after="{{ '1' if go_after else '0' }}">
+  {{ select_html | safe }}
+  <button type="button" class="rec-btn" data-rec-btn aria-pressed="false" aria-label="{{ t('dictation.start') }}">
+    <span data-ic-mic>{{ icon('mic', 44) }}</span><span data-ic-stop hidden>{{ icon('stop', 44) }}</span>
+  </button>
+  <div class="rec-time mono" data-rec-time>00:00</div>
+  <p class="muted" data-rec-hint style="text-align:center;max-width:420px">{{ t('dictation.hint') }}</p>
+</div>
+<script type="application/json" id="nf-dict-t">{{ {
+  'sending': t('dictation.q_sending'), 'waiting': t('dictation.q_waiting'), 'sent': t('dictation.q_sent'),
+  'open': t('dictation.open'), 'empty': t('dictation.q_empty'), 'no_patient': t('dictation.no_patient'),
+  'no_mic': t('dictation.no_mic'), 'choose_patient': t('dictation.choose_patient'), 'stop': t('dictation.stop'),
+  'start': t('dictation.start'), 'recording': t('dictation.recording'), 'denied': t('dictation.denied'),
+  'uploading': t('dictation.uploading'), 'saved_offline': t('dictation.saved_offline'),
+  'failed': t('dictation.q_failed'), 'failed_hint': t('dictation.q_failed_hint'), 'drop': t('common.delete'),
+  'other_user': t('dictation.q_other_user'), 'other_user_hint': t('dictation.q_other_user_hint')
+} | tojson }}</script>
+{% endmacro %}

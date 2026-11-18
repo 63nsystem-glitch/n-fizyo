@@ -1,0 +1,44 @@
+{
+  "p": {
+    "mtt": {
+      "title": "Allenamento (MTT)",
+      "none": "Nessun piano di allenamento approvato.",
+      "running": "in corso",
+      "card_hint": "{n} attrezzi – scansioni il codice QR sull'attrezzo.",
+      "left": "ancora {n} ingressi",
+      "start": "Inizia l'allenamento",
+      "continue": "Continua l'allenamento",
+      "start_hint": "Oppure scansioni il codice QR sul primo attrezzo. Con un abbonamento conta come un ingresso.",
+      "qr_hint": "Scansioni il codice QR sull'attrezzo o tocchi un attrezzo.",
+      "minutes": "{n} minuti",
+      "end": "Termina l'allenamento",
+      "stop": "Si fermi in caso di forti dolori e avvisi chi sorveglia. In caso di emergenza chiami il 144.",
+      "setting": "Regolazione",
+      "last_time": "L'ultima volta {date}",
+      "today": "Oggi",
+      "set_n": "Serie {n}",
+      "log_set": "Registra la serie {n}",
+      "log_cardio": "Registra",
+      "minutes_label": "Minuti",
+      "reps": "Ripetizioni",
+      "load": "Peso (kg)",
+      "effort_q": "Quanto è stato faticoso?",
+      "effort": {
+        "light": "leggero",
+        "medium": "medio",
+        "hard": "pesante",
+        "very_hard": "molto pesante",
+        "max": "massimo"
+      },
+      "pain_q": "Dolori?",
+      "save_set": "Salva",
+      "saved": "Salvato",
+      "started": "Allenamento iniziato – buon lavoro!",
+      "ended": "Allenamento terminato – bravo!",
+      "qr_unknown": "Questo codice QR è sconosciuto.",
+      "qr_no_plan": "Non ha ancora un piano di allenamento approvato.",
+      "qr_not_in_plan": "Questo attrezzo non è nel suo piano. Chieda a chi sorveglia.",
+      "to_plan": "Al mio piano"
+    }
+  }
+}

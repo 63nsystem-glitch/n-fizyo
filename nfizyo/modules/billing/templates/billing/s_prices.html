@@ -1,0 +1,68 @@
+{% extends "ui/settings.html" %}
+{% block settings %}
+<div class="grid-main-side">
+  <div class="col stack">
+    {% if not vat_number %}<div class="banner info">{{ icon('info', 20) }}<div>{{ t('billing.price.no_vat') }} <a href="{{ S }}/einstellungen/zahlung">{{ t('billing.sec_payment') }}</a></div></div>{% endif %}
+    {% for kind in kinds %}
+    <section class="card flush">
+      <h2 style="padding:16px 16px 4px">{{ t('billing.price.kind_' ~ kind ~ '_pl') }}</h2>
+      <p class="small muted" style="padding:0 16px 8px">{{ t('billing.price.kind_' ~ kind ~ '_hint') }}</p>
+      <div class="list">
+        {% for it in items if it.kind == kind %}
+        <div class="list-item"{% if not it.active %} style="opacity:.6"{% endif %}>
+          <span class="lead avatar">{{ icon({'service': 'medical_services', 'product': 'inventory_2', 'abo': 'card_membership'}[kind], 20) }}</span>
+          <span class="body"><span class="title">{{ it.name_fr if lang == 'fr' else it.name_de }}</span><br>
+            <span class="sub"><span class="mono">{{ it.code }}</span> · {{ chf(it.price_chf) }}{% if it.vat_rate %} · {{ t('billing.price.vat_short', rate=pct(it.vat_rate)) }}{% endif %}
+              {% if kind == 'service' %} · {{ type_names.get(it.treatment_type_id) or t('billing.price.all_types') }}{% endif %}
+              {% if kind == 'abo' %} · {{ t('billing.price.abo_sessions_n', n=it.abo_sessions) if it.abo_sessions else t('billing.price.abo_unlimited') }} · {{ t('billing.price.abo_days_n', n=it.abo_days) }}{% endif %}
+              {% if not it.active %} · {{ t('billing.price.inactive') }}{% endif %}</span></span>
+          <span class="trail row" style="gap:4px">
+            <a class="icon-btn" href="?bearbeiten={{ it.id }}" aria-label="{{ t('common.edit') }}" title="{{ t('common.edit') }}">{{ icon('edit', 20) }}</a>
+            <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="toggle"><input type="hidden" name="item_id" value="{{ it.id }}">
+              <button class="btn text sm" type="submit">{{ t('settings.deactivate') if it.active else t('settings.activate') }}</button></form>
+          </span>
+        </div>
+        {% else %}<p class="small muted" style="padding:0 16px 16px">{{ t('billing.price.none') }}</p>{% endfor %}
+      </div>
+    </section>
+    {% endfor %}
+  </div>
+  <section class="card stack">
+    <h2>{{ t('billing.price.edit') if edit_id else t('billing.price.add') }}</h2>
+    {% if not edit_id %}
+    <nav class="seg" aria-label="{{ t('billing.price.kind') }}">
+      {% for k in kinds %}<a href="?art={{ k }}"{% if values.kind == k %} aria-current="page" class="selected"{% endif %}>{{ t('billing.price.kind_' ~ k) }}</a>{% endfor %}
+    </nav>
+    {% endif %}
+    {% for e in errors %}<div class="banner error">{{ icon('error', 20) }}<span>{{ t('billing.price.err_' ~ e) }}</span></div>{% endfor %}
+    <form method="post" class="form">
+      <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="save"><input type="hidden" name="kind" value="{{ values.kind }}">
+      {% if edit_id %}<input type="hidden" name="item_id" value="{{ edit_id }}">{% endif %}
+      <div class="row" style="gap:12px;flex-wrap:wrap">
+        <div class="field" style="width:130px"><label for="pc">{{ t('billing.price.code') }}</label><input id="pc" name="code" value="{{ values.code or '' }}" required maxlength="20" pattern="[A-Za-z0-9][A-Za-z0-9._\-]{0,19}" placeholder="{{ {'service': 'PRIV-45', 'product': 'TB-ROT', 'abo': 'MTT-10'}[values.kind] }}"></div>
+        <div class="field" style="width:130px"><label for="pp">{{ t('billing.price.price') }}</label><input id="pp" name="price_chf" value="{{ '%.2f' | format(values.price_chf) if values.price_chf is not none else '' }}" required inputmode="decimal" placeholder="0.00"></div>
+        <div class="field"><label for="pv">{{ t('billing.price.vat') }}</label>
+          <select id="pv" name="vat_rate">{% for r in rates %}<option value="{{ r }}"{% if values.vat_rate == r %} selected{% endif %}>{{ t('billing.price.vat_none') if not r else (r | num) ~ ' %' }}</option>{% endfor %}</select></div>
+      </div>
+      <div class="field"><label for="pnd">{{ t('billing.price.name_de') }}</label><input id="pnd" name="name_de" value="{{ values.name_de or '' }}" required maxlength="120"></div>
+      <div class="field"><label for="pnf">{{ t('billing.price.name_fr') }}</label><input id="pnf" name="name_fr" value="{{ values.name_fr or '' }}" maxlength="120"></div>
+      {% if values.kind == 'service' %}
+      <div class="field"><label for="ptt">{{ t('billing.price.type') }}</label>
+        <select id="ptt" name="treatment_type_id"><option value="">{{ t('billing.price.all_types') }}</option>
+          {% for ty in types %}<option value="{{ ty.id }}"{% if values.treatment_type_id == ty.id %} selected{% endif %}>{{ ty.name_fr if lang == 'fr' else ty.name_de }} · {{ ty.minutes }} min</option>{% endfor %}</select>
+        <p class="hint">{{ t('billing.price.type_hint') }}</p></div>
+      {% elif values.kind == 'abo' %}
+      <div class="row" style="gap:12px;flex-wrap:wrap">
+        <div class="field" style="width:150px"><label for="pas">{{ t('billing.price.abo_sessions') }}</label><input id="pas" name="abo_sessions" type="number" min="1" max="500" value="{{ values.abo_sessions or '' }}" placeholder="{{ t('billing.price.abo_unlimited') }}"></div>
+        <div class="field" style="width:150px"><label for="pad">{{ t('billing.price.abo_days') }}</label><input id="pad" name="abo_days" type="number" min="1" max="1100" value="{{ values.abo_days or '' }}" required placeholder="180"></div>
+      </div>
+      <p class="hint">{{ t('billing.price.abo_hint') }}</p>
+      {% endif %}
+      <p class="small muted">{{ t('billing.price.vat_hint') }}</p>
+      <div class="form-actions">
+        {% if edit_id %}<a class="btn text" href="?">{{ t('common.cancel') }}</a>{% endif %}
+        <button class="btn" type="submit">{{ icon('check' if edit_id else 'add', 18) }}{{ t('common.save') if edit_id else t('billing.price.add') }}</button></div>
+    </form>
+  </section>
+</div>
+{% endblock %}

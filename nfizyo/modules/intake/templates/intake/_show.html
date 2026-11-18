@@ -1,0 +1,31 @@
+{# Anliegen für die Therapie anzeigen (Panel und Liste). x = present(...) #}
+{% import "ui/figure.html" as fig with context %}
+{% macro show(x, back, translate_on=False, with_figure=True) %}
+{% set it = x.it %}
+<div class="grid-2" style="grid-template-columns:{{ 'minmax(140px,180px) 1fr' if with_figure else '1fr' }};gap:16px;align-items:start">
+  {% if with_figure %}<div class="bodymap" style="max-width:180px">{{ fig.muscle_svg(x.fig_view, x.marks.muscle) }}</div>{% endif %}
+  <div class="stack-s">
+    {% if x.regions %}<p><span class="muted">{{ t('intake_staff.where_short') }}:</span> {% for r in x.regions %}{{ t('common.region.' ~ (r if r == 'head' else r[:-2])) }}{% if r != 'head' %} {{ t('common.side.' ~ r[-1]) }}{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+    {% if it.pain is not none %}<p><span class="muted">{{ t('intake_staff.pain_short') }}:</span> <span class="pill-label {{ 'error' if it.pain >= 7 else ('warn' if it.pain >= 4 else 'ok') }}">{{ it.pain }}/10</span></p>{% endif %}
+    {% if it.since %}<p><span class="muted">{{ t('intake_staff.since_short') }}:</span> {{ t('intake.since_opt.' ~ it.since) }}</p>{% endif %}
+    {% if x.worse %}<p><span class="muted">{{ t('intake_staff.worse_short') }}:</span> {% for w in x.worse %}{{ t('intake.worse_opt.' ~ w) }}{% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+    {% if x.goals %}<p><span class="muted">{{ t('intake_staff.goals_short') }}:</span> {% for g in x.goals %}{{ t('intake.goal_opt.' ~ g) }}{% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+  </div>
+</div>
+{% if it.text_original %}
+<div class="translated" style="margin-top:12px">
+  {% if x.foreign %}
+    {% if it.text_translated %}
+    <p dir="auto">«{{ it.text_translated }}»</p>
+    <p class="small muted" style="margin-top:6px">{{ icon('translate', 14) }} {{ t('ai.machine_translated') }} · {{ x.lang_name }}{% if it.translation_engine == 'demo' %} · {{ t('ai.demo_translation') }}{% endif %}{% if it.translation_warning %} · <span style="color:var(--error)">{{ t('ai.numbers_differ') }}</span>{% endif %}</p>
+    <details class="orig"><summary>{{ t('ai.show_original') }} ({{ x.lang_name }})</summary><p dir="auto" lang="{{ it.lang }}">{{ it.text_original }}</p></details>
+    {% else %}
+    <p dir="auto" lang="{{ it.lang }}">«{{ it.text_original }}»</p>
+    <p class="small muted" style="margin-top:6px">{{ icon('translate', 14) }} {{ x.lang_name }} · {{ t('intake_staff.translation_pending') if translate_on else t('ai.no_translation') }}</p>
+    {% endif %}
+  {% else %}
+  <p dir="auto">«{{ it.text_original }}»</p>
+  {% endif %}
+</div>
+{% endif %}
+{% endmacro %}

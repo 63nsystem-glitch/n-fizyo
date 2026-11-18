@@ -1,0 +1,21 @@
+{% extends "layouts/patient.html" %}
+{% block back %}<a class="icon-btn" href="{{ '/p/profil' if patient_user is defined and patient_user else '/p/anmelden' }}" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('p.privacy.title') }}{% endblock %}
+{% block content %}
+<div class="row" style="justify-content:flex-end"><a class="chip" href="/p/sprachen?next={{ path | urlencode }}">{{ icon('language', 18) }}{{ LANG_NAMES[lang] }}</a></div>
+<section class="card stack-s">
+  <h2>{{ t('p.privacy.controller_title') }}</h2>
+  {% if practice %}
+  <p><strong style="font-weight:500">{{ practice.name }}</strong>{% if practice.address %}<br>{{ practice.address }}{% endif %}</p>
+  <p class="small">{% if practice.email %}{{ icon('mail', 16) }} <a href="mailto:{{ practice.email }}">{{ practice.email }}</a>{% endif %}{% if practice.phone %} · {{ icon('call', 16) }} <a href="tel:{{ practice.phone | replace(' ', '') }}">{{ practice.phone | phone }}</a>{% endif %}</p>
+  {% else %}<p>{{ t('p.privacy.controller_generic') }}</p>{% endif %}
+</section>
+{% for key in ('data', 'purpose', 'where', 'who', 'processor', 'consent', 'retention', 'rights') %}
+<section class="card stack-s">
+  <h2>{{ t('p.privacy.' ~ key ~ '_title') }}</h2>
+  <p dir="auto">{{ t('p.privacy.' ~ key) }}</p>
+</section>
+{% endfor %}
+<p class="small muted">{{ t('p.privacy.version') }}</p>
+<div class="emergency">{{ icon('emergency', 20) }}<span>{{ t('p.emergency') }}</span></div>
+{% endblock %}

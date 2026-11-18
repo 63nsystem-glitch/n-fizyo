@@ -1,0 +1,44 @@
+{
+  "p": {
+    "mtt": {
+      "title": "Trening (MTT)",
+      "none": "Još nema odobrenog plana treninga.",
+      "running": "u toku",
+      "card_hint": "{n} sprava – skenirajte QR kod na spravi.",
+      "left": "još {n} ulazaka",
+      "start": "Započni trening",
+      "continue": "Nastavi trening",
+      "start_hint": "Ili skenirajte QR kod na prvoj spravi. Uz pretplatu se to računa kao jedan ulazak.",
+      "qr_hint": "Skenirajte QR kod na spravi ili dodirnite spravu.",
+      "minutes": "{n} minuta",
+      "end": "Završi trening",
+      "stop": "Prestanite ako imate jake bolove i javite se osobi koja nadzire. U hitnom slučaju nazovite 144.",
+      "setting": "Podešavanje",
+      "last_time": "Prošli put {date}",
+      "today": "Danas",
+      "set_n": "Serija {n}",
+      "log_set": "Upiši seriju {n}",
+      "log_cardio": "Upiši",
+      "minutes_label": "Minute",
+      "reps": "Ponavljanja",
+      "load": "Težina (kg)",
+      "effort_q": "Koliko je bilo naporno?",
+      "effort": {
+        "light": "lako",
+        "medium": "srednje",
+        "hard": "teško",
+        "very_hard": "vrlo teško",
+        "max": "maksimalno"
+      },
+      "pain_q": "Bolovi?",
+      "save_set": "Spremi",
+      "saved": "Spremljeno",
+      "started": "Trening započet – sretno!",
+      "ended": "Trening završen – bravo!",
+      "qr_unknown": "Ovaj QR kod je nepoznat.",
+      "qr_no_plan": "Još nemate odobren plan treninga.",
+      "qr_not_in_plan": "Ova sprava nije u Vašem planu. Pitajte osobu koja nadzire.",
+      "to_plan": "Na moj plan"
+    }
+  }
+}

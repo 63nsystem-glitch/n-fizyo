@@ -1,0 +1,18 @@
+{% set m = ctx.m %}
+<section class="card" aria-labelledby="h-msg">
+  <div class="row" style="gap:16px;align-items:flex-start;flex-wrap:nowrap">
+    <span class="avatar" style="background:var(--tertiary-container);color:var(--on-tertiary-container)">{{ icon('report' if m.kind == 'problem' else 'forum', 20) }}</span>
+    <div class="grow">
+      <div class="row-between"><h2 id="h-msg">{{ t('messages.problem_from_app') if m.kind == 'problem' else t('messages.from_app') }}</h2><span class="meta small muted">{{ fmt_date(m.created_at, weekday=True, year=False) }} {{ fmt_time(m.created_at) }}</span></div>
+      {% if m.translation %}<p dir="auto" style="margin-top:6px">«{{ m.translation }}»</p>
+        <p class="small muted">{{ icon('translate', 12) }} {{ t('messages.auto_translated', language=ctx.lang_name) }}{% if m.translation_engine == 'demo' %} · {{ t('messages.demo_translation') }}{% endif %}</p>
+        <details class="small muted"><summary>{{ t('messages.show_original') }}</summary><p dir="auto" lang="{{ m.lang }}">{{ m.body }}</p></details>
+      {% else %}<p dir="auto" lang="{{ m.lang }}" style="margin-top:6px">«{{ m.body }}»</p>{% if ctx.foreign %}<p class="small muted">{{ icon('translate', 12) }} {{ ctx.lang_name }}</p>{% endif %}{% endif %}
+      <div class="row" style="margin-top:10px">
+        {% if m.pain is not none %}<span class="chip">{{ t('intake_staff.pain_short') }} {{ m.pain }}/10</span>{% endif %}
+        {% if m.region %}{% for r in m.region.split(',')[:3] %}<span class="chip">{{ t('common.region.' ~ (r if r == 'head' else r[:-2])) }}{% if r != 'head' %} {{ t('common.side.' ~ r[-1]) }}{% endif %}</span>{% endfor %}{% endif %}
+        <a class="btn tonal" href="{{ S }}/nachrichten/{{ ctx.patient.id }}" style="margin-inline-start:auto">{{ icon('reply', 18) }}{{ t('messages.answer') }}</a>
+      </div>
+    </div>
+  </div>
+</section>

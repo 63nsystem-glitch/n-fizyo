@@ -1,0 +1,98 @@
+{
+  "p": {
+    "app_name": "La mia fisioterapia",
+    "nav": {
+      "main": "Navigazione",
+      "today": "Oggi",
+      "exercises": "Esercizi",
+      "appointments": "Appuntamenti",
+      "messages": "Messaggi",
+      "today_short": "Oggi",
+      "appointments_short": "Agenda",
+      "messages_short": "Messaggi"
+    },
+    "emergency": "In caso di emergenza chiami il 144. L'app non è pensata per le emergenze.",
+    "machine_translated": "traduzione automatica",
+    "home": {
+      "hello": "Buongiorno, {name}",
+      "next": "Il suo prossimo appuntamento",
+      "exercises": "I miei esercizi di oggi",
+      "exercises_hint": "Spunti gli esercizi fatti – lo studio vede i suoi progressi.",
+      "describe": "Descrivere i disturbi",
+      "report": "Segnalare un problema",
+      "messages": "Messaggi",
+      "appointment": "Appuntamenti",
+      "call": "Domande? Ci chiami:"
+    },
+    "profile": {
+      "title": "Profilo",
+      "language": "Lingua",
+      "language_hint": "Se necessario, i testi dello studio vengono tradotti automaticamente nella sua lingua.",
+      "privacy": "Protezione dei dati",
+      "privacy_text": "I suoi dati restano sul server del suo studio in Svizzera. Traduzione e riconoscimento vocale avvengono lì – nulla viene inviato a servizi esterni.",
+      "privacy_text_remote": "I suoi dati restano sul server del suo studio in Svizzera. Traduzione e riconoscimento vocale funzionano su un server di NSystem in Svizzera che non memorizza nulla.",
+      "logout": "Esci",
+      "revoke": "Terminare l'accesso all'app",
+      "revoke_confirm": "Terminare davvero l'accesso? Potrà ricevere un nuovo invito più tardi."
+    },
+    "login": {
+      "title": "Accedi",
+      "intro": "Inserisca il suo numero di cellulare e la data di nascita. Riceverà un codice via SMS.",
+      "phone": "Numero di cellulare",
+      "birthdate": "Data di nascita",
+      "send_code": "Inviare il codice",
+      "code_intro": "Inserisca il codice a 6 cifre ricevuto via SMS.",
+      "code": "Codice",
+      "submit": "Accedi",
+      "demo_code": "Demo: non viene inviato alcun SMS. Il suo codice è {code}.",
+      "wrong_code": "Il codice non è corretto o è scaduto.",
+      "blocked": "Troppi tentativi. Riprovi più tardi.",
+      "too_many_codes": "A questo numero sono già stati inviati diversi codici. Attenda un'ora o ci chiami."
+    },
+    "invite": {
+      "title": "Benvenuta/o",
+      "hello": "Buongiorno, {name}. {practice} la invita a usare l'app.",
+      "what": "Nell'app vede i suoi esercizi e appuntamenti, descrive i suoi disturbi nella sua lingua e scrive allo studio.",
+      "code": "Codice dello studio",
+      "code_hint": "Ha ricevuto il codice a 6 cifre nello studio o via SMS.",
+      "privacy_title": "I suoi dati",
+      "privacy_text": "I suoi dati restano sul server del suo studio in Svizzera. La sua terapista o il suo terapista vede ciò che inserisce. Può terminare l'accesso in qualsiasi momento.",
+      "consent": "Accetto di usare l'app.",
+      "consent_translation": "I miei testi possono essere tradotti automaticamente sul server dello studio.",
+      "consent_translation_remote": "I miei testi possono essere tradotti automaticamente – sul server IA in Svizzera (trasmissione cifrata, lì non viene conservato nulla).",
+      "start": "Avviare l'app",
+      "need_consent": "Confermi il suo consenso.",
+      "wrong_code": "Il codice non è corretto.",
+      "invalid": "Questo invito è scaduto o è già stato usato.",
+      "invalid_hint": "Chieda allo studio un nuovo invito oppure acceda con il suo numero di cellulare."
+    },
+    "sms": {
+      "invite": "Buongiorno {name}, la sua app di fisioterapia: {url} – codice: {code}",
+      "login": "Il suo codice di accesso: {code} (valido 15 minuti)"
+    },
+    "privacy": {
+      "title": "Protezione dei dati",
+      "link": "Informativa sulla protezione dei dati",
+      "controller_title": "Responsabile",
+      "controller_generic": "Il responsabile è lo studio che l'ha invitata nell'app. Trova i suoi recapiti nell'app alla voce «Profilo».",
+      "data_title": "Quali dati",
+      "data": "I suoi dati personali e di contatto, i dati assicurativi, le prescrizioni e i rapporti medici, le note di trattamento e le misurazioni, oltre a ciò che inserisce nell'app (esercizi, dolori, messaggi, richieste, serie di allenamento). I dati sanitari sono particolarmente degni di protezione.",
+      "purpose_title": "A quale scopo",
+      "purpose": "Per il suo trattamento, la pianificazione degli appuntamenti, la fatturazione alla sua assicurazione e la collaborazione con il suo medico – non per pubblicità.",
+      "where_title": "Dove si trovano i dati",
+      "where": "Sul server dello studio in Svizzera. I suoi dati non vengono trasmessi all'estero. Le sedute video passano dal server video proprio dello studio in Svizzera e non vengono registrate.",
+      "who_title": "Chi li vede",
+      "who": "Solo i professionisti del suo team di trattamento e, per appuntamenti e fatture, la reception. I rapporti ai medici vengono inviati cifrati tramite HIN, le fatture alla sua assicurazione. Gli SMS sono inviati da un fornitore in Svizzera; le e-mail solo con il suo consenso. Tutti sono soggetti al segreto professionale.",
+      "processor_title": "Software e tecnica",
+      "processor": "Il software N-Fizyo è di NSystem GmbH, Bienne. NSystem gestisce la tecnica su incarico dello studio, è vincolata al segreto e nel funzionamento normale non vede dati dei pazienti. Traduzione e riconoscimento vocale funzionano sul server dello studio o su un server di NSystem in Svizzera che non memorizza nulla.",
+      "consent_title": "Il suo consenso",
+      "consent": "Per l'app, le e-mail, i suoi video di esercizi e le sedute video le chiediamo il consenso. Può revocarlo in qualsiasi momento – nell'app alla voce «Profilo» o presso lo studio.",
+      "retention_title": "Per quanto tempo",
+      "retention": "Lo studio conserva la documentazione del trattamento per il tempo richiesto dalla legge. Può cancellare i suoi video di esercizi in qualsiasi momento. I codici di accesso e i link scadono dopo poco tempo.",
+      "rights_title": "I suoi diritti",
+      "rights": "Può chiedere informazioni sui suoi dati, far correggere dati errati e opporsi al trattamento, nella misura in cui nessuna legge lo richieda. Si rivolga allo studio. Per domande sulla protezione dei dati può rivolgersi anche all'Incaricato federale della protezione dei dati e della trasparenza (IFPDT).",
+      "version": "Stato: novembre 2026"
+    }
+  },
+  "_review": "Erstübersetzung NSystem – vor Einsatz von Muttersprachler/in prüfen lassen."
+}

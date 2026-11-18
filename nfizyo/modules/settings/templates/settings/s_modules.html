@@ -1,0 +1,24 @@
+{% extends "ui/settings.html" %}
+{% block settings %}
+<p class="small muted" style="margin-bottom:12px">{{ t('settings.modules_hint') }}</p>
+<section class="card flush">
+  <div class="list">
+    {% for m in mods %}
+    <div class="list-item">
+      <span class="body"><span class="title">{{ t(m.title_key) }}</span><br>
+        <span class="sub">{% if m.description_key %}{{ t(m.description_key) }}{% endif %}{% if m.requires %}{% if m.description_key %} – {% endif %}{{ t('settings.needs') }} {% for r in m.requires %}{{ t(r) }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}</span></span>
+      <span class="trail">
+        {% if m.optional %}
+        <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="module" value="{{ m.name }}"><input type="hidden" name="enabled" value="{{ '0' if m.enabled else '1' }}">
+          <button class="switch" type="submit" role="switch" aria-checked="{{ 'true' if m.enabled else 'false' }}" aria-label="{{ t(m.title_key) }}"><span></span></button></form>
+        {% else %}<span class="pill-label">{{ t('settings.always_on') }}</span>{% endif %}
+      </span>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+<details class="small muted" style="margin-top:12px">
+  <summary>{{ t('settings.versions') }}</summary>
+  <p class="mono">{% for m in mods %}{{ m.name }} {{ m.version }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
+</details>
+{% endblock %}

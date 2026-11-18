@@ -1,0 +1,77 @@
+{
+  "_review": "Maschinennahe Erstübersetzung durch NSystem – vor Einsatz von Muttersprachler/in prüfen lassen.",
+  "common": {
+    "demo_ribbon": "Demo · datos ficticios",
+    "save": "Guardar",
+    "saved": "Guardado",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "yes": "Sí",
+    "no": "No",
+    "next": "Siguiente",
+    "done": "Listo",
+    "send": "Enviar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "loading": "Cargando …",
+    "offline": "Sin conexión – se enviará más tarde",
+    "retry": "Reintentar",
+    "today": "Hoy",
+    "tomorrow": "Mañana",
+    "yesterday": "Ayer",
+    "region": {
+      "head": "Cabeza",
+      "neck": "Cuello / nuca",
+      "trapezius": "Nuca / hombro",
+      "chest": "Pecho",
+      "abs": "Barriga",
+      "obliques": "Costado",
+      "front_deltoids": "Hombro (delante)",
+      "back_deltoids": "Hombro (detrás)",
+      "biceps": "Brazo (delante)",
+      "triceps": "Brazo (detrás)",
+      "forearm": "Antebrazo / mano",
+      "upper_back": "Parte alta de la espalda",
+      "lower_back": "Parte baja de la espalda",
+      "gluteal": "Glúteo / cadera",
+      "abductors": "Ingle / cara interna del muslo",
+      "quadriceps": "Muslo (delante)",
+      "hamstring": "Muslo (detrás)",
+      "knees": "Rodilla",
+      "calves": "Pierna / pie",
+      "soleus": "Pantorrilla / talón"
+    },
+    "side": {
+      "l": "(lado izquierdo)",
+      "r": "(lado derecho)"
+    },
+    "hold_s": "mantener {n} s",
+    "per_day": "{n}× al día",
+    "search": "Buscar"
+  },
+  "p": {
+    "mail": {
+      "footer": "Este mensaje fue enviado automáticamente por {practice}. En caso de emergencia, llame al 144."
+    },
+    "error": {
+      "title_403": "Sin acceso",
+      "text_403": "No puede abrir esta página.",
+      "title_404": "Página no encontrada",
+      "text_404": "Esta página no existe (o ya no existe).",
+      "title_500": "Algo ha salido mal",
+      "text_500": "Vuelva a intentarlo más tarde. Si tiene preguntas, llame a la consulta.",
+      "home": "Ir a la página de inicio"
+    },
+    "body": {
+      "view": "Vista",
+      "front": "Delante",
+      "back": "Detrás",
+      "figure": "Cuerpo",
+      "right_short": "D",
+      "left_short": "I",
+      "zoom": "Ampliar"
+    },
+    "listen": "Escuchar"
+  }
+}

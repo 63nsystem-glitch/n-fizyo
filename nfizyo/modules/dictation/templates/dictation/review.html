@@ -1,0 +1,72 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S ~ '/patienten/' ~ patient.id if patient else S ~ '/diktat' }}" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('dictation.review') }}{% endblock %}
+{% block subtitle %}{% if patient %}{{ patient.first_name }} {{ patient.last_name }} · {% endif %}{{ fmt_date(rec.created_at) }} {{ fmt_time(rec.created_at) }}{% endblock %}
+{% block content %}
+{% if pending %}
+<section class="card" data-poll="{{ S }}/diktat/{{ rec.id }}/status" style="max-width:720px">
+  <h2 style="margin-bottom:12px">{{ t('dictation.st.' ~ rec.status) }} …</h2>
+  <div class="progress"><span style="width:{{ {'uploaded': 15, 'transcribing': 40, 'transcribed': 65, 'drafting': 85}.get(rec.status, 50) }}%"></span></div>
+  <p class="muted small" style="margin-top:12px">{{ t('dictation.wait_hint') }}</p>
+</section>
+{% elif rec.status == 'failed' %}
+<section class="card" style="max-width:720px">
+  <div class="banner warn" style="margin-bottom:12px">{{ icon('warning') }}<span>{{ t('dictation.err_' ~ (rec.error or 'unknown')) }}</span></div>
+  <form method="post" action="{{ S }}/diktat/{{ rec.id }}/text" class="form">
+    <input type="hidden" name="_csrf" value="{{ csrf }}">
+    <div class="field"><label for="text">{{ t('dictation.free_text') }}</label><textarea id="text" name="text" rows="6" data-autogrow>{{ rec.transcript or '' }}</textarea></div>
+    <div class="form-actions"><button class="btn" type="submit">{{ t('dictation.make_draft') }}</button></div>
+  </form>
+</section>
+{% elif not patient %}
+<section class="card" style="max-width:720px">
+  <h2 style="margin-bottom:12px">{{ t('dictation.assign') }}</h2>
+  <form method="post" action="{{ S }}/diktat/{{ rec.id }}/patient" class="row">
+    <input type="hidden" name="_csrf" value="{{ csrf }}">
+    <select name="patient_id" class="input grow" required>{% for p in patients %}<option value="{{ p.id }}">{{ p.last_name }}, {{ p.first_name }} · {{ p.number }}</option>{% endfor %}</select>
+    <button class="btn" type="submit">{{ t('common.next') }}</button>
+  </form>
+  {% if rec.transcript %}<p class="quote" style="margin-top:12px">{{ rec.transcript }}</p>{% endif %}
+</section>
+{% elif note %}
+<form method="post" action="{{ S }}/diktat/{{ rec.id }}/freigeben" class="grid-main-side">
+  <input type="hidden" name="_csrf" value="{{ csrf }}">
+  <div class="col">
+    <section class="card stack">
+      <div class="row-between"><h2>{{ t('dictation.draft') }}</h2>
+        <span class="ai-note">{{ icon('lock', 14) }}{% if draft and draft.engine.startswith('llm') %}{{ t('dictation.engine_llm') }}{% else %}{{ t('dictation.engine_rules') }}{% endif %}</span></div>
+      {% if draft and draft.warnings %}{% for w in draft.warnings %}<div class="banner info">{{ icon('info') }}<span>{{ t('ai.warn.' ~ w) }}</span></div>{% endfor %}{% endif %}
+      {% if note.status == 'approved' %}
+      <div class="banner ok">{{ icon('lock') }}<span>{{ t('dictation.already_approved') }}</span><a class="btn text" href="{{ S }}/notizen/{{ note.id }}">{{ t('dictation.open') }}</a></div>
+      {% else %}
+      {% for s in ('befund', 'behandlung', 'beurteilung', 'plan') %}
+      <div class="field"><label for="{{ s }}">{{ t('notes.sec.' ~ s) }}</label><textarea id="{{ s }}" name="{{ s }}" rows="3" data-autogrow>{{ note[s] }}</textarea></div>
+      {% endfor %}
+      {% endif %}
+    </section>
+    {% for c in extra %}{% with ctx = c.ctx %}{% include c.template %}{% endwith %}{% endfor %}
+  </div>
+  <div class="col">
+    {% if draft and draft.measurements %}
+    <section class="card">
+      <h2 style="margin-bottom:4px">{{ t('dictation.measurements') }}</h2>
+      <p class="small muted" style="margin-bottom:8px">{{ t('dictation.measurements_hint') }}</p>
+      {% if context_hint %}<div class="banner warn" role="note" style="margin-bottom:8px">{{ icon('warning') }}<span>{{ t('dictation.context_differs', dictated=context_hint.dictated, stored=context_hint.stored) }}</span></div>{% endif %}
+      {% for m in draft.measurements %}
+      <label class="check"><input type="checkbox" name="m{{ loop.index0 }}" value="1" checked>{{ t('measure.' ~ m.kind) }}{% if m.joint %} · {{ t('joint.' ~ m.joint) }}{% endif %}{% if m.side %} {{ t('common.side.' ~ m.side) }}{% endif %}: <strong>{{ m.value | num }}{{ m.unit }}</strong></label>
+      {% endfor %}
+    </section>
+    {% endif %}
+    <section class="card tonal">
+      <h2 style="margin-bottom:8px">{{ t('dictation.transcript') }}</h2>
+      <p style="white-space:pre-wrap">{{ rec.transcript }}</p>
+      <p class="small muted" style="margin-top:8px">{% if rec.transcript_engine == 'demo' %}{{ t('dictation.demo_transcript') }}{% elif rec.transcript_engine == 'typed' %}{{ t('dictation.typed') }}{% else %}{{ t('dictation.engine') }}: {{ rec.transcript_engine }}{% endif %}{% if audio_kept %} · {{ t('dictation.audio_until_approval') }}{% endif %}</p>
+    </section>
+    {% if note.status == 'draft' %}
+    <button class="btn lg block" type="submit">{{ icon('lock', 20) }}{{ t('dictation.approve') }}</button>
+    <p class="small muted" style="text-align:center">{{ t('dictation.approve_hint') }}</p>
+    {% endif %}
+  </div>
+</form>
+{% endif %}
+{% endblock %}

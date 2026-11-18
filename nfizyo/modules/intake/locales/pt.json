@@ -1,0 +1,61 @@
+{
+  "intake": {
+    "title": "As minhas queixas",
+    "hello": "Bom dia, {name}",
+    "intro": "Descreva as suas queixas – na sua língua. A sua terapeuta ou o seu terapeuta lê antes do tratamento.",
+    "where": "Onde tem queixas?",
+    "where_hint": "Toque nos locais do corpo (pode escolher vários). Mude com «Frente/Costas».",
+    "list_instead": "Lista em vez de imagem",
+    "none_selected": "Ainda nenhum local escolhido",
+    "pain": "Qual é a intensidade da dor?",
+    "pain_0": "nenhuma",
+    "pain_2": "ligeira",
+    "pain_4": "moderada",
+    "pain_6": "forte",
+    "pain_8": "muito forte",
+    "pain_10": "insuportável",
+    "since": "Desde quando?",
+    "since_opt": {
+      "days": "menos de 1 semana",
+      "weeks": "1 a 6 semanas",
+      "months": "mais de 6 semanas",
+      "years": "mais de 1 ano"
+    },
+    "worse": "Quando é pior?",
+    "worse_opt": {
+      "move": "ao mexer",
+      "rest": "em repouso",
+      "night": "à noite",
+      "sitting": "sentado/a",
+      "standing": "de pé",
+      "walking": "a andar",
+      "stairs": "nas escadas",
+      "lifting": "ao levantar pesos",
+      "morning": "de manhã"
+    },
+    "goals": "O que gostaria de voltar a conseguir fazer?",
+    "goal_opt": {
+      "sleep": "dormir sem dor",
+      "walk": "andar / passear",
+      "stairs": "subir escadas",
+      "work": "trabalhar",
+      "sport": "fazer desporto",
+      "lift": "levantar e carregar",
+      "overhead": "levantar o braço acima da cabeça",
+      "household": "tarefas domésticas",
+      "drive": "conduzir"
+    },
+    "text": "Por palavras suas",
+    "text_hint": "Escreva ou fale na sua língua. Será traduzido para a clínica.",
+    "text_ph": "O que aconteceu? O que piora ou melhora?",
+    "voice": "Falar em vez de escrever",
+    "voice_stop": "Parar a gravação",
+    "voice_busy": "A reconhecer …",
+    "emergency": "Com dores fortes ou novas e repentinas, contacte o seu médico. Em caso de emergência, ligue 144.",
+    "privacy": "As suas respostas ficam no servidor da clínica.",
+    "send": "Enviar",
+    "sent_flash": "Obrigado/a! A clínica recebeu as suas respostas.",
+    "text_hint_same": "Descreva por palavras suas o que o preocupa. Pode escrever ou falar."
+  },
+  "_review": "Erstübersetzung NSystem – vor Einsatz von Muttersprachler/in prüfen lassen."
+}

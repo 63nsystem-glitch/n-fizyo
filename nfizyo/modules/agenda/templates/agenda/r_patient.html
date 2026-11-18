@@ -1,0 +1,13 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/patienten/{{ patient.id }}" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ patient.first_name }} {{ patient.last_name }}{% endblock %}
+{% block subtitle %}{{ t('agenda.appointments') }} · {{ patient.number }}{% endblock %}
+{% block actions %}
+  <a class="btn tonal" href="{{ S }}/agenda/serie?patient={{ label | urlencode }}">{{ icon('event_repeat', 18) }}<span>{{ t('agenda.series') }}</span></a>
+  <a class="btn" href="{{ S }}/agenda/neu?patient={{ label | urlencode }}&back={{ (S ~ '/patienten/' ~ patient.id ~ '/termine') | urlencode }}">{{ icon('add', 18) }}<span>{{ t('agenda.book') }}</span></a>
+{% endblock %}
+{% block content %}
+{% if skipped %}<div class="banner warn" role="status" style="margin-bottom:12px" data-skipped>{{ icon('event_busy') }}<span>{{ t('agenda.series_skipped', dates=skipped | join(', ')) }}</span></div>{% endif %}
+{% if n_beyond %}<div class="banner warn" role="status" style="margin-bottom:12px" data-beyond>{{ icon('warning') }}<span>{{ t('agenda.beyond_rx_list', n=n_beyond) }}</span></div>{% endif %}
+<section class="card flush">{% include "agenda/_appt_table.html" %}</section>
+{% endblock %}

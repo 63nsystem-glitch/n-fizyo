@@ -1,0 +1,14 @@
+{
+  "p": {
+    "notify": {
+      "message": "لديك رسالة جديدة من {practice}. للفتح: {url}",
+      "info": "لديك معلومات جديدة من {practice}. للفتح: {url}",
+      "appointment": "لديك موعد جديد لدى {practice}. التفاصيل: {url}",
+      "several": "توجد مستجدات من {practice} في تطبيقك. للفتح: {url}",
+      "mail_subject": "مستجدات من {practice}",
+      "mail_hello": "مرحبًا",
+      "mail_privacy": "لحماية بياناتك، المحتوى موجود في التطبيق فقط. يرجى تسجيل الدخول هناك لقراءته.",
+      "mail_bye": "مع أطيب التحيات\n{practice}"
+    }
+  }
+}

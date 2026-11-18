@@ -1,0 +1,76 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/kasse?ansicht=heute&tag={{ sale.day }}" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('cashdesk.receipt') }} {{ sale.number }}{% endblock %}
+{% block subtitle %}{{ fmt_date(sale.day, weekday=True) }} {{ fmt_time(sale.created_at) }} · {{ sale.creator_name }}{% endblock %}
+{% block actions %}
+  <span class="pill-label {{ {'paid': 'ok', 'invoiced': 'info', 'cancelled': 'error'}[sale.status] }}">{{ t('cashdesk.status.' ~ sale.status) }}</span>
+  <a class="btn tonal" href="{{ S }}/kasse/belege/{{ sale.id }}/pdf" target="_blank" rel="noopener">{{ icon('picture_as_pdf', 18) }}<span>{{ t('cashdesk.pdf_btn') }}</span></a>
+  {% if email_ok %}<form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="email">
+    <button class="btn tonal" type="submit">{{ icon('mail', 18) }}<span>{{ t('cashdesk.mail_btn') }}</span></button></form>{% endif %}
+{% endblock %}
+{% block content %}
+<div class="grid-main-side">
+  <div class="col stack">
+    {% if sale.status == 'cancelled' %}<div class="banner error">{{ icon('info', 20) }}<div>{{ t('cashdesk.cancelled_on', date=fmt_date(sale.cancelled_at), reason=sale.cancel_reason) }}</div></div>{% endif %}
+    {% for c in corrections %}<div class="banner {{ 'error' if c.kind == 'storno' else 'warn' }}">{{ icon('rule', 20) }}<div>
+      {% if c.kind == 'storno' %}{{ t('cashdesk.corr.storno_done', date=fmt_date(c.created_at), name=c.creator_name, reason=c.reason) }}{% if c.refund_day %} {{ t('cashdesk.corr.refunded', date=fmt_date(c.refund_day), method=t('cashdesk.method.' ~ c.method)) }}{% endif %}
+      {% else %}{{ t('cashdesk.corr.method_done', date=fmt_date(c.created_at), name=c.creator_name, old=t('cashdesk.method.' ~ c.method), new=t('cashdesk.method.' ~ c.to_method), reason=c.reason) }}{% endif %}</div></div>{% endfor %}
+    {% if sale.method == 'invoice' and sale.invoice_id %}<div class="banner info">{{ icon('receipt_long', 20) }}<div>{{ t('cashdesk.invoice_created') }} <a href="{{ S }}/rechnungen/{{ sale.invoice_id }}">{{ t('cashdesk.invoice_open') }}</a></div></div>{% endif %}
+    <section class="card flush">
+      <div class="table-wrap"><table class="table">
+        <thead><tr><th>{{ t('cashdesk.col_item') }}</th><th class="num">{{ t('billing.col_qty') }}</th><th class="num">{{ t('billing.col_price') }}</th><th class="num">{{ t('billing.col_vat') }}</th><th class="num">CHF</th></tr></thead>
+        <tbody>{% for l in lines %}<tr><td>{{ l.label }} <span class="mono small muted">{{ l.code }}</span></td><td class="num">{{ l.quantity | num }}</td>
+          <td class="num mono">{{ l.unit_price | money }}</td><td class="num mono">{{ (l.vat_rate | num) ~ ' %' if l.vat_rate else '–' }}</td><td class="num mono">{{ l.amount_chf | money }}</td></tr>{% endfor %}</tbody>
+        <tfoot>{% if sale.rounding_chf %}<tr><td colspan="4">{{ t('cashdesk.items_total') }}</td><td class="num mono">{{ items_total | money }}</td></tr>
+          <tr><td colspan="4" class="small">{{ t('cashdesk.rounding') }}</td><td class="num mono small">{{ '%+.2f' | format(sale.rounding_chf) }}</td></tr>{% endif %}
+          <tr><td colspan="4"><strong>{{ t('billing.total') }}</strong></td><td class="num mono"><strong>{{ sale.total_chf | money }}</strong></td></tr>
+          {% for v in vat %}<tr><td colspan="4" class="small muted">{{ t('billing.vat_incl', rate=pct(v.rate)) }}</td><td class="num mono small muted">{{ v.vat | money }}</td></tr>{% endfor %}</tfoot>
+      </table></div>
+    </section>
+  </div>
+  <div class="col stack">
+    <section class="card stack-s">
+      <h2>{{ t('cashdesk.details') }}</h2>
+      <dl class="facts">
+        <dt>{{ t('cashdesk.method_label') }}</dt><dd>{{ t('cashdesk.method.' ~ sale.method) }}{% if current_method != sale.method %} → {{ t('cashdesk.method.' ~ current_method) }}{% endif %}</dd>
+        {% if change is not none %}<dt>{{ t('cashdesk.given') }}</dt><dd class="mono">{{ chf(sale.given_chf) }}</dd>
+        <dt>{{ t('cashdesk.change') }}</dt><dd class="mono"><strong>{{ chf(change) }}</strong></dd>{% endif %}
+        {% if sale.first_name %}<dt>{{ t('cashdesk.patient') }}</dt><dd>{% if screen.key != 'leitung' %}<a href="{{ S }}/patienten/{{ sale.patient_id }}">{{ sale.first_name }} {{ sale.last_name }}</a>{% else %}{{ sale.first_name }} {{ sale.last_name }}{% endif %}</dd>{% endif %}
+        {% if sale.note %}<dt>{{ t('cashdesk.note') }}</dt><dd>{{ sale.note }}</dd>{% endif %}
+        {% if sale.vat_number %}<dt>{{ t('billing.set.vat_number') }}</dt><dd class="mono">{{ sale.vat_number }}</dd>{% endif %}
+      </dl>
+      {% set stornoed = corrections | selectattr('kind', 'equalto', 'storno') | list %}
+      {% if sale.status != 'cancelled' %}
+      {% if closed %}<p class="small muted">{{ icon('lock', 16) }} {{ t('cashdesk.cancel_closed') }}</p>
+      {% if screen.key == 'leitung' and not stornoed %}
+      <details><summary class="disclose">{{ t('cashdesk.corr.title') }}</summary>
+        <p class="hint" style="margin-top:6px">{{ t('cashdesk.corr.hint') }}</p>
+        <form method="post" class="form" style="margin-top:8px" data-confirm="{{ t('cashdesk.corr.storno_confirm') }}" data-confirm-yes="{{ t('cashdesk.corr.storno_btn') }}">
+          <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="correct_storno">
+          <div class="field"><label for="kreason">{{ t('cashdesk.cancel_reason') }}</label><input id="kreason" name="reason" required maxlength="200"></div>
+          {% if sale.method != 'invoice' %}<label class="check"><input type="checkbox" name="refund" value="1"{% if today_closed %} disabled{% endif %}>{{ t('cashdesk.corr.refund_today', method=t('cashdesk.method.' ~ current_method)) }}</label>{% endif %}
+          {% if sale.method == 'invoice' %}<p class="hint">{{ t('cashdesk.cancel_invoice_hint') }}</p>{% endif %}
+          <button class="btn outlined" type="submit">{{ t('cashdesk.corr.storno_btn') }}</button></form>
+        {% if sale.method in paid_methods and sale.status == 'paid' %}
+        <form method="post" class="form" style="margin-top:12px">
+          <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="correct_method">
+          <div class="row" style="gap:8px;flex-wrap:wrap;align-items:flex-end">
+            <div class="field"><label for="kto">{{ t('cashdesk.corr.to_method') }}</label><select id="kto" name="to_method">{% for m in paid_methods if m != current_method %}<option value="{{ m }}">{{ t('cashdesk.method.' ~ m) }}</option>{% endfor %}</select></div>
+            <div class="field grow"><label for="kmreason">{{ t('cashdesk.corr.reason') }}</label><input id="kmreason" name="reason" required maxlength="200"></div>
+          </div>
+          <button class="btn outlined" type="submit">{{ t('cashdesk.corr.method_btn') }}</button></form>
+        {% endif %}
+      </details>
+      {% endif %}
+      {% else %}
+      <details><summary class="disclose">{{ t('cashdesk.cancel') }}</summary>
+        <form method="post" class="form" style="margin-top:8px"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="cancel">
+          <div class="field"><label for="creason">{{ t('cashdesk.cancel_reason') }}</label><input id="creason" name="reason" required maxlength="200"></div>
+          {% if sale.method == 'invoice' %}<p class="hint">{{ t('cashdesk.cancel_invoice_hint') }}</p>{% endif %}
+          <button class="btn outlined" type="submit">{{ t('cashdesk.cancel') }}</button></form></details>
+      {% endif %}{% endif %}
+      <a class="btn text" href="{{ S }}/kasse{% if sale.patient_id %}?patient={{ sale.patient_id }}{% endif %}">{{ icon('point_of_sale', 18) }}{{ t('cashdesk.new_sale') }}</a>
+    </section>
+  </div>
+</div>
+{% endblock %}

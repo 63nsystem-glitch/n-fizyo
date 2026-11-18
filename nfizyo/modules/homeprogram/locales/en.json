@@ -1,0 +1,68 @@
+{
+  "p": {
+    "ex": {
+      "title": "Exercises",
+      "intro": "Your programme from the practice. Tap an exercise.",
+      "none": "No exercise programme approved yet.",
+      "not_translated": "These instructions are not yet available in your language.",
+      "stop_if_pain": "Stop if the pain gets much worse and contact the practice.",
+      "pain_after": "How strong was the pain?",
+      "done": "Done",
+      "done_again": "Done again",
+      "logged": "Saved – well done!",
+      "answer": {
+        "forgot": "That happens. A fixed time helps, for example after brushing your teeth. Tomorrow is a new day.",
+        "unclear": "Thank you. The practice will see this before your next appointment and show you the exercise again.",
+        "no_time": "Understandable. Even one exercise is better than none.",
+        "no_time_star": "Understandable. When time is short: do only the exercises with the star.",
+        "pain": "Do not continue the exercise while it hurts a lot, and contact the practice. In an emergency, call 144.",
+        "app": "Thank you. Ask at reception on your next visit – we are happy to help you with the app.",
+        "no_benefit": "Thank you for being honest. Bring it up at your next appointment – you will look at your goal together."
+      },
+      "write_practice": "Write to the practice",
+      "star_hint": "When time is short: the exercises with the star first.",
+      "star_one": "When time is short: do this exercise first.",
+      "skip_q": "Didn't manage today?",
+      "skip_saved": "Saved: {reason}. You can change your answer.",
+      "skip_intro": "Optional. The practice sees your answer before your next appointment.",
+      "skip": {
+        "forgot": "I forgot",
+        "unclear": "The exercise was unclear",
+        "no_time": "No time",
+        "pain": "Too much pain",
+        "app": "Problem with the app",
+        "no_benefit": "I don't see the benefit"
+      },
+      "skip_note": "Would you like to add something? (optional)",
+      "skip_send": "Send",
+      "skip_choose": "Please choose a reason.",
+      "own_video": "Your own video – recorded at the practice",
+      "video_delete_hint": "You can delete your video at any time. It will also be deleted at the practice.",
+      "video_delete": "Delete my video",
+      "video_deleted": "Video deleted",
+      "dose": {
+        "sets": {
+          "one": "{n} set",
+          "other": "{n} sets"
+        },
+        "reps": {
+          "one": "{n} repetition",
+          "other": "{n} repetitions"
+        },
+        "hold": {
+          "one": "hold {n} s",
+          "other": "hold {n} s"
+        },
+        "minutes": {
+          "one": "{n} minute",
+          "other": "{n} minutes"
+        },
+        "per_day": {
+          "one": "{n} time a day",
+          "other": "{n} times a day"
+        },
+        "sets_reps": "{sets} of {reps}"
+      }
+    }
+  }
+}

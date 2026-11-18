@@ -1,0 +1,68 @@
+{
+  "p": {
+    "ex": {
+      "title": "Ushtrimet",
+      "intro": "Programi juaj nga praktika. Prekni një ushtrim.",
+      "none": "Ende nuk është miratuar asnjë program ushtrimesh.",
+      "not_translated": "Ky udhëzim nuk është ende i disponueshëm në gjuhën tuaj.",
+      "stop_if_pain": "Ndaloni nëse dhimbja rritet shumë dhe kontaktoni praktikën.",
+      "pain_after": "Sa e fortë ishte dhimbja?",
+      "done": "U krye",
+      "done_again": "U krye përsëri",
+      "logged": "U ruajt – të lumtë!",
+      "answer": {
+        "forgot": "Ndodh. Një orë e caktuar ndihmon, për shembull pasi të lani dhëmbët. Nesër është një ditë e re.",
+        "unclear": "Faleminderit. Praktika do ta shohë këtë para takimit tuaj të ardhshëm dhe do t'ju tregojë ushtrimin përsëri.",
+        "no_time": "E kuptueshme. Edhe një ushtrim i vetëm është më mirë se asnjë.",
+        "no_time_star": "E kuptueshme. Kur keni pak kohë: bëni vetëm ushtrimet me yll.",
+        "pain": "Mos e vazhdoni ushtrimin derisa dhemb shumë dhe lajmëroni praktikën. Në rast urgjence telefononi 144.",
+        "app": "Faleminderit. Pyesni në recepsion në vizitën e ardhshme – ju ndihmojmë me kënaqësi me aplikacionin.",
+        "no_benefit": "Faleminderit për sinqeritetin. Flisni për këtë në takimin e ardhshëm – bashkë do të shikoni qëllimin tuaj."
+      },
+      "write_practice": "Shkruajini praktikës",
+      "star_hint": "Kur keni pak kohë: së pari ushtrimet me yll.",
+      "star_one": "Kur keni pak kohë: këtë ushtrim së pari.",
+      "skip_q": "Sot nuk ia dolët?",
+      "skip_saved": "U ruajt: {reason}. Mund ta ndryshoni përgjigjen.",
+      "skip_intro": "Vullnetare. Praktika e sheh përgjigjen tuaj para takimit të ardhshëm.",
+      "skip": {
+        "forgot": "E harrova",
+        "unclear": "Ushtrimi nuk ishte i qartë",
+        "no_time": "Nuk pata kohë",
+        "pain": "Shumë dhimbje",
+        "app": "Problem me aplikacionin",
+        "no_benefit": "Nuk e shoh dobinë"
+      },
+      "skip_note": "Dëshironi të shtoni diçka? (vullnetare)",
+      "skip_send": "Dërgo",
+      "skip_choose": "Ju lutemi zgjidhni një arsye.",
+      "own_video": "Videoja juaj – e regjistruar në praktikë",
+      "video_delete_hint": "Mund ta fshini videon tuaj në çdo kohë. Ajo fshihet edhe në praktikë.",
+      "video_delete": "Fshije videon time",
+      "video_deleted": "Videoja u fshi",
+      "dose": {
+        "sets": {
+          "one": "{n} seri",
+          "other": "{n} seri"
+        },
+        "reps": {
+          "one": "{n} përsëritje",
+          "other": "{n} përsëritje"
+        },
+        "hold": {
+          "one": "mbani {n} s",
+          "other": "mbani {n} s"
+        },
+        "minutes": {
+          "one": "{n} minutë",
+          "other": "{n} minuta"
+        },
+        "per_day": {
+          "one": "{n} herë në ditë",
+          "other": "{n} herë në ditë"
+        },
+        "sets_reps": "{sets} me nga {reps}"
+      }
+    }
+  }
+}

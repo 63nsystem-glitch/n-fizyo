@@ -1,0 +1,16 @@
+{% import "briefing/_parts.html" as bp with context %}
+{% macro body(h, S) %}
+<p class="small muted" style="margin-bottom:8px">{% if h.mode == 'takeover' %}{{ t('brief.ho_sub', n=h.n, first=fmt_date(h.first, year=False), last=fmt_date(h.last, year=False)) }}{% else %}{{ t('brief.ho_away_sub', n=h.n, names=h.names | join(', ')) }}{% endif %} · {{ t('brief.source_short') }}</p>
+<div class="brief">
+  {{ bp.goal_row(h.goal) }}
+  {% if h.rx %}<div class="brief-row{{ ' alert' if h.rx.top else '' }}">{{ icon('assignment', 20) }}<div><span class="lbl">{{ t('brief.rx') }} · {{ h.rx.used }}/{{ h.rx.total }}{% if h.rx.row.referrer_name %} · {{ h.rx.row.referrer_name }}{% endif %}</span>{{ h.rx.row.diagnosis or '' }}{% if h.rx.top %}<br>{{ h.rx.top.text }}{% endif %}</div></div>{% endif %}
+  {% if h.restrictions or h.alerts or h.clearances %}<div class="brief-row alert">{{ icon('warning', 20) }}<div><span class="lbl">{{ t('brief.restrictions') }} / {{ t('brief.clearances') }}</span>{{ bp.finding_list(h.restrictions, 'restriction') }}{{ bp.finding_list(h.alerts, 'restriction') }}{{ bp.finding_list(h.clearances, 'clearance') }}</div></div>{% endif %}
+  {% if h.notes %}<div class="lbl" style="font-size:12px;color:var(--on-surface-variant);text-transform:uppercase;margin-top:4px">{{ t('brief.ho_notes') }}</div>{% for n in h.notes %}{{ bp.note_row(n, S, h.full) }}{% endfor %}{% endif %}
+  {% if h.trends %}<div class="brief-row">{{ icon('trending_up', 20) }}<div><span class="lbl">{{ t('brief.measures') }}</span>{% for s in h.trends %}{{ bp.trend_line(s) }}{% if not loop.last %}<br>{% endif %}{% endfor %}</div></div>{% endif %}
+  {% if h.hp %}<div class="brief-row">{{ icon('fitness_center', 20) }}<div><span class="lbl">{{ t('brief.ho_hp') }} · {{ t('brief.items', n=h.hp['items']) }}</span>{{ bp.hp_line(h.hp) }}
+    {% if h.hp_items %}<ul class="small" style="margin:6px 0 0;padding-inline-start:18px">{% for i in h.hp_items %}<li>{{ i.name_fr if lang == 'fr' else i.name_de }}{% if i.sets and i.reps %} · {{ i.sets }}×{{ i.reps }}{% endif %}{% if i.note %} · <span class="muted">{{ i.note }}</span>{% endif %}</li>{% endfor %}</ul>{% endif %}</div></div>{% endif %}
+  {% for m in h.messages %}{{ bp.msg_row(m) }}{% endfor %}
+  {% if h.open and (h.open.unread or h.open.problems) %}<div class="brief-row alert">{{ icon('forum', 20) }}<div><span class="lbl">{{ t('brief.ho_messages') }}</span>{{ t('brief.ho_open_msgs', unread=h.open.unread, problems=h.open.problems) }} <a href="{{ S }}/nachrichten/{{ h.patient.id }}">{{ t('brief.messages') }}</a></div></div>{% endif %}
+  {% if h.upcoming %}<div class="brief-row">{{ icon('event_upcoming', 20) }}<div><span class="lbl">{{ t('brief.ho_upcoming') }}</span>{% for a in h.upcoming %}{{ fmt_date(a.starts_at, weekday=True, year=False) }} {{ fmt_time(a.starts_at) }} · {{ a.therapist_name }}{% if not loop.last %}<br>{% endif %}{% endfor %}</div></div>{% endif %}
+</div>
+{% endmacro %}

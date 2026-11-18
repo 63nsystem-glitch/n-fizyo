@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <title>Pendelübung</title>
+  <g id="fig" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 186 L300 186" stroke-width="3" opacity="0.3"/>
+    <path d="M204 122 L300 122" stroke-width="5" opacity="0.45"/>
+    <path d="M212 122 L212 186" stroke-width="4" opacity="0.45"/>
+    <path d="M292 122 L292 186" stroke-width="4" opacity="0.45"/>
+    <path d="M165.2 95.3 L185.3 120.2 L214 116" stroke-width="10" opacity="0.45"/>
+    <path d="M116 104 L137.1 140.3 L132 180" stroke-width="10" opacity="0.45"/>
+    <path d="M132 180 L146 182" stroke-width="8" opacity="0.45"/>
+    <path d="M116 104 L165.2 95.3" stroke-width="13"/>
+    <path d="M165.2 95.3 L182.2 95.3" stroke-width="10"/>
+    <circle cx="182.2" cy="95.3" r="11" fill="currentColor" stroke="none"/>
+    <path d="M116 104 L120.6 145.7 L100 180" stroke-width="10"/>
+    <path d="M100 180 L114 182" stroke-width="8"/>
+    <path d="M165.2 95.3 L165.2 127.3 L165.2 156.3" stroke-width="10" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M144.6 165.1 L144 164.4 L143.6 163.7 L143.3 163 L143.2 162.3 L143.3 161.6 L143.6 160.9 L144 160.2 L144.6 159.6 L145.3 158.9 L146.2 158.3 L147.2 157.7 L148.4 157.2 L149.7 156.7 L151.1 156.2 L152.6 155.8 L154.2 155.4 L155.9 155.1 L157.7 154.8 L159.5 154.6 L161.4 154.4 L163.3 154.3 L165.2 154.3 L167.2 154.3 L169.1 154.4 L170.9 154.6 L172.8 154.8 L174.5 155.1 L176.2 155.4 L177.9 155.8 L179.4 156.2 L180.8 156.7 L182.1 157.2 L183.3 157.7 L184.3 158.3 L185.2 158.9 L185.9 159.6 L186.5 160.2 L186.9 160.9 L187.2 161.6 L187.2 162.3 L187.2 163 L186.9 163.7 L186.5 164.4 L185.9 165.1 L185.2 165.7 L184.3 166.3 L183.3 166.9 L182.1 167.5 L180.8 168 L179.4 168.4 L177.9 168.9 L176.2 169.2 L174.5 169.6 L172.8 169.8 L170.9 170 L169.1 170.2 L167.2 170.3 L165.2 170.3 L163.3 170.3 L161.4 170.2 L159.5 170 L157.7 169.8 L155.9 169.6 L154.2 169.2 L153.6 169.1" stroke-width="4" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M148.4 167.5 L158.3 166.2 L155.1 174.8 Z" stroke-width="2.5" style="fill:var(--ex-accent, #D9661F);stroke:var(--ex-accent, #D9661F)"/>
+  </g>
+</svg>

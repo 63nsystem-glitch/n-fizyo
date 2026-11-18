@@ -1,0 +1,51 @@
+{% extends "layouts/staff.html" %}
+{% block title %}{{ t('today.arrivals') if is_today else fmt_long_date(day) }}{% endblock %}
+{% block subtitle %}{{ fmt_long_date(day) if is_today else '' }}{% if is_today %} · {% endif %}{{ t('today.count', n=rows | length) }}{% endblock %}
+{% block actions %}
+  <a class="icon-btn" href="{{ S }}/heute?d={{ prev_day }}{% if loc_id %}&loc={{ loc_id }}{% endif %}" aria-label="{{ t('agenda.prev') }}">{{ icon('chevron_left', 24, 'flip-rtl') }}</a>
+  {% if not is_today %}<a class="btn text" href="{{ S }}/heute">{{ t('common.today') }}</a>{% endif %}
+  <a class="icon-btn" href="{{ S }}/heute?d={{ next_day }}{% if loc_id %}&loc={{ loc_id }}{% endif %}" aria-label="{{ t('agenda.next') }}">{{ icon('chevron_right', 24, 'flip-rtl') }}</a>
+  <a class="btn" href="{{ S }}/agenda/neu?date={{ day.isoformat() }}">{{ icon('add', 18) }}<span>{{ t('agenda.new') }}</span></a>
+{% endblock %}
+{% block content %}
+{% if notices %}<div class="banner warn" role="status" style="margin-bottom:12px" data-off-notice>{{ icon('event_busy') }}<span>{{ notices | join(' · ') }}</span></div>{% endif %}
+{% if absent %}<div class="banner info" role="status" style="margin-bottom:12px" data-absent>{{ icon('info') }}<span>{{ t('agenda.abs.today_absent') }}: {{ absent | join(' · ') }}</span></div>{% endif %}
+<div class="row-between" style="margin-bottom:12px">
+  <div class="chips">
+    <span class="chip">{{ icon('schedule', 16) }}{{ t('agenda.st.booked') }} · {{ counts.booked }}</span>
+    <span class="chip info">{{ icon('login', 16) }}{{ t('agenda.st.arrived') }} · {{ counts.arrived }}</span>
+    <span class="chip ok">{{ icon('task_alt', 16) }}{{ t('agenda.st.done') }} · {{ counts.done }}</span>
+    {% if counts.no_show %}<span class="chip warn">{{ icon('event_busy', 16) }}{{ t('agenda.st.no_show') }} · {{ counts.no_show }}</span>{% endif %}
+    {% if waiting %}<a class="chip" href="{{ S }}/agenda/warteliste">{{ icon('hourglass_top', 16) }}{{ t('agenda.waitlist') }} · {{ waiting }}</a>{% endif %}
+  </div>
+  {% if locations | length > 1 %}
+  <form method="get" class="row"><input type="hidden" name="d" value="{{ day.isoformat() }}">
+    <label class="sr-only" for="loc">{{ t('agenda.location') }}</label>
+    <select id="loc" name="loc" class="select-sm" data-autosubmit><option value="">{{ t('agenda.all_locations') }}</option>{% for l in locations %}<option value="{{ l.id }}"{% if l.id == loc_id %} selected{% endif %}>{{ l.name }}</option>{% endfor %}</select>
+  </form>
+  {% endif %}
+</div>
+<section class="card flush">
+  <div class="table-wrap"><table class="table">
+    <thead><tr><th>{{ t('agenda.time') }}</th><th>{{ t('agenda.patient') }}</th><th class="hide-compact">{{ t('agenda.therapist') }}</th><th class="hide-compact">{{ t('agenda.room') }}</th><th>{{ t('agenda.status') }}</th><th></th></tr></thead>
+    <tbody>
+    {% for r in rows %}{% set a = r.a %}
+      <tr{% if a.status in ('cancelled', 'no_show') %} style="opacity:.72"{% endif %}>
+        <td class="mono nowrap">{{ fmt_time(r.start) }}–{{ fmt_time(r.end) }}</td>
+        <td><a href="{{ S }}/patienten/{{ a.patient_id }}">{{ a.first_name }} {{ a.last_name }}</a>{% if a.patient_phone %}<br><a class="small muted" href="tel:{{ a.patient_phone }}">{{ a.patient_phone | phone }}</a>{% endif %}</td>
+        <td class="hide-compact">{{ a.therapist_name }}</td>
+        <td class="hide-compact">{{ a.room_name or '–' }}</td>
+        <td>{% if r.late %}<span class="pill-label warn">{{ t('today.late') }}</span>{% else %}<span class="pill-label {{ {'arrived': 'info', 'done': 'ok', 'cancelled': 'error', 'no_show': 'warn'}.get(a.status, '') }}">{{ t('agenda.st.' ~ a.status) }}</span>{% endif %}</td>
+        <td class="nowrap" style="text-align:end">
+          {% if a.status == 'booked' and is_today %}
+          <form method="post" action="{{ S }}/agenda/termine/{{ a.id }}/status" style="display:inline"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="status" value="arrived"><input type="hidden" name="back" value="{{ S }}/heute{% if loc_id %}?loc={{ loc_id }}{% endif %}"><button class="btn tonal sm" type="submit">{{ icon('login', 18) }}{{ t('agenda.checkin') }}</button></form>
+          {% if r.late %}<form method="post" action="{{ S }}/agenda/termine/{{ a.id }}/status" style="display:inline"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="status" value="no_show"><input type="hidden" name="back" value="{{ S }}/heute"><button class="icon-btn" type="submit" title="{{ t('agenda.to.no_show') }}" aria-label="{{ t('agenda.to.no_show') }}">{{ icon('event_busy', 20) }}</button></form>{% endif %}
+          {% endif %}
+          <a class="icon-btn" href="{{ S }}/agenda/termine/{{ a.id }}" aria-label="{{ t('agenda.details') }}">{{ icon('chevron_right', 20, 'flip-rtl') }}</a>
+        </td>
+      </tr>
+    {% else %}<tr><td colspan="6"><div class="empty">{{ icon('event_available', 40) }}<p>{{ t('today.empty') }}</p></div></td></tr>{% endfor %}
+    </tbody>
+  </table></div>
+</section>
+{% endblock %}

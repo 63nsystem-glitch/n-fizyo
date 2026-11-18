@@ -1,0 +1,43 @@
+{
+  "p": {
+    "appt": {
+      "title": "Appointments",
+      "none": "No appointments planned.",
+      "cancel_hint": "To cancel or move an appointment, please call at least 24 hours in advance.",
+      "request": "Request an appointment",
+      "wish": "Your request",
+      "wish_ph": "e.g. an earlier appointment",
+      "preferred": "When suits you?",
+      "preferred_ph": "e.g. Monday or Wednesday morning",
+      "send": "Send request",
+      "requested": "Request sent. The practice will contact you.",
+      "closure": "The practice is closed: {dates}."
+    },
+    "sms": {
+      "reminder": "Reminder: your physiotherapy appointment on {when} ({place}). Please cancel by phone at least 24 hours in advance.",
+      "offer": "{practice}: an appointment has become free – {when}, {place}. Would you like it? Reply here: {url}",
+      "offer_booked": "{practice}: your appointment on {when} is confirmed. To cancel, please call at least 24 hours before: {phone}",
+      "offer_gone": "{practice}: the offered appointment on {when} is no longer free. You stay on the waiting list.",
+      "cancelled": "{practice}: your appointments have been cancelled: {dates}. If you have questions, please call us: {phone}"
+    },
+    "mail": {
+      "reminder_subject": "Reminder: appointment on {when}",
+      "reminder_body": "Hello {name}\n\nThis is a reminder of your physiotherapy appointment on {when} ({place}).\nPlease cancel at least 24 hours before: {phone}\n\nKind regards\n{practice}"
+    },
+    "offer": {
+      "title": "Free appointment",
+      "minutes": "{n} minutes",
+      "first_wins": "This appointment was offered to several people. Whoever confirms first gets it.",
+      "accept": "Yes, I'll take the appointment",
+      "decline": "No, thank you",
+      "booked_title": "Your appointment is booked",
+      "booked_text": "You will receive a confirmation by SMS. To cancel, please call at least 24 hours before.",
+      "declined": "Thank you for your answer. You stay on the waiting list.",
+      "changed_mind": "Actually, I want the appointment",
+      "taken": "Sorry, the appointment has already been taken. You stay on the waiting list.",
+      "expired": "This offer has expired. You stay on the waiting list.",
+      "invalid": "This link is not valid or has expired.",
+      "call": "Questions? Call us:"
+    }
+  }
+}

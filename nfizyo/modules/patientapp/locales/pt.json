@@ -1,0 +1,98 @@
+{
+  "p": {
+    "app_name": "A minha fisioterapia",
+    "nav": {
+      "main": "Navegação",
+      "today": "Hoje",
+      "exercises": "Exercícios",
+      "appointments": "Consultas",
+      "messages": "Mensagens",
+      "today_short": "Hoje",
+      "appointments_short": "Consultas",
+      "messages_short": "Mensagens"
+    },
+    "emergency": "Em caso de emergência, ligue 144. A app não é para emergências.",
+    "machine_translated": "tradução automática",
+    "home": {
+      "hello": "Bom dia, {name}",
+      "next": "A sua próxima consulta",
+      "exercises": "Os meus exercícios de hoje",
+      "exercises_hint": "Marque os exercícios feitos – a clínica vê a sua evolução.",
+      "describe": "Descrever as queixas",
+      "report": "Comunicar um problema",
+      "messages": "Mensagens",
+      "appointment": "Consultas",
+      "call": "Dúvidas? Ligue-nos:"
+    },
+    "profile": {
+      "title": "Perfil",
+      "language": "Língua",
+      "language_hint": "Se necessário, os textos da clínica são traduzidos automaticamente para a sua língua.",
+      "privacy": "Proteção de dados",
+      "privacy_text": "Os seus dados ficam no servidor da sua clínica na Suíça. A tradução e o reconhecimento de voz funcionam lá – nada é enviado a serviços externos.",
+      "privacy_text_remote": "Os seus dados ficam no servidor da sua clínica na Suíça. A tradução e o reconhecimento de voz funcionam num servidor da NSystem na Suíça que não guarda nada.",
+      "logout": "Terminar sessão",
+      "revoke": "Terminar o acesso à app",
+      "revoke_confirm": "Terminar mesmo o acesso? Pode receber um novo convite mais tarde."
+    },
+    "login": {
+      "title": "Entrar",
+      "intro": "Introduza o seu número de telemóvel e a data de nascimento. Vai receber um código por SMS.",
+      "phone": "Número de telemóvel",
+      "birthdate": "Data de nascimento",
+      "send_code": "Enviar código",
+      "code_intro": "Introduza o código de 6 dígitos do SMS.",
+      "code": "Código",
+      "submit": "Entrar",
+      "demo_code": "Demo: não é enviado nenhum SMS. O seu código é {code}.",
+      "wrong_code": "O código está errado ou expirou.",
+      "blocked": "Demasiadas tentativas. Tente novamente mais tarde.",
+      "too_many_codes": "Já foram enviados vários códigos para este número. Aguarde uma hora ou ligue-nos."
+    },
+    "invite": {
+      "title": "Bem-vindo/a",
+      "hello": "Bom dia, {name}. {practice} convida-o/a a usar a app.",
+      "what": "Na app vê os seus exercícios e consultas, descreve as suas queixas na sua língua e escreve à clínica.",
+      "code": "Código da clínica",
+      "code_hint": "Recebeu o código de 6 dígitos na clínica ou por SMS.",
+      "privacy_title": "Os seus dados",
+      "privacy_text": "Os seus dados ficam no servidor da sua clínica na Suíça. A sua terapeuta ou o seu terapeuta vê o que escreve. Pode terminar o acesso a qualquer momento.",
+      "consent": "Aceito usar a app.",
+      "consent_translation": "Os meus textos podem ser traduzidos automaticamente no servidor da clínica.",
+      "consent_translation_remote": "Os meus textos podem ser traduzidos automaticamente – no servidor de IA na Suíça (envio encriptado, nada fica guardado lá).",
+      "start": "Iniciar a app",
+      "need_consent": "Por favor, confirme o seu consentimento.",
+      "wrong_code": "O código está errado.",
+      "invalid": "Este convite expirou ou já foi usado.",
+      "invalid_hint": "Peça à clínica um novo convite ou entre com o seu número de telemóvel."
+    },
+    "sms": {
+      "invite": "Bom dia {name}, a sua app de fisioterapia: {url} – código: {code}",
+      "login": "O seu código de acesso: {code} (válido 15 minutos)"
+    },
+    "privacy": {
+      "title": "Proteção de dados",
+      "link": "Declaração de proteção de dados",
+      "controller_title": "Responsável",
+      "controller_generic": "O responsável é o consultório que o convidou para a app. Encontra os contactos na app em «Perfil».",
+      "data_title": "Que dados",
+      "data": "Os seus dados pessoais e de contacto, dados do seguro, prescrições e relatórios médicos, notas de tratamento e medições, e o que introduz na app (exercícios, dores, mensagens, pedidos, séries de treino). Os dados de saúde são especialmente sensíveis.",
+      "purpose_title": "Para quê",
+      "purpose": "Para o seu tratamento, a marcação de consultas, a faturação ao seu seguro e a colaboração com o seu médico – nunca para publicidade.",
+      "where_title": "Onde estão os dados",
+      "where": "No servidor do consultório na Suíça. Os seus dados não são transferidos para o estrangeiro. As sessões por vídeo passam pelo servidor de vídeo próprio do consultório na Suíça e não são gravadas.",
+      "who_title": "Quem os vê",
+      "who": "Apenas os profissionais da sua equipa de tratamento e, para consultas e faturas, a receção. Os relatórios aos médicos são enviados encriptados via HIN, as faturas ao seu seguro. Os SMS são enviados por um fornecedor na Suíça; e-mails só com o seu consentimento. Todos estão sujeitos ao sigilo profissional.",
+      "processor_title": "Software e técnica",
+      "processor": "O software N-Fizyo é da NSystem GmbH, Biel/Bienne. A NSystem opera a técnica por conta do consultório, está obrigada ao sigilo e não vê dados de pacientes em funcionamento normal. A tradução e o reconhecimento de voz funcionam no servidor do consultório ou num servidor da NSystem na Suíça que não guarda nada.",
+      "consent_title": "O seu consentimento",
+      "consent": "Para a app, e-mails, os seus próprios vídeos de exercícios e sessões por vídeo pedimos o seu consentimento. Pode retirá-lo a qualquer momento – na app em «Perfil» ou no consultório.",
+      "retention_title": "Por quanto tempo",
+      "retention": "O consultório guarda a documentação do tratamento pelo tempo exigido por lei. Pode apagar os seus vídeos de exercícios a qualquer momento. Códigos de acesso e links expiram pouco tempo depois.",
+      "rights_title": "Os seus direitos",
+      "rights": "Pode pedir informações sobre os seus dados, mandar corrigir dados errados e opor-se ao tratamento, desde que nenhuma lei o exija. Dirija-se ao consultório. Para questões de proteção de dados pode também contactar o Comissário Federal para a Proteção de Dados e a Transparência (PFPDT).",
+      "version": "Versão: novembro de 2026"
+    }
+  },
+  "_review": "Erstübersetzung NSystem – vor Einsatz von Muttersprachler/in prüfen lassen."
+}

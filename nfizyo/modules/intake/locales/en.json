@@ -1,0 +1,61 @@
+{
+  "intake": {
+    "title": "My symptoms",
+    "hello": "Hello, {name}",
+    "intro": "Describe your symptoms – in your own language. Your therapist will read it before the treatment.",
+    "where": "Where do you have symptoms?",
+    "where_hint": "Tap the places on the body (several are possible). Switch with “Front/Back”.",
+    "list_instead": "List instead of picture",
+    "none_selected": "No place selected yet",
+    "pain": "How strong is the pain?",
+    "pain_0": "none",
+    "pain_2": "mild",
+    "pain_4": "moderate",
+    "pain_6": "strong",
+    "pain_8": "very strong",
+    "pain_10": "unbearable",
+    "since": "Since when?",
+    "since_opt": {
+      "days": "less than 1 week",
+      "weeks": "1 to 6 weeks",
+      "months": "more than 6 weeks",
+      "years": "more than 1 year"
+    },
+    "worse": "When is it worse?",
+    "worse_opt": {
+      "move": "when moving",
+      "rest": "at rest",
+      "night": "at night",
+      "sitting": "when sitting",
+      "standing": "when standing",
+      "walking": "when walking",
+      "stairs": "on stairs",
+      "lifting": "when lifting",
+      "morning": "in the morning"
+    },
+    "goals": "What would you like to be able to do again?",
+    "goal_opt": {
+      "sleep": "sleep without pain",
+      "walk": "walk",
+      "stairs": "climb stairs",
+      "work": "work",
+      "sport": "do sport",
+      "lift": "lift and carry",
+      "overhead": "raise my arm above my head",
+      "household": "housework",
+      "drive": "drive"
+    },
+    "text": "In your own words",
+    "text_hint": "Write or speak in your own language. It will be translated for the practice.",
+    "text_ph": "What happened? What makes it worse or better?",
+    "voice": "Speak instead of writing",
+    "voice_stop": "Stop recording",
+    "voice_busy": "Recognising …",
+    "emergency": "If the pain is severe or suddenly new, contact your doctor. In an emergency, call 144.",
+    "privacy": "Your answers stay on the practice's server.",
+    "send": "Send",
+    "sent_flash": "Thank you! The practice has received your answers.",
+    "text_hint_same": "Describe in your own words what is bothering you. You can write or speak."
+  },
+  "_review": "Erstübersetzung NSystem – vor Einsatz von Muttersprachler/in prüfen lassen."
+}

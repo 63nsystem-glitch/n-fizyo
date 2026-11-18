@@ -1,0 +1,23 @@
+{% extends "layouts/patient.html" %}
+{% block back %}<a class="icon-btn" href="/p/heute" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('p.profile.title') }}{% endblock %}
+{% block content %}
+<section class="card">
+  <p style="font-size:18px">{{ patient_user.first_name }} {{ patient_user.last_name }}</p>
+  <p class="small muted">{{ practice.name }}</p>
+</section>
+<section class="card">
+  <h2 style="margin-bottom:12px">{{ icon('language', 20) }} {{ t('p.profile.language') }}</h2>
+  <div class="langgrid">{% for code in langs %}<a href="/lang/{{ code }}?area=patient&next=/p/profil" lang="{{ code }}" dir="{{ 'rtl' if code == 'ar' else 'ltr' }}" class="{{ 'on' if code == lang else '' }}" style="min-height:52px;font-size:16px">{{ LANG_NAMES[code] }}</a>{% endfor %}</div>
+  <p class="small muted" style="margin-top:12px">{{ t('p.profile.language_hint') }}</p>
+</section>
+<section class="card">
+  <h2 style="margin-bottom:8px">{{ icon('lock', 20) }} {{ t('p.profile.privacy') }}</h2>
+  <p class="small">{{ t('p.profile.privacy_text_remote') if ai_remote else t('p.profile.privacy_text') }}</p>
+  <a class="btn text sm" href="/p/datenschutz" style="margin-top:6px">{{ t('p.privacy.link') }}</a>
+</section>
+<a class="btn outlined block" href="/p/abmelden">{{ icon('logout', 18) }}{{ t('p.profile.logout') }}</a>
+<form method="post" action="/p/profil/zugang-beenden" data-confirm="{{ t('p.profile.revoke_confirm') }}" data-confirm-yes="{{ t('p.profile.revoke') }}" data-confirm-no="{{ t('common.cancel') }}">
+  <input type="hidden" name="_csrf" value="{{ csrf }}"><button class="btn text block" type="submit" style="color:var(--error)">{{ t('p.profile.revoke') }}</button>
+</form>
+{% endblock %}

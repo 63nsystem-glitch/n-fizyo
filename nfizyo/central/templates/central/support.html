@@ -1,0 +1,17 @@
+{% extends "central/layout.html" %}
+{% block content %}
+<h1 style="margin-bottom:8px">Support-Anfragen</h1>
+<p class="small muted" style="margin-bottom:12px">Aus den Praxen (Hilfe › Support anfragen). Texte mit erkennbaren Patientendaten werden schon in der Praxis blockiert; kommt doch einer an, wird er hier nicht gespeichert.</p>
+<nav class="row" style="gap:8px;margin-bottom:12px">{% for k, label in (('open', 'offen'), ('new', 'neu'), ('done', 'erledigt'), ('all', 'alle')) %}<a class="btn {{ '' if filter == k else 'text' }} sm" href="/support?status={{ k }}">{{ label }}</a>{% endfor %}</nav>
+<section class="card" style="padding:0;overflow:hidden"><div class="table-wrap"><table class="table">
+  <thead><tr><th>Eingang</th><th>Box / Praxis</th><th>Bereich</th><th>Dringlichkeit</th><th>Von</th><th>Status</th></tr></thead><tbody>
+  {% for r in rows %}<tr>
+    <td>{{ local(r.received_at) }}</td>
+    <td><a href="/support/{{ r.id }}"><strong>{{ r.box_name }}</strong></a><br><span class="small muted">{{ r.practice }}</span></td>
+    <td>{{ areas.get(r.area, r.area) }}{% if r.with_access %}<br><span class="pill-label warn">Supportzugang geöffnet</span>{% endif %}</td>
+    <td>{% if r.urgency == 'urgent' %}<span class="pill-label error">dringend</span>{% else %}{{ urgencies.get(r.urgency, r.urgency) }}{% endif %}</td>
+    <td class="small">{{ r.from_name }}</td>
+    <td><span class="pill-label {{ 'error' if r.status == 'new' else ('warn' if r.status == 'in_progress' else 'ok') }}">{{ statuses.get(r.status, r.status) }}</span>{% if r.blocked %} <span class="pill-label">blockiert</span>{% endif %}</td>
+  </tr>{% else %}<tr><td colspan="6" class="muted">Keine Anfragen.</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

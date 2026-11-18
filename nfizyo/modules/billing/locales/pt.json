@@ -1,0 +1,8 @@
+{
+  "p": {
+    "mail": {
+      "invoice_subject": "Fatura {number}",
+      "invoice_body": "Bom dia {name}\n\nEm anexo encontra a fatura {number} no valor de CHF {amount}. Por favor, pague com a secção de pagamento QR até {due}.\n\nCumprimentos\n{practice}"
+    }
+  }
+}

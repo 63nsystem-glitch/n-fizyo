@@ -1,0 +1,17 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/uebersicht" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('setup.title') }}{% endblock %}
+{% block subtitle %}{{ t('setup.subtitle') }}{% endblock %}
+{% block content %}
+<div class="stack" style="max-width:820px">
+  {% include "settings/card_setup.html" %}
+  {% if hidden %}
+  <form method="post" action="{{ S }}/einrichtung"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="show">
+    <button class="btn text" type="submit">{{ icon('visibility', 18) }}{{ t('setup.show_again') }}</button></form>
+  {% endif %}
+  <section class="card stack-s">
+    <h2>{{ t('setup.insurers_title') }}</h2>
+    <p class="small">{{ t('setup.insurers_text') }}</p>
+  </section>
+</div>
+{% endblock %}

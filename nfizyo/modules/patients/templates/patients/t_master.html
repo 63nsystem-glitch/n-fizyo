@@ -1,0 +1,43 @@
+{% extends "patients/_file.html" %}
+{% block content %}
+<div class="grid-main-side">
+  <div class="col stack">
+    <section class="card">
+      <h2 style="margin-bottom:12px">{{ t('patients.person') }}</h2>
+      <dl class="facts">
+        <dt>{{ t('patients.number') }}</dt><dd class="mono">{{ patient.number }}</dd>
+        <dt>{{ t('patients.birthdate') }}</dt><dd>{{ fmt_date(patient.birthdate) if patient.birthdate else '–' }}{% if age is not none %} ({{ age }}){% endif %}</dd>
+        <dt>{{ t('patients.phone') }}</dt><dd>{% if patient.phone %}<a href="tel:{{ patient.phone }}">{{ patient.phone | phone }}</a>{% else %}–{% endif %}</dd>
+        <dt>{{ t('patients.email') }}</dt><dd>{{ patient.email or '–' }}</dd>
+        <dt>{{ t('patients.address') }}</dt><dd>{{ patient.address or '' }} {{ patient.zip or '' }} {{ patient.city or '' }}</dd>
+        <dt>{{ t('patients.spoken_language') }}</dt><dd>{{ spoken_name or '–' }}{% if patient.needs_interpreter %} · {{ t('patients.interpreter_needed') }}{% endif %}</dd>
+        <dt>{{ t('patients.insurance') }}</dt><dd>{{ patient.law | law }} {{ patient.insurer_name or '' }}{% if patient.case_number %} · {{ t('patients.case_number') }} {{ patient.case_number }}{% endif %}</dd>
+        <dt>{{ t('patients.referrer') }}</dt><dd>{{ patient.referrer_name or '–' }}</dd>
+      </dl>
+      <p class="small muted" style="margin-top:12px">{{ t('patients.master_by_reception') }}</p>
+    </section>
+    <section class="card">
+      <h2 style="margin-bottom:12px">{{ t('patients.goal') }}</h2>
+      <form method="post" class="form">
+        <input type="hidden" name="_csrf" value="{{ csrf }}">
+        <div class="field"><label for="goal">{{ t('patients.goal_label') }}</label><input id="goal" name="goal" value="{{ patient.goal or '' }}" maxlength="300" placeholder="{{ t('patients.goal_ph') }}"></div>
+        <div class="form-actions"><button class="btn tonal" type="submit">{{ t('common.save') }}</button></div>
+      </form>
+    </section>
+  </div>
+  <div class="col stack">
+    <section class="card">
+      <h2 style="margin-bottom:8px">{{ t('patients.prescriptions') }}</h2>
+      {% for pr in prescriptions %}
+      <div class="list-item" style="padding-inline:0"><span class="body"><span class="title">{{ t('patients.sessions_n', n=pr.sessions) }}</span><br><span class="sub">{{ fmt_date(pr.issued_on) if pr.issued_on else '–' }}{% if pr.referrer_name %} · {{ pr.referrer_name }}{% endif %}{% if pr.diagnosis %} · {{ pr.diagnosis }}{% endif %}</span></span><span class="trail"><span class="pill-label {{ 'ok' if pr.status == 'active' else '' }}">{{ t('patients.pr_status_' ~ pr.status) }}</span></span></div>
+      {% else %}<p class="muted small">{{ t('patients.no_prescriptions') }}</p>{% endfor %}
+    </section>
+    <section class="card">
+      <h2 style="margin-bottom:8px">{{ t('patients.team') }}</h2>
+      {% for m in team %}
+      <div class="list-item" style="padding-inline:0"><span class="lead avatar">{{ m.initials }}</span><span class="body"><span class="title">{{ m.name }}</span><br><span class="sub">{{ t('patients.team_reason.' ~ m.reason) }}</span></span></div>
+      {% endfor %}
+    </section>
+  </div>
+</div>
+{% endblock %}

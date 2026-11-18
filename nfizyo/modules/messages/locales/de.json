@@ -1,0 +1,58 @@
+{
+  "messages": {
+    "title": "Nachrichten",
+    "tab": "Nachrichten",
+    "subtitle": "Nachrichten und Problem-Meldungen aus der Patienten-App",
+    "none": "Noch keine Nachrichten.",
+    "empty_thread": "Noch keine Nachrichten mit dieser Person.",
+    "reply": "Antwort",
+    "reads": "liest auf {language}",
+    "translate_to": "Automatisch auf {language} übersetzen (das Original wird mitgeschickt)",
+    "no_translate": "Liest {language}. Ihre Antwort wird nicht automatisch übersetzt – die automatische Übersetzung ist noch nicht eingerichtet. Bitte kurz und einfach schreiben.",
+    "no_advice_hint": "Bitte keine Diagnosen über die App. Bei Warnzeichen telefonisch Kontakt aufnehmen.",
+    "sent": "Nachricht gesendet",
+    "handled": "Als erledigt markiert",
+    "mark_handled": "Erledigt",
+    "problem": "Problem gemeldet",
+    "sent_as": "automatisch übersetzt gesendet: {language}",
+    "from_app": "Nachricht aus der Patienten-App",
+    "problem_from_app": "Problem aus der Patienten-App",
+    "answer": "Antworten",
+    "auto_translated": "automatisch übersetzt aus: {language}",
+    "demo_translation": "Beispielübersetzung (Demo)",
+    "check_numbers": "Zahlen bitte im Original prüfen",
+    "show_original": "Original anzeigen",
+    "from_practice": "Praxis:",
+    "problem_preview": "Problem gemeldet",
+    "yesterday": "gestern",
+    "description": "Nachrichten mit Patient/innen (mit Übersetzung)"
+  },
+  "p": {
+    "msg": {
+      "title": "Nachrichten",
+      "empty": "Noch keine Nachrichten.",
+      "write": "Ihre Nachricht",
+      "write_ph": "Schreiben Sie in Ihrer Sprache.",
+      "reply_time": "Die Praxis antwortet in der Regel innerhalb eines Arbeitstages. Keine Notfälle über die App.",
+      "too_many": "Sie haben in kurzer Zeit sehr viele Nachrichten geschickt. Bitte später nochmals versuchen oder die Praxis anrufen.",
+      "sent": "Nachricht gesendet.",
+      "report_sent": "Meldung gesendet. Die Praxis sieht sie beim nächsten Öffnen.",
+      "problem": "Problem gemeldet",
+      "machine": "Original anzeigen (maschinelle Übersetzung)",
+      "reply": {
+        "same_day": "Die Praxis antwortet in der Regel am selben Arbeitstag.",
+        "next_day": "Die Praxis antwortet in der Regel bis zum nächsten Arbeitstag.",
+        "two_days": "Die Praxis antwortet in der Regel innerhalb von zwei Arbeitstagen.",
+        "three_days": "Die Praxis antwortet in der Regel innerhalb von drei Arbeitstagen.",
+        "week": "Die Praxis antwortet in der Regel innerhalb einer Woche."
+      },
+      "no_emergency": "Keine Notfälle über die App."
+    },
+    "report": {
+      "title": "Problem melden",
+      "what": "Was ist passiert?",
+      "what_ph": "z. B. Knie geschwollen nach dem Treppensteigen",
+      "send": "Meldung senden"
+    }
+  }
+}

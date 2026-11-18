@@ -1,0 +1,81 @@
+{% extends "layouts/staff.html" %}
+{% block title %}{{ t('firms.title') }}{% endblock %}
+{% block subtitle %}{{ t('firms.subtitle') }}{% endblock %}
+{% block content %}
+<div class="stack">
+  <div class="row-between" style="flex-wrap:wrap;gap:12px">
+    <nav class="seg" aria-label="{{ t('firms.title') }}">
+      <a href="{{ S }}/firmen"{% if view == 'firmen' %} aria-current="page" class="selected"{% endif %}>{{ t('firms.tab_firms') }}</a>
+      <a href="{{ S }}/firmen?ansicht=rechnungen"{% if view == 'rechnungen' %} aria-current="page" class="selected"{% endif %}>{{ t('firms.tab_invoices') }}{% if totals.drafts %} · {{ totals.drafts }}{% endif %}</a>
+      <a href="{{ S }}/firmen?ansicht=offen"{% if view == 'offen' %} aria-current="page" class="selected"{% endif %}>{{ t('firms.tab_open') }}{% if totals.open %} · {{ totals.open }}{% endif %}</a>
+    </nav>
+  </div>
+  <div class="grid-main-side">
+    <section class="card">
+      {% if view == 'rechnungen' %}
+      <nav class="chips" aria-label="{{ t('firms.filter') }}" style="margin-bottom:8px">
+        <a class="chip{{ ' selected' if not status else '' }}" href="{{ S }}/firmen?ansicht=rechnungen">{{ t('firms.all') }}</a>
+        {% for s in ('draft', 'final', 'cancelled') %}<a class="chip{{ ' selected' if status == s else '' }}" href="{{ S }}/firmen?ansicht=rechnungen&amp;status={{ s }}">{{ t('firms.status.' ~ s) }}</a>{% endfor %}
+      </nav>
+      <div class="list">
+        {% for x in invoices %}
+        <a class="list-item" href="{{ S }}/firmen/rechnungen/{{ x.inv.id }}">
+          <span class="lead avatar">{{ icon('draft' if x.inv.status == 'draft' else 'receipt_long', 20) }}</span>
+          <span class="body"><span class="title">{{ x.inv.firm_name }} · {{ x.inv.number or t('firms.status.draft') }}</span><br>
+            <span class="sub">{{ x.inv.subject or '–' }} · {{ fmt_date(x.inv.finalized_at or x.inv.created_at) }}</span></span>
+          <span class="trail"><span class="mono">{{ chf(x.inv.total_chf) }}</span>
+            <span class="pill-label {{ {'paid': 'ok', 'overdue': 'error', 'partial': 'warn', 'open': 'info', 'cancelled': 'error', 'draft': 'warn'}.get(x.b.state, '') }}">{{ t('firms.state.' ~ x.b.state) }}</span></span>
+        </a>
+        {% else %}<div class="empty">{{ icon('receipt_long', 40) }}<p>{{ t('firms.no_invoices') }}</p></div>{% endfor %}
+      </div>
+      {% elif view == 'offen' %}
+      <p class="small muted" style="margin-bottom:8px">{{ t('firms.open_sum', n=items|length, chf=chf(totals.open_chf)) }}</p>
+      <div class="list">
+        {% for x in items %}
+        <a class="list-item" href="{{ S }}/firmen/rechnungen/{{ x.inv.id }}">
+          <span class="lead avatar">{{ icon('assignment_late' if x.b.state == 'overdue' else 'receipt_long', 20) }}</span>
+          <span class="body"><span class="title">{{ x.inv.firm_name }} · {{ x.inv.number }}</span><br>
+            <span class="sub">{{ t('firms.due') }} {{ fmt_date(x.inv.due_on) if x.inv.due_on else '–' }}{% if x.level %} · {{ t('firms.rem.level_' ~ x.level) }}{% endif %}{% if x.next %} · <strong>{{ t('firms.rem.due_' ~ x.next) }}</strong>{% endif %}</span></span>
+          <span class="trail"><strong class="mono">{{ chf(x.b.open) }}</strong></span>
+        </a>
+        {% else %}<div class="empty">{{ icon('check_circle', 40) }}<p>{{ t('firms.none_open') }}</p></div>{% endfor %}
+      </div>
+      {% else %}
+      <form method="get" class="search" style="margin-bottom:8px" role="search">
+        {{ icon('search') }}<input name="q" value="{{ q }}" placeholder="{{ t('firms.search') }}" aria-label="{{ t('firms.search') }}">
+        <button class="icon-btn" type="submit" aria-label="{{ t('firms.search') }}">{{ icon('arrow_forward', 20, 'flip-rtl') }}</button>
+      </form>
+      <div class="list">
+        {% for f in firms %}
+        <a class="list-item" href="{{ S }}/firmen/{{ f.id }}">
+          <span class="lead avatar">{{ icon('domain', 20) }}</span>
+          <span class="body"><span class="title">{{ f.name }}{% if not f.active %} <span class="pill-label">{{ t('firms.archived') }}</span>{% endif %}</span><br>
+            <span class="sub">{{ f.zip or '' }} {{ f.city or '' }}{% if f.contact %} · {{ f.contact }}{% endif %}</span></span>
+          <span class="trail small muted">{{ t('firms.n_invoices', n=f.finals) }}{% if f.drafts %} · {{ t('firms.n_drafts', n=f.drafts) }}{% endif %}</span>
+        </a>
+        {% else %}<div class="empty">{{ icon('domain', 40) }}<p>{{ t('firms.none') }}</p></div>{% endfor %}
+      </div>
+      <p class="small" style="margin-top:8px">{% if all %}<a href="{{ S }}/firmen">{{ t('firms.show_active') }}</a>{% else %}<a href="{{ S }}/firmen?alle=1">{{ t('firms.show_all') }}</a>{% endif %}</p>
+      {% endif %}
+    </section>
+    <div class="col stack">
+      {% if view == 'firmen' %}
+      <section class="card stack-s" id="new-firm">
+        <details{% if new or not firms %} open{% endif %}>
+          <summary class="btn tonal">{{ icon('add', 18) }}{{ t('firms.new') }}</summary>
+          <form method="post" class="form" style="margin-top:12px">
+            <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="create">
+            {% include "firms/_fields.html" %}
+            <button class="btn" type="submit">{{ icon('add', 18) }}{{ t('firms.create') }}</button>
+          </form>
+        </details>
+      </section>
+      {% endif %}
+      <section class="card stack-s">
+        <h2>{{ t('firms.how_title') }}</h2>
+        <p class="small muted">{{ t('firms.how') }}</p>
+      </section>
+    </div>
+  </div>
+</div>
+{% endblock %}

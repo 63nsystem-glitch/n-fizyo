@@ -1,0 +1,20 @@
+<section class="card" aria-labelledby="h-today-p">
+  {% if ctx.a %}
+  <div class="card-head"><h2 id="h-today-p">{{ t('agenda.today_session') }}{% if ctx.session %} · {{ t('agenda.session_n', n=ctx.session[0]) }}{% endif %}</h2>
+    <span class="meta mono">{{ fmt_time(ctx.start) }}{% if ctx.a.room_name %} · {{ ctx.a.room_name }}{% endif %}</span></div>
+  <p>{{ (ctx.a.type_fr if lang == 'fr' else ctx.a.type_de) or '' }} · {{ ctx.a.therapist_name }}</p>
+  {% if ctx.session and ctx.session[1] %}<div class="row" style="margin-top:10px;flex-wrap:nowrap"><span class="small muted nowrap">{{ t('agenda.session_of', n=ctx.session[0], total=ctx.session[1]) }}</span><span class="progress grow"><span style="width:{{ [100, (100 * ctx.session[0] / ctx.session[1]) | round(0)] | min }}%"></span></span></div>
+  {% if ctx.beyond %}<div class="banner warn" role="status" style="margin-top:8px" data-beyond-rx>{{ icon('warning', 18) }}<span>{{ t('agenda.beyond_rx') }} – {{ t('agenda.beyond_rx_hint', n=ctx.session[0], total=ctx.session[1]) }}</span></div>{% endif %}{% endif %}
+  {% elif ctx.next %}
+  <div class="card-head"><h2 id="h-today-p">{{ t('agenda.next_appointment') }}</h2></div>
+  <p>{{ fmt_date(ctx.next_start, weekday=True) }} · {{ fmt_time(ctx.next_start) }}{% if ctx.next.room_name %} · {{ ctx.next.room_name }}{% endif %}</p>
+  <p class="small muted">{{ ctx.next.therapist_name }}</p>
+  {% else %}
+  <div class="card-head"><h2 id="h-today-p">{{ t('agenda.appointments') }}</h2></div>
+  <p class="muted small">{{ t('agenda.no_appointments') }}</p>
+  {% endif %}
+  <div class="row" style="margin-top:12px">
+    <a class="btn text" href="{{ S }}/agenda/neu?patient={{ ctx.label | urlencode }}&back={{ (S ~ '/patienten/' ~ ctx.patient.id) | urlencode }}">{{ icon('add', 18) }}{{ t('agenda.book') }}</a>
+    <a class="btn text" href="{{ S }}/patienten/{{ ctx.patient.id }}/termine">{{ icon('event', 18) }}{{ t('agenda.all') }}</a>
+  </div>
+</section>

@@ -1,0 +1,18 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/heute" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('notes.my_drafts') }}{% endblock %}
+{% block subtitle %}{{ t('notes.my_drafts_hint') }}{% endblock %}
+{% block actions %}<a class="btn text" href="{{ S }}/notizen/vorlagen">{{ icon('note_add', 18) }}<span>{{ t('notes.tpl_title') }}</span></a>{% endblock %}
+{% block content %}
+<section class="card flush">
+  <div class="list">
+    {% for n in notes %}
+    <a class="list-item" href="{{ S }}/notizen/{{ n.id }}"><span class="lead avatar">{{ (n.first_name[:1] ~ n.last_name[:1]) | upper }}</span>
+      <span class="body"><span class="title">{{ n.first_name }} {{ n.last_name }}</span><br><span class="sub">{{ fmt_date(n.session_date, weekday=True) }}{% if n.source == 'dictation' %} · {{ t('notes.from_dictation') }}{% endif %}</span></span>
+      <span class="trail"><span class="pill-label warn">{{ t('notes.status_draft') }}</span>{{ icon('chevron_right', 20, 'flip-rtl') }}</span></a>
+    {% else %}
+    <div class="empty">{{ icon('task_alt', 40) }}<p>{{ t('notes.no_drafts') }}</p></div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

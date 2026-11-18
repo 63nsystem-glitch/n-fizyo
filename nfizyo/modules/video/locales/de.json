@@ -1,0 +1,89 @@
+{
+  "video": {
+    "title": "Video-Sitzung",
+    "description": "Video über den eigenen Jitsi-Server der Praxis in der Schweiz: Raum pro Termin, Link per SMS, Einwilligung, keine Aufzeichnung.",
+    "action": "Video-Sitzung",
+    "action_open": "Video",
+    "details": "Details",
+    "not_configured": "Video-Sitzungen sind in dieser Praxis noch nicht eingerichtet.",
+    "intro": "Diesen Termin als Video-Sitzung führen. Die Patientin / der Patient bekommt einen Link per SMS und tritt ab 15 Minuten vor Beginn bei.",
+    "setup": "Als Video-Sitzung einrichten",
+    "ready": "Video-Sitzung eingerichtet – jetzt den Link per SMS senden",
+    "status": "Stand",
+    "state": {
+      "early": "noch nicht offen",
+      "open": "offen",
+      "over": "vorbei",
+      "cancelled": "Termin abgesagt"
+    },
+    "link": "Link",
+    "sms_at": "per SMS gesendet {when}",
+    "no_sms": "noch nicht gesendet",
+    "consent": "Einwilligung",
+    "consent_yes": "liegt vor",
+    "consent_no": "fehlt noch (wird vor dem Beitreten abgefragt)",
+    "joined": "Beigetreten",
+    "patient_in": "Patient/in um {time}",
+    "start": "Video starten",
+    "sms": "Link per SMS senden",
+    "sms_again": "Neuen Link senden",
+    "sms_confirm": "Der alte Link wird ungültig. Neuen Link senden?",
+    "sms_sent": "Link per SMS gesendet",
+    "no_phone": "Keine Handynummer im Stammblatt.",
+    "not_now": "Der Raum ist nur von 30 Minuten vor bis 30 Minuten nach dem Termin offen.",
+    "window_hint": "Der Raum ist von 30 Minuten vor Beginn (Patient/in: 15 Minuten) bis 30 Minuten nach dem Ende offen. Danach gilt kein Schlüssel mehr.",
+    "privacy_title": "Datenschutz",
+    "privacy": {
+      "server": "Eigener Server der Praxis in der Schweiz – keine fremden Dienste (kein Google, kein jitsi.org).",
+      "record": "Es wird nichts aufgezeichnet oder gespeichert. Gespräch und Bild laufen verschlüsselt.",
+      "key": "Zutritt nur mit Schlüssel für diesen Termin; der Raumname ist zufällig.",
+      "consent": "Die Patientin / der Patient willigt vor dem ersten Mal ein.",
+      "billing": "Abrechnung: UV/MV/IV – Position 25.310 «Patientenbehandlung auf räumliche Distanz» (pro 5 Min.). KVG: keine eigene Position – vorher mit dem Versicherer klären."
+    },
+    "server": "Video-Server",
+    "s": {
+      "url": "Adresse",
+      "secret": "Schlüssel",
+      "secret_set": "eingetragen (wird nie angezeigt)",
+      "secret_missing": "fehlt",
+      "check": "Verbindung prüfen",
+      "how": "Einrichtung",
+      "how_text": "Die Praxis bekommt einen eigenen Video-Server in der Schweiz. Wird von NSystem eingerichtet; danach stehen Adresse und Schlüssel hier.",
+      "secret_rule": "Den Schlüssel sieht niemand – auch nicht in Chat, E-Mail oder auf dieser Seite."
+    },
+    "c": {
+      "configured": "Adresse und Schlüssel eingetragen",
+      "https": "Adresse mit https",
+      "secret_strong": "Schlüssel lang genug (mindestens 32 Zeichen)",
+      "reachable": "Server erreichbar",
+      "privacy_config": "Datenschutz-Einstellungen von N-Fizyo aktiv (keine Drittanbieter, kein Peer-to-Peer)",
+      "no_guests": "Keine Gäste ohne Schlüssel"
+    }
+  },
+  "p": {
+    "sms": {
+      "video": "{practice}: Ihr Video-Termin am {when}. Beitreten ab 15 Minuten vorher: {url} – nicht für Notfälle, im Notfall 144."
+    },
+    "video": {
+      "title": "Video-Termin",
+      "card_title": "Video-Termin",
+      "open_now": "jetzt offen",
+      "invalid": "Dieser Link ist ungültig. Bitte rufen Sie die Praxis an.",
+      "cancelled": "Dieser Termin wurde abgesagt.",
+      "over": "Dieser Video-Termin ist vorbei.",
+      "consent_title": "Bevor Sie beitreten",
+      "c_server": "Das Video läuft über den Server der Praxis in der Schweiz.",
+      "c_record": "Es wird nichts aufgezeichnet.",
+      "c_place": "Bitte suchen Sie einen ruhigen Ort, an dem niemand mithört.",
+      "c_agree": "Ich bin mit der Video-Sitzung einverstanden.",
+      "need_consent": "Bitte bestätigen Sie zuerst Ihr Einverständnis.",
+      "early": "Sie können ab {time} beitreten.",
+      "save_consent": "Einverständnis speichern",
+      "not_ready": "Der Video-Raum ist noch nicht bereit. Bitte rufen Sie die Praxis an.",
+      "camera_hint": "Im nächsten Schritt fragt Ihr Gerät nach Kamera und Mikrofon – bitte erlauben.",
+      "join": "Video-Termin beitreten",
+      "call": "Probleme? Rufen Sie uns an:",
+      "emergency": "Die Video-Sitzung ist nicht für Notfälle. Im Notfall rufen Sie 144 an."
+    }
+  }
+}

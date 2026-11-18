@@ -1,0 +1,20 @@
+{
+  "p": {
+    "info": {
+      "title": "Info nga terapia juaj",
+      "intro": "Kjo është ajo që terapisti juaj ka shkruar për ju.",
+      "new": "e re",
+      "home": "Çfarë mund të bëni në shtëpi",
+      "contact": "Kur duhet të na kontaktoni",
+      "original": "Origjinali",
+      "translation_soon": "Përkthimi vjen së shpejti.",
+      "none": "Ende nuk ka informacion.",
+      "card": "Info nga terapia juaj",
+      "card_hint": "Për ta lexuar ose dëgjuar",
+      "not_translated": "Ky tekst nuk është përkthyer. Nëse diçka nuk është e qartë, pyesni në takimin tuaj të ardhshëm."
+    },
+    "nav": {
+      "info": "Info"
+    }
+  }
+}

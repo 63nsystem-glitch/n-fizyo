@@ -1,0 +1,28 @@
+{
+  "p": {
+    "sms": {
+      "video": "{practice}: il suo appuntamento video del {when}. Accesso da 15 minuti prima: {url} – non per le emergenze, in caso di emergenza 144."
+    },
+    "video": {
+      "title": "Appuntamento video",
+      "card_title": "Appuntamento video",
+      "open_now": "aperto ora",
+      "invalid": "Questo link non è valido. Chiami lo studio.",
+      "cancelled": "Questo appuntamento è stato disdetto.",
+      "over": "Questo appuntamento video è terminato.",
+      "consent_title": "Prima di entrare",
+      "c_server": "Il video passa dal server dello studio in Svizzera.",
+      "c_record": "Non viene registrato nulla.",
+      "c_place": "Scelga un luogo tranquillo dove nessuno ascolta.",
+      "c_agree": "Acconsento alla seduta video.",
+      "need_consent": "Confermi prima il suo consenso.",
+      "early": "Può entrare dalle {time}.",
+      "save_consent": "Salva il consenso",
+      "not_ready": "La stanza video non è ancora pronta. Chiami lo studio.",
+      "camera_hint": "Al passo successivo il dispositivo chiede fotocamera e microfono – li consenta.",
+      "join": "Entra nell'appuntamento video",
+      "call": "Problemi? Ci chiami:",
+      "emergency": "La seduta video non è per le emergenze. In caso di emergenza chiami il 144."
+    }
+  }
+}

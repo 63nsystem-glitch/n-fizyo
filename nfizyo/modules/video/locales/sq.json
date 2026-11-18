@@ -1,0 +1,28 @@
+{
+  "p": {
+    "sms": {
+      "video": "{practice}: takimi juaj me video më {when}. Hyrja nga 15 minuta më parë: {url} – jo për urgjenca, në rast urgjence 144."
+    },
+    "video": {
+      "title": "Takim me video",
+      "card_title": "Takim me video",
+      "open_now": "i hapur tani",
+      "invalid": "Ky link nuk është i vlefshëm. Ju lutemi telefononi praktikën.",
+      "cancelled": "Ky takim është anuluar.",
+      "over": "Ky takim me video ka përfunduar.",
+      "consent_title": "Para se të hyni",
+      "c_server": "Videoja kalon nëpër serverin e praktikës në Zvicër.",
+      "c_record": "Asgjë nuk regjistrohet.",
+      "c_place": "Ju lutemi gjeni një vend të qetë ku askush nuk dëgjon.",
+      "c_agree": "Jam dakord me seancën me video.",
+      "need_consent": "Ju lutemi konfirmoni së pari pëlqimin tuaj.",
+      "early": "Mund të hyni nga ora {time}.",
+      "save_consent": "Ruaj pëlqimin",
+      "not_ready": "Dhoma e videos nuk është ende gati. Ju lutemi telefononi praktikën.",
+      "camera_hint": "Në hapin tjetër pajisja kërkon kamerën dhe mikrofonin – ju lutemi lejojini.",
+      "join": "Hyr në takimin me video",
+      "call": "Probleme? Na telefononi:",
+      "emergency": "Seanca me video nuk është për urgjenca. Në rast urgjence telefononi 144."
+    }
+  }
+}

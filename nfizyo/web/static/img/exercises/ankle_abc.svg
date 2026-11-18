@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <title>Fuss-ABC</title>
+  <g id="fig" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 186 L300 186" stroke-width="3" opacity="0.3"/>
+    <path d="M68 145 L122 145" stroke-width="5" opacity="0.45"/>
+    <path d="M72 145 L70 186" stroke-width="4" opacity="0.45"/>
+    <path d="M118 145 L120 186" stroke-width="4" opacity="0.45"/>
+    <path d="M72 145 L66 75" stroke-width="4" opacity="0.45"/>
+    <path d="M92 137 L138.2 137 L138.2 181" stroke-width="10" opacity="0.45"/>
+    <path d="M138.2 181 L153.6 182" stroke-width="8" opacity="0.45"/>
+    <path d="M92 137 L89.1 82.1" stroke-width="13"/>
+    <path d="M89.1 82.1 L89.1 63.4" stroke-width="10"/>
+    <circle cx="89.1" cy="63.4" r="12.1" fill="currentColor" stroke="none"/>
+    <path d="M92 137 L137.9 132.2 L181.8 135.2" stroke-width="10" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M181.8 135.2 L187.1 120.8" stroke-width="8" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M89.1 82.1 L92 117.2 L122 128" stroke-width="10"/>
+    <path d="M209.1 132.8 L219.1 106.8 L229.1 132.8 M213.6 121.8 L224.6 121.8" stroke-width="4.5" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M241.1 132.8 L241.1 106.8 L249.1 106.8 Q257.1 106.8 257.1 113.3 Q257.1 119.3 249.1 119.3 L241.1 119.3 M249.1 119.3 Q259.1 119.3 259.1 126.1 Q259.1 132.8 250.1 132.8 L241.1 132.8" stroke-width="4.5" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M290.1 110.8 Q285.1 105.8 280.1 106.8 Q273.1 108.8 273.1 119.8 Q273.1 130.8 280.1 132.8 Q286.1 133.8 290.1 127.8" stroke-width="4.5" style="stroke:var(--ex-accent, #D9661F)"/>
+  </g>
+</svg>

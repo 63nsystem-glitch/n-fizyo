@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
+<title>{% block title %}NSystem Übersicht{% endblock %}</title>
+<link rel="stylesheet" href="{{ static('css/app.css') }}">
+<style>
+  .c-top { display:flex; align-items:center; gap:16px; padding:12px 20px; background:var(--surface-container, #eef0f4); flex-wrap:wrap }
+  .c-top a { color:inherit; text-decoration:none } .c-top nav { display:flex; gap:4px; flex-wrap:wrap }
+  .c-top nav a { padding:8px 12px; border-radius:16px } .c-top nav a.on { background:var(--secondary-container, #dde3f0) }
+  .c-main { max-width:1200px; margin:0 auto; padding:20px 16px 48px }
+  .dot { width:12px; height:12px; border-radius:50%; display:inline-block } .dot.ok { background:#1b8a3a } .dot.warn { background:#c27c00 } .dot.error { background:#ba1a1a }
+  pre.json { font-size:12px; max-height:420px; overflow:auto; background:var(--surface-container, #f3f4f6); padding:12px; border-radius:12px }
+</style>
+</head>
+<body>
+{% if staff %}
+<header class="c-top">
+  <a href="/" class="row" style="gap:8px"><span class="brand-mark">N</span><strong>NSystem Übersicht</strong></a>
+  <nav><a href="/" class="{{ 'on' if path == '/' else '' }}">Boxen</a><a href="/support" class="{{ 'on' if path.startswith('/support') else '' }}">Support{% if new_requests %} <span class="pill-label error">{{ new_requests }}</span>{% endif %}</a><a href="/hinweise" class="{{ 'on' if path == '/hinweise' else '' }}">Hinweise</a><a href="/warnungen" class="{{ 'on' if path == '/warnungen' else '' }}">Warnungen</a><a href="/protokoll" class="{{ 'on' if path == '/protokoll' else '' }}">Protokoll</a></nav>
+  <span class="grow"></span><span class="small">{{ staff.name }}</span>
+  <form method="post" action="/logout"><input type="hidden" name="_csrf" value="{{ csrf }}"><button class="btn text sm" type="submit">{{ icon('logout', 18) }}Abmelden</button></form>
+</header>
+{% endif %}
+<main class="c-main">{% block content %}{% endblock %}</main>
+</body>
+</html>

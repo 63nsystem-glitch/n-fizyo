@@ -1,0 +1,23 @@
+{% extends "layouts/staff.html" %}
+{% block title %}{{ t('dictation.drafts') }}{% endblock %}
+{% block subtitle %}{{ t('dictation.drafts_hint') }}{% endblock %}
+{% block content %}
+<div class="stack" style="max-width:880px">
+  {% if pending %}
+  <section class="card"><h2 style="margin-bottom:8px">{{ t('dictation.in_progress') }}</h2>
+    {% for rec in pending %}<div class="queue-item"><span class="pill-label {{ 'error' if rec.status == 'failed' else 'warn' }}">{{ t('dictation.st.' ~ rec.status) }}</span><span class="grow">{{ rec.first_name or t('dictation.no_patient') }} {{ rec.last_name or '' }} · {{ fmt_date(rec.created_at) }} {{ fmt_time(rec.created_at) }}</span><a class="btn text" href="{{ S }}/diktat/{{ rec.id }}">{{ t('dictation.open') }}</a></div>{% endfor %}
+  </section>
+  {% endif %}
+  <section class="card">
+    <div class="list">
+      {% for n in notes %}
+      <a class="list-item" href="{{ S ~ '/diktat/' ~ n.recording_id if n.recording_id else S ~ '/notizen/' ~ n.id }}">
+        <span class="lead avatar">{{ (n.first_name[:1] ~ n.last_name[:1]) | upper }}</span>
+        <span class="body"><span class="title">{{ n.first_name }} {{ n.last_name }}</span><br><span class="sub">{{ fmt_date(n.session_date, weekday=True) }} · {{ n.author_name }} · {{ (n.befund or n.behandlung) | truncate(80) }}</span></span>
+        <span class="trail"><span class="pill-label warn">{{ t('notes.status_draft') }}</span>{{ icon('chevron_right', 20, 'flip-rtl') }}</span>
+      </a>
+      {% else %}<div class="empty">{{ icon('task_alt', 40) }}<p>{{ t('dictation.no_drafts') }}</p></div>{% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

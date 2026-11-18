@@ -1,0 +1,39 @@
+{% extends "patients/_file.html" %}
+{% import "notify/_status.html" as ns with context %}
+{% block content %}
+<div class="grid-main-side">
+  <section class="card">
+    <div class="card-head"><h2>{{ t('patientinfo.title') }}</h2>{% if foreign %}<span class="chip info">{{ icon('translate', 16) }}{{ target_name }}</span>{% endif %}</div>
+    <div class="list">
+      {% for i in infos %}
+      <div class="stack-s" style="padding:12px 0;border-top:1px solid var(--surface-highest)">
+        <div class="row-between"><span class="small muted">{{ fmt_date(i.approved_at or i.created_at, weekday=True) }} · {{ i.author_name }}</span>
+          <span>{% if i.status == 'approved' %}{% if i.read_at %}<span class="pill-label ok">{{ t('patientinfo.read') }}</span>{% else %}<span class="pill-label">{{ t('patientinfo.not_read') }}</span>{% endif %}{% else %}<span class="pill-label warn">{{ t('patientinfo.st.' ~ i.status) }}</span>{% endif %}</span></div>
+        {% for key in ('home', 'contact') if i[key] %}
+        <div class="pi-pair">
+          <p><strong style="font-weight:500">{{ t('patientinfo.' ~ key) }}</strong><br>{{ i[key] }}</p>
+          {% if i.status == 'approved' and i.target_lang != i.source_lang %}
+          {% if i[key ~ '_translated'] %}<p class="small" dir="auto" lang="{{ i.target_lang }}" style="color:var(--on-surface-variant)">{{ icon('translate', 14) }} {{ i[key ~ '_translated'] }}</p>
+          {% else %}<p class="small" style="color:var(--on-surface-variant)">{{ icon('translate', 14) }} {{ t('patientinfo.translating') if i.translation_engine is none else t('patientinfo.not_translated') }}</p>{% endif %}
+          {% endif %}
+        </div>
+        {% endfor %}
+        {% if i.translation_warning %}<p class="small muted">{{ icon('info', 14) }} {{ t('patientinfo.check_translation') }}</p>{% endif %}
+        {% if notified.get(i.id) %}<p>{{ ns.line(notified.get(i.id)) }}</p>{% endif %}
+      </div>
+      {% else %}<div class="empty">{{ icon('info', 40) }}<p>{{ t('patientinfo.none') }}</p></div>{% endfor %}
+    </div>
+  </section>
+  <section class="card">
+    <h2 style="margin-bottom:4px">{{ t('patientinfo.write') }}</h2>
+    <p class="small muted" style="margin-bottom:12px">{{ t('patientinfo.write_hint', language=target_name) if foreign else t('patientinfo.write_hint_same') }}</p>
+    <form method="post" class="form"><input type="hidden" name="_csrf" value="{{ csrf }}">
+      <div class="field"><label for="w-home">{{ t('patientinfo.home') }}</label><textarea id="w-home" name="home" rows="3" data-autogrow maxlength="1500" placeholder="{{ t('patientinfo.home_ph') }}"></textarea></div>
+      <div class="field"><label for="w-contact">{{ t('patientinfo.contact') }}</label><textarea id="w-contact" name="contact" rows="2" data-autogrow maxlength="1500" placeholder="{{ t('patientinfo.contact_ph') }}"></textarea></div>
+      {% if foreign and not translate_on %}<p class="small" style="color:var(--error)">{{ t('patientinfo.no_translator') }}</p>{% endif %}
+      <div class="form-actions"><button class="btn" type="submit">{{ icon('send', 18) }}{{ t('patientinfo.send_now') }}</button></div>
+    </form>
+    <p class="small muted" style="margin-top:12px">{{ icon('lock', 14) }} {{ t('patientinfo.no_advice') }}</p>
+  </section>
+</div>
+{% endblock %}

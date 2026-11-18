@@ -1,0 +1,28 @@
+{
+  "p": {
+    "sms": {
+      "video": "{practice}: your video appointment on {when}. Join from 15 minutes before: {url} – not for emergencies, in an emergency call 144."
+    },
+    "video": {
+      "title": "Video appointment",
+      "card_title": "Video appointment",
+      "open_now": "open now",
+      "invalid": "This link is not valid. Please call the practice.",
+      "cancelled": "This appointment was cancelled.",
+      "over": "This video appointment is over.",
+      "consent_title": "Before you join",
+      "c_server": "The video runs on the practice's server in Switzerland.",
+      "c_record": "Nothing is recorded.",
+      "c_place": "Please find a quiet place where nobody is listening.",
+      "c_agree": "I agree to the video session.",
+      "need_consent": "Please confirm your agreement first.",
+      "early": "You can join from {time}.",
+      "save_consent": "Save my agreement",
+      "not_ready": "The video room is not ready yet. Please call the practice.",
+      "camera_hint": "In the next step your device asks for camera and microphone – please allow.",
+      "join": "Join video appointment",
+      "call": "Problems? Call us:",
+      "emergency": "The video session is not for emergencies. In an emergency, call 144."
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "p": {
+    "notify": {
+      "message": "Keni një mesazh të ri nga {practice}. Hapeni: {url}",
+      "info": "Keni një informacion të ri nga {practice}. Hapeni: {url}",
+      "appointment": "Keni një termin të ri te {practice}. Detajet: {url}",
+      "several": "Ka të reja nga {practice} në aplikacionin tuaj. Hapeni: {url}",
+      "mail_subject": "Të reja nga {practice}",
+      "mail_hello": "Përshëndetje",
+      "mail_privacy": "Për të mbrojtur të dhënat tuaja, përmbajtja gjendet vetëm në aplikacion. Ju lutemi hyni atje për ta lexuar.",
+      "mail_bye": "Me përshëndetje të përzemërta\n{practice}"
+    }
+  }
+}

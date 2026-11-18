@@ -1,0 +1,202 @@
+{% extends "layouts/staff.html" %}
+{% block title %}{{ t('cashdesk.title') }}{% endblock %}
+{% block subtitle %}{{ fmt_long_date(day) }}{% endblock %}
+{% block content %}
+{% set method_icon = {'cash': 'payments', 'twint': 'qr_code_2', 'card': 'credit_card', 'invoice': 'receipt_long'} %}
+<div class="stack">
+  <nav class="seg" aria-label="{{ t('cashdesk.title') }}">
+    {% for key, label in (('verkauf', 'cashdesk.tab_sell'), ('heute', 'cashdesk.tab_today'), ('abos', 'cashdesk.tab_abos'), ('abschluss', 'cashdesk.tab_close')) %}
+    <a href="{{ S }}/kasse?ansicht={{ key }}"{% if tab == key %} aria-current="page" class="selected"{% endif %}>{{ t(label) }}</a>
+    {% endfor %}
+  </nav>
+  {% for e in errors %}<div class="banner error" role="alert">{{ icon('error', 20) }}<span>{{ t('cashdesk.err.' ~ e) }}</span></div>{% endfor %}
+
+  {% if tab == 'verkauf' %}
+  <div class="grid-main-side">
+    <div class="col stack">
+      <section class="card stack-s" aria-labelledby="h-pat">
+        <h2 id="h-pat">{{ t('cashdesk.patient') }}</h2>
+        {% if patient %}
+        <div class="row-between"><span><strong>{{ patient.first_name }} {{ patient.last_name }}</strong>{% if patient.birthdate %} · {{ fmt_date(patient.birthdate) }}{% endif %}{% if patient.law %} · {{ t('billing.law.' ~ patient.law) }}{% endif %}</span>
+          <a class="btn text sm" href="{{ S }}/kasse">{{ t('cashdesk.patient_change') }}</a></div>
+        {% else %}
+        <form method="get" class="row" style="gap:8px;align-items:flex-end">
+          <div class="field grow"><label for="pq">{{ t('cashdesk.patient_search') }}</label><input id="pq" name="q" value="{{ q }}" autocomplete="off" placeholder="{{ t('cashdesk.patient_ph') }}"></div>
+          <button class="btn tonal" type="submit">{{ icon('search', 18) }}{{ t('common.search') }}</button>
+        </form>
+        {% for p in found %}<a class="list-item" style="padding-inline:0" href="{{ S }}/kasse?patient={{ p.id }}"><span class="lead avatar">{{ (p.first_name[:1] ~ p.last_name[:1]) | upper }}</span>
+          <span class="body"><span class="title">{{ p.first_name }} {{ p.last_name }}</span><br><span class="sub">{{ fmt_date(p.birthdate) if p.birthdate else '–' }} · {{ p.number }}</span></span></a>
+        {% else %}{% if q %}<p class="small muted">{{ t('cashdesk.patient_none') }}</p>{% endif %}{% endfor %}
+        <p class="hint">{{ t('cashdesk.patient_hint') }}</p>
+        {% endif %}
+      </section>
+
+      <form method="post" class="card stack" aria-labelledby="h-items" data-cash-form>
+        <input type="hidden" name="_csrf" value="{{ csrf }}">
+        {% if patient %}<input type="hidden" name="patient_id" value="{{ patient.id }}">{% endif %}
+        <h2 id="h-items">{{ t('cashdesk.items') }}</h2>
+        {% if not items %}
+        <div class="banner info">{{ icon('info', 20) }}<span>{{ t('cashdesk.no_items') }}{% if leitung %} <a href="{{ S }}/einstellungen/preise">{{ t('billing.sec_prices') }}</a>{% endif %}</span></div>
+        {% endif %}
+        {% for kind in ('product', 'abo', 'service') %}
+        {% set group = items | selectattr('kind', 'equalto', kind) | list %}
+        {% if group %}
+        <h3 class="small muted" style="margin:8px 0 0">{{ t('billing.price.kind_' ~ kind ~ '_pl') }}</h3>
+        <div class="list">
+          {% for it in group %}
+          <div class="list-item" style="padding-inline:0">
+            <span class="body"><label class="title" for="q{{ it.id }}">{{ it.name_fr if lang == 'fr' else it.name_de }}</label><br>
+              <span class="sub"><span class="mono">{{ it.code }}</span> · {{ chf(it.price_chf) }}{% if kind == 'abo' %} · {{ t('billing.price.abo_sessions_n', n=it.abo_sessions) if it.abo_sessions else t('billing.price.abo_unlimited') }} · {{ t('billing.price.abo_days_n', n=it.abo_days) }}{% endif %}</span></span>
+            <span class="trail"><input id="q{{ it.id }}" name="qty_{{ it.id }}" data-price="{{ it.price_chf | money }}" type="number" min="0" max="{{ 1 if kind == 'abo' else 99 }}" step="1" inputmode="numeric"
+              value="{{ values.qty[it.id] | num if values.qty and it.id in values.qty else '' }}" placeholder="0" class="select-sm" style="width:72px;text-align:end"{% if kind == 'abo' and not patient %} disabled title="{{ t('cashdesk.err.abo_patient') }}"{% endif %}></span>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% if items %}
+        <fieldset class="stack-s" style="border:0;padding:0;margin:0">
+          <legend class="small" style="margin-bottom:6px">{{ t('cashdesk.method_label') }}</legend>
+          <div class="row" style="gap:8px;flex-wrap:wrap">
+            {% for m in methods %}
+            <label class="chip-choice"><input type="radio" name="method" value="{{ m }}" required{% if (values.method or 'cash') == m %} checked{% endif %}{% if m == 'invoice' and not patient %} disabled{% endif %}>
+              {{ icon(method_icon[m], 18) }}{{ t('cashdesk.method.' ~ m) }}</label>
+            {% endfor %}
+          </div>
+          {% if not patient %}<p class="hint">{{ t('cashdesk.invoice_needs_patient') }}</p>{% endif %}
+        </fieldset>
+        <div class="row" style="gap:12px;flex-wrap:wrap">
+          <div class="field" style="width:150px"><label for="given">{{ t('cashdesk.given') }}</label><input id="given" name="given" inputmode="decimal" value="{{ values.given or '' }}" placeholder="0.00"></div>
+          <div class="field grow"><label for="snote">{{ t('cashdesk.note') }}</label><input id="snote" name="note" maxlength="200" value="{{ values.note or '' }}"></div>
+        </div>
+        <section class="cash-total" data-cash-total aria-live="polite" aria-label="{{ t('cashdesk.total_box') }}">
+          <dl class="facts">
+            <dt data-cash-only data-rounding-row{% if not (totals and totals.rounding) %} hidden{% endif %}>{{ t('cashdesk.rounding') }}</dt><dd class="mono" data-cash-only data-rounding-row data-rounding{% if not (totals and totals.rounding) %} hidden{% endif %}>{{ '%+.2f' | format(totals.rounding) if totals and totals.rounding else '' }}</dd>
+            <dt>{{ t('billing.total') }}</dt><dd class="mono"><strong data-total>{{ chf(totals.total if totals else 0) }}</strong></dd>
+            <dt data-cash-only>{{ t('cashdesk.given') }}</dt><dd class="mono" data-cash-only data-given>{{ chf(totals.given) if totals and totals.given is not none else '–' }}</dd>
+            <dt data-cash-only>{{ t('cashdesk.change') }}</dt><dd class="mono{% if totals and totals.change is not none and totals.change < 0 %} text-error{% endif %}" data-cash-only data-change>{{ chf(totals.change) if totals and totals.change is not none else '–' }}</dd>
+          </dl>
+          <p class="hint">{{ t('cashdesk.total_hint') }}</p>
+        </section>
+        {% if not vat_number %}<p class="small muted">{{ t('cashdesk.no_vat') }}</p>{% endif %}
+        <div class="form-actions">
+          <button class="btn text" type="submit" name="do" value="preview" formnovalidate data-preview>{{ icon('calculate', 18) }}{{ t('cashdesk.preview') }}</button>
+          <button class="btn" type="submit" name="do" value="sell">{{ icon('point_of_sale', 18) }}{{ t('cashdesk.sell') }}</button></div>
+        {% endif %}
+      </form>
+    </div>
+    <div class="col stack">
+      {% if patient %}
+      <section class="card stack-s">
+        <h2>{{ t('cashdesk.abo.title') }}</h2>
+        {% for s in subs %}{% include "cashdesk/_sub.html" %}{% else %}<p class="small muted">{{ t('cashdesk.abo.none_patient') }}</p>{% endfor %}
+      </section>
+      {% endif %}
+      <section class="card stack-s" aria-labelledby="h-inv">
+        <h2 id="h-inv">{{ t('cashdesk.pay_invoice') }}</h2>
+        <form method="get" class="row" style="gap:8px;align-items:flex-end">
+          <div class="field grow"><label for="rn">{{ t('cashdesk.invoice_number') }}</label><input id="rn" name="rechnung" value="{{ invoice_q }}" placeholder="2026-0001" autocomplete="off"></div>
+          <button class="btn tonal" type="submit">{{ icon('search', 18) }}{{ t('common.search') }}</button>
+        </form>
+        {% if invoice %}
+        <p><strong>{{ invoice.number }}</strong> · {{ invoice.name }}<br><span class="small">{{ t('cashdesk.open_amount') }}: <strong class="mono">{{ chf(invoice.open) }}</strong>
+          {% if invoice.cash_due != invoice.open %}<br>{{ t('cashdesk.cash_due', amount=chf(invoice.cash_due)) }}{% endif %}</span></p>
+        <form method="post" class="stack-s"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="pay_invoice"><input type="hidden" name="number" value="{{ invoice.number }}">
+          <div class="row" style="gap:8px;flex-wrap:wrap;align-items:flex-end">
+            <div class="field" style="width:120px"><label for="pa">CHF</label><input id="pa" name="amount" inputmode="decimal" value="{{ '%.2f' | format(invoice.open) }}" required></div>
+            <div class="field"><label for="pm">{{ t('cashdesk.method_label') }}</label><select id="pm" name="method">{% for m in ('cash', 'twint', 'card') %}<option value="{{ m }}">{{ t('cashdesk.method.' ~ m) }}</option>{% endfor %}</select></div>
+          </div>
+          {% if invoice.cash_due != invoice.open %}<p class="hint">{{ t('cashdesk.rounding_hint') }}</p>{% endif %}
+          <button class="btn" type="submit">{{ icon('check', 18) }}{{ t('cashdesk.pay_btn') }}</button>
+        </form>
+        {% elif invoice_q %}<p class="small muted">{{ t('cashdesk.invoice_not_found') }}</p>{% endif %}
+      </section>
+    </div>
+  </div>
+
+  {% elif tab == 'heute' %}
+  <div class="grid-main-side">
+    <section class="card flush">
+      <div class="row-between" style="padding:12px 16px">
+        <a class="icon-btn" href="{{ S }}/kasse?ansicht=heute&tag={{ prev_day }}" aria-label="{{ t('cashdesk.prev_day') }}">{{ icon('chevron_left', 24) }}</a>
+        <strong>{{ fmt_date(sel_day, weekday=True) }}{% if closed %} · {{ icon('lock', 16) }} {{ t('cashdesk.closed') }}{% endif %}</strong>
+        {% if next_day %}<a class="icon-btn" href="{{ S }}/kasse?ansicht=heute&tag={{ next_day }}" aria-label="{{ t('cashdesk.next_day') }}">{{ icon('chevron_right', 24) }}</a>{% else %}<span style="width:40px"></span>{% endif %}
+      </div>
+      <div class="list">
+        {% for s in sales %}
+        <a class="list-item" href="{{ S }}/kasse/belege/{{ s.id }}"{% if s.status == 'cancelled' %} style="opacity:.6"{% endif %}>
+          <span class="lead avatar">{{ icon(method_icon[s.method], 20) }}</span>
+          <span class="body"><span class="title">{{ s.number }}{% if s.first_name %} · {{ s.first_name }} {{ s.last_name }}{% endif %}</span><br>
+            <span class="sub">{{ fmt_time(s.created_at) }} · {{ t('cashdesk.method.' ~ s.method) }} · {{ s.creator_name }}</span></span>
+          <span class="trail"><strong class="mono">{{ chf(s.total_chf) }}</strong>{% if s.status == 'cancelled' %}<span class="pill-label error">{{ t('cashdesk.status.cancelled') }}</span>{% endif %}</span>
+        </a>
+        {% else %}<div class="empty">{{ icon('point_of_sale', 40) }}<p>{{ t('cashdesk.none_today') }}</p></div>{% endfor %}
+      </div>
+      {% if summary.payments %}
+      <h3 class="small" style="padding:12px 16px 4px">{{ t('cashdesk.invoice_payments') }}</h3>
+      <div class="list">{% for pm in summary.payments %}
+        <div class="list-item"><span class="lead avatar">{{ icon(method_icon[pm.method], 20) }}</span>
+          <span class="body"><span class="title">{{ t('billing.invoice') }} {{ pm.number }}</span><br><span class="sub">{{ fmt_time(pm.created_at) }} · {{ t('cashdesk.method.' ~ pm.method) }}</span></span>
+          <span class="trail mono">{{ chf(pm.cash_chf) }}{% if pm.rounding_chf %}<br><span class="small muted">{{ t('cashdesk.payment_rounding', amount='%+.2f' | format(pm.rounding_chf)) }}</span>{% endif %}</span></div>{% endfor %}</div>
+      {% endif %}
+    </section>
+    <section class="card stack-s">
+      <h2>{{ t('cashdesk.summary') }}</h2>
+      {% include "cashdesk/_summary.html" %}
+      <a class="btn outlined" href="{{ S }}/kasse?ansicht=abschluss&tag={{ sel_day }}">{{ icon('lock_clock', 18) }}{{ t('cashdesk.tab_close') }}</a>
+    </section>
+  </div>
+
+  {% elif tab == 'abos' %}
+  <section class="card flush">
+    <p class="small muted" style="padding:16px 16px 0">{{ t('cashdesk.abo.hint') }}</p>
+    <div class="list">
+      {% for s in subs %}
+      <div class="list-item" style="flex-wrap:wrap">
+        <span class="lead avatar">{{ icon('card_membership', 20) }}</span>
+        <span class="body"><span class="title">{{ s.first_name }} {{ s.last_name }} · {{ s.label }}</span><br>
+          <span class="sub">{% include "cashdesk/_sub_usage.html" %}</span></span>
+        <span class="trail row" style="gap:6px">{% include "cashdesk/_sub_actions.html" %}</span>
+      </div>
+      {% else %}<div class="empty">{{ icon('card_membership', 40) }}<p>{{ t('cashdesk.abo.none') }}</p></div>{% endfor %}
+    </div>
+  </section>
+
+  {% elif tab == 'abschluss' %}
+  {% for d in unclosed if d != sel_day %}{% if loop.first %}<div class="banner warn">{{ icon('warning', 20) }}<div>{{ t('cashdesk.close.missing') }}
+    {% endif %}<a href="{{ S }}/kasse?ansicht=abschluss&tag={{ d }}">{{ fmt_date(d) }}</a>{% if not loop.last %}, {% endif %}{% if loop.last %}</div></div>{% endif %}{% endfor %}
+  <div class="grid-main-side">
+    <section class="card stack">
+      <form method="get" class="row" style="gap:8px;align-items:flex-end"><input type="hidden" name="ansicht" value="abschluss">
+        <div class="field"><label for="cday">{{ t('cashdesk.close.day') }}</label><input id="cday" name="tag" type="date" value="{{ sel_day }}" max="{{ day }}"></div>
+        <button class="btn tonal" type="submit">{{ t('cashdesk.close.show') }}</button></form>
+      {% include "cashdesk/_summary.html" %}
+      {% if closing %}
+      <div class="banner ok">{{ icon('lock', 20) }}<div>{{ t('cashdesk.close.done_by', name=closing.creator_name, time=fmt_time(closing.created_at)) }}<br>
+        {{ t('cashdesk.close.counted') }}: <strong class="mono">{{ chf(closing.cash_counted) }}</strong> ·
+        {{ t('cashdesk.close.difference') }}: <strong class="mono">{{ '%+.2f' | format(closing.difference) }}</strong>{% if closing.note %}<br>{{ closing.note }}{% endif %}</div></div>
+      {% else %}
+      <form method="post" class="form" data-confirm="{{ t('cashdesk.close.confirm') }}" data-confirm-yes="{{ t('cashdesk.close.btn') }}">
+        <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="close"><input type="hidden" name="day" value="{{ sel_day }}">
+        <div class="row" style="gap:12px;flex-wrap:wrap">
+          <div class="field" style="width:240px"><label for="cc">{{ t('cashdesk.close.counted') }}</label><input id="cc" name="counted" inputmode="decimal" required placeholder="{{ summary.cash | money }}"></div>
+          <div class="field grow"><label for="cn">{{ t('cashdesk.note') }}</label><input id="cn" name="note" maxlength="300"></div>
+        </div>
+        <p class="hint">{{ t('cashdesk.close.hint') }}</p>
+        <div class="form-actions"><button class="btn" type="submit">{{ icon('lock_clock', 18) }}{{ t('cashdesk.close.btn') }}</button></div>
+      </form>
+      {% endif %}
+    </section>
+    <section class="card flush">
+      <h2 style="padding:16px 16px 8px">{{ t('cashdesk.close.history') }}</h2>
+      <div class="table-wrap"><table class="table"><thead><tr><th>{{ t('cashdesk.close.day') }}</th><th class="num">{{ t('cashdesk.method.cash') }}</th><th class="num">{{ t('cashdesk.close.difference') }}</th></tr></thead><tbody>
+        {% for c in closings %}<tr><td><a href="{{ S }}/kasse?ansicht=abschluss&tag={{ c.day }}">{{ fmt_date(c.day) }}</a></td><td class="num mono">{{ c.cash_counted | money }}</td>
+          <td class="num mono{% if c.difference %} {{ 'text-error' if c.difference < 0 else '' }}{% endif %}">{{ '%+.2f' | format(c.difference) }}</td></tr>
+        {% else %}<tr><td colspan="3" class="muted small">{{ t('cashdesk.close.none') }}</td></tr>{% endfor %}
+      </tbody></table></div>
+    </section>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+{% block scripts %}{{ super() }}{% if tab == 'verkauf' %}<script src="{{ static('js/cashdesk.js') }}" defer></script>{% endif %}{% endblock %}

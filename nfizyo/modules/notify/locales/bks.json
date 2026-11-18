@@ -1,0 +1,14 @@
+{
+  "p": {
+    "notify": {
+      "message": "Imate novu poruku od {practice}. Otvori: {url}",
+      "info": "Imate novu informaciju od {practice}. Otvori: {url}",
+      "appointment": "Imate novi termin kod {practice}. Detalji: {url}",
+      "several": "Imate novosti od {practice} u aplikaciji. Otvori: {url}",
+      "mail_subject": "Novosti od {practice}",
+      "mail_hello": "Dobar dan",
+      "mail_privacy": "Radi zaštite vaših podataka, sadržaj je samo u aplikaciji. Molimo prijavite se tamo da ga pročitate.",
+      "mail_bye": "Srdačan pozdrav\n{practice}"
+    }
+  }
+}

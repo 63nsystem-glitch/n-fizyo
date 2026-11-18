@@ -1,0 +1,25 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/patienten/{{ patient.id }}/verlauf" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('notes.new') }}{% endblock %}
+{% block subtitle %}{{ patient.first_name }} {{ patient.last_name }}{% endblock %}
+{% block content %}
+<form method="post" class="stack" style="max-width:920px">
+  <input type="hidden" name="_csrf" value="{{ csrf }}">
+  {% if error %}<div class="banner error" role="alert">{{ icon('error') }}<span>{{ t(error) }}</span></div>{% endif %}
+  <section class="card"><div class="form-grid">
+    <div class="field"><label for="session_date">{{ t('notes.date') }}</label><input id="session_date" name="session_date" type="date" value="{{ today }}"></div>
+    <div class="field"><label for="kind">{{ t('notes.kind') }}</label><select id="kind" name="kind">{% for k in ('session', 'initial', 'discharge') %}<option value="{{ k }}">{{ t('notes.kind_' ~ k) }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="tpl">{{ t('notes.template') }}</label>
+      {% if templates %}<select id="tpl" data-nav-select="?{% if appointment_id %}termin={{ appointment_id }}&{% endif %}vorlage="><option value="">–</option>{% for tp in templates %}<option value="{{ tp.id }}"{% if tpl and tpl.id == tp.id %} selected{% endif %}>{{ tp.name }}{% if tp.lang != lang %} ({{ tp.lang | upper }}){% endif %}{% if tp.owner_id is none %} · {{ t('notes.tpl_practice_short') }}{% endif %}</option>{% endfor %}</select>{% endif %}
+      <a class="small" href="{{ S }}/notizen/vorlagen">{{ t('notes.tpl_manage') if templates else t('notes.tpl_create_first') }}</a></div>
+  </div></section>
+  <section class="card stack">
+    {% for s in ('befund', 'behandlung', 'beurteilung', 'plan') %}
+    <div class="field"><label for="{{ s }}">{{ t('notes.sec.' ~ s) }}</label><textarea id="{{ s }}" name="{{ s }}" rows="3" data-autogrow>{{ tpl[s] if tpl else '' }}</textarea></div>
+    {% endfor %}
+  </section>
+  <div class="form-actions"><a class="btn text" href="{{ S }}/patienten/{{ patient.id }}/verlauf">{{ t('common.cancel') }}</a>
+    <button class="btn outlined" type="submit">{{ t('notes.save_draft') }}</button>
+    <button class="btn" type="submit" name="approve" value="1">{{ icon('lock', 18) }}{{ t('notes.approve') }}</button></div>
+</form>
+{% endblock %}

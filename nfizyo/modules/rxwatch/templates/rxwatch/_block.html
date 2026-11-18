@@ -1,0 +1,42 @@
+{# Stand einer Verordnung mit Meldungen und Knöpfen. s = Ergebnis von repo.evaluate (+ lines) #}
+{% macro rx_block(s, medical, back, vias) %}
+{% set r = s.row %}
+{% set bar = 'act' if s.level == 'act' else ('warn' if s.level == 'soon' else 'ok') %}
+<div class="row-between" style="gap:8px;flex-wrap:wrap">
+  <span><strong class="mono">{{ s.used }}/{{ s.total }}</strong> {{ t('rx.sessions_done') }}{% if s.booked %} · {{ t('rx.booked', n=s.booked) }}{% endif %}</span>
+  <span class="small muted">{{ r.referrer_name or t('rx.no_referrer') }}{% if r.issued_on %} · {{ fmt_date(r.issued_on) }}{% endif %}{% if r.law %} · {{ r.law | law }}{% endif %}</span>
+</div>
+<div class="progress {{ bar }}" style="margin-top:6px"><span style="width:{{ [100, (100 * s.used / (s.total or 1)) | round(0)] | min }}%"></span></div>
+{% if medical and r.diagnosis %}<p class="small muted" style="margin-top:6px">{{ r.diagnosis }}</p>{% endif %}
+{% for l in s.lines %}
+<div class="rx-line {{ l.level }}">{{ icon(l.icon, 18) }}<span>{{ l.text }}</span></div>
+{% if l.request_kind or (l.draft_id and medical) or (l.code == 'start_late' and s.first_future_id) %}
+<div class="rx-actions">
+  {% if l.request_kind %}
+  <form method="post" action="{{ S }}/verordnungen/{{ r.id }}/anfrage" class="rx-actions" style="margin:0">
+    <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="kind" value="{{ l.request_kind }}"><input type="hidden" name="back" value="{{ back }}">
+    <label class="sr-only" for="via-{{ r.id }}-{{ loop.index }}">{{ t('rx.via_label') }}</label>
+    <select id="via-{{ r.id }}-{{ loop.index }}" name="via">{% for v in vias if v != 'report' %}<option value="{{ v }}">{{ t('rx.via.' ~ v) }}</option>{% endfor %}</select>
+    <button class="btn tonal sm" type="submit">{{ icon('check', 18) }}{{ t('rx.mark_requested') }}</button>
+  </form>
+  {% if medical and l.request_kind == 'renewal' and module_on('reports') %}
+  <form method="post" action="{{ S }}/patienten/{{ r.patient_id }}/berichte" style="margin:0">
+    <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="kind" value="renewal">
+    {% if r.referrer_id %}<input type="hidden" name="referrer_id" value="{{ r.referrer_id }}">{% endif %}
+    <button class="btn sm" type="submit">{{ icon('note_add', 18) }}{{ t('rx.create_request_letter') }}</button>
+  </form>
+  {% endif %}
+  {% endif %}
+  {% if l.code == 'start_late' and s.first_future_id %}<a class="btn text sm" href="{{ S }}/agenda/termine/{{ s.first_future_id }}">{{ icon('event', 18) }}{{ t('rx.move_first') }}</a>{% endif %}
+  {% if l.draft_id and medical %}<a class="btn text sm" href="{{ S }}/berichte/{{ l.draft_id }}">{{ icon('description', 18) }}{{ t('rx.open_draft') }}</a>{% endif %}
+</div>
+{% endif %}
+{% endfor %}
+{% for q in s.requests %}
+<form method="post" action="{{ S }}/verordnungen/anfrage/{{ q.id }}" class="rx-actions small muted">
+  <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="back" value="{{ back }}">
+  <span>{{ icon('history', 16) }} {{ t('rx.req.' ~ q.kind) }} · {{ fmt_date(q.requested_on) }} · {{ t('rx.via.' ~ q.via) }}{% if q.creator_name %} · {{ q.creator_name }}{% endif %}{% if q.note %} · {{ q.note }}{% endif %}</span>
+  <button class="btn text sm" type="submit" name="status" value="done">{{ t('rx.req_done') }}</button>
+</form>
+{% endfor %}
+{% endmacro %}

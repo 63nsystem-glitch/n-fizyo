@@ -1,0 +1,75 @@
+{% extends "layouts/staff.html" %}
+{% from "agenda/_session.html" import session_label with context %}
+{% block title %}{{ t('agenda.title') }}{% endblock %}
+{% block subtitle %}{% if view == 'tag' %}{{ fmt_long_date(day) }}{% else %}{{ t('agenda.week_of', date=fmt_date(columns[0].day)) }}{% endif %}{% endblock %}
+{% block actions %}
+  <a class="icon-btn" href="?view={{ view }}&d={{ prev_d }}&loc={{ loc_id or '' }}&who={{ who or '' }}" aria-label="{{ t('agenda.prev') }}">{{ icon('chevron_left', 24, 'flip-rtl') }}</a>
+  <a class="btn text" href="?view={{ view }}&loc={{ loc_id or '' }}&who={{ who or '' }}">{{ t('common.today') }}</a>
+  <a class="icon-btn" href="?view={{ view }}&d={{ next_d }}&loc={{ loc_id or '' }}&who={{ who or '' }}" aria-label="{{ t('agenda.next') }}">{{ icon('chevron_right', 24, 'flip-rtl') }}</a>
+  {% if screen.key == 'therapie' %}<a class="icon-btn" href="{{ S }}/agenda/kalender-abo" aria-label="{{ t('agenda.ical.title') }}" title="{{ t('agenda.ical.title') }}">{{ icon('event_upcoming', 22) }}</a>{% endif %}
+  <a class="icon-btn" href="{{ S }}/agenda/abwesenheiten" aria-label="{{ t('agenda.abs.title') if screen.key != 'therapie' else t('agenda.abs.mine') }}" title="{{ t('agenda.abs.title') if screen.key != 'therapie' else t('agenda.abs.mine') }}">{{ icon('event_busy', 22) }}</a>
+  {% if can_book %}<a class="btn" href="{{ S }}/agenda/neu?date={{ day.isoformat() }}&location_id={{ loc_id or '' }}">{{ icon('add', 18) }}<span>{{ t('agenda.new') }}</span></a>{% endif %}
+{% endblock %}
+{% block content %}
+<div class="row-between" style="margin-bottom:12px">
+  <div class="seg">
+    <a href="?view=tag&d={{ day.isoformat() }}&loc={{ loc_id or '' }}"{% if view == 'tag' %} aria-current="page"{% endif %}>{{ icon('view_day', 18) }}{{ t('agenda.day') }}</a>
+    <a href="?view=woche&d={{ day.isoformat() }}&who={{ who or '' }}"{% if view == 'woche' %} aria-current="page"{% endif %}>{{ icon('view_week', 18) }}{{ t('agenda.week') }}</a>
+  </div>
+  <form method="get" class="row">
+    <input type="hidden" name="view" value="{{ view }}"><input type="hidden" name="d" value="{{ day.isoformat() }}">
+    {% if view == 'tag' and show_location and locations %}
+    <label class="sr-only" for="loc">{{ t('agenda.location') }}</label>
+    <select id="loc" name="loc" class="input" style="min-height:40px;padding:6px 12px;width:auto" data-autosubmit>{% for l in locations %}<option value="{{ l.id }}"{% if l.id == loc_id %} selected{% endif %}>{{ l.name }}</option>{% endfor %}</select>
+    {% elif view == 'woche' and therapists | length > 1 %}
+    <label class="sr-only" for="who">{{ t('agenda.therapist') }}</label>
+    <select id="who" name="who" class="input" style="min-height:40px;padding:6px 12px;width:auto" data-autosubmit>{% for th in therapists %}<option value="{{ th.id }}"{% if th.id == who %} selected{% endif %}>{{ th.name }}</option>{% endfor %}</select>
+    {% endif %}
+    {% if show_waitlist %}<a class="btn text" href="{{ S }}/agenda/warteliste">{{ icon('hourglass_top', 18) }}{{ t('agenda.waitlist') }}</a>{% endif %}
+  </form>
+</div>
+{% if notices %}<div class="banner warn" role="status" style="margin-bottom:12px" data-off-notice>{{ icon('event_busy') }}<span>{{ notices | join(' · ') }}</span></div>{% endif %}
+{% if empty_key %}<div class="banner info" role="status" style="margin-bottom:12px" data-empty-hint>{{ icon('info') }}<span>{{ t(empty_key, **empty_args) }}</span></div>{% endif %}
+{% if columns | length > 2 %}<p class="agenda-swipe only-compact" data-swipe-hint>{{ icon('swap_horiz', 18) }}{{ t('agenda.swipe_hint') }}</p>{% endif %}
+<div class="agenda-scroll{{ ' wide' if columns | length > 2 else '' }}"{% if view == 'woche' and not view_chosen %} data-agenda-auto-day{% endif %}>
+<div class="agenda" style="grid-template-columns: 56px repeat({{ columns | length or 1 }}, minmax(150px, 1fr)); min-width: {{ 56 + 160 * (columns | length or 1) }}px">
+  <div class="agenda-head agenda-corner"></div>
+  {% for c in columns %}<div class="agenda-head"{% if c.today %} style="color:var(--primary)"{% endif %}>{{ c.title }}{% if c.sub %}<br><span class="small muted">{{ c.sub }}</span>{% endif %}</div>{% else %}<div class="agenda-head muted">{{ '' if empty_key else t('agenda.nobody') }}</div>{% endfor %}
+  <div class="agenda-times" style="height:{{ grid_height }}px">
+    {% for h in hours %}<div class="agenda-time" style="top:{{ (h - hours[0]) * px_hour }}px">{{ '%02d' | format(h) }}:00</div>{% endfor %}
+  </div>
+  {% for c in columns %}
+  <div class="agenda-col" style="height:{{ grid_height }}px" data-agenda-col data-therapist="{{ c.therapist_id or '' }}" data-day="{{ c.day.isoformat() }}" data-px-min="{{ px_hour / 60 }}" data-start-hour="{{ hours[0] }}">
+    {% for hb in c.hours %}<div class="agenda-hours" style="top:{{ hb.top }}px;height:{{ hb.height }}px"></div>{% endfor %}
+    {% for h in hours %}<div class="agenda-line" style="top:{{ (h - hours[0]) * px_hour }}px"></div><div class="agenda-line half" style="top:{{ (h - hours[0]) * px_hour + px_hour / 2 }}px"></div>{% endfor %}
+    {% for b in c.bands %}<div class="off-band {{ b.kind }}" style="top:{{ b.top }}px;height:{{ b.height }}px" title="{{ b.label }}" data-off-band><span>{{ b.label }}</span></div>{% endfor %}
+    {% if now_top is not none and (view == 'tag' and is_today or c.today) %}<div class="now-line" style="top:{{ now_top }}px"></div>{% endif %}
+    {% for it in c.appts %}{% set a = it.a %}
+    {% set who_txt = (a.first_name[:1] ~ '. ' ~ a.last_name) if a.patient_id else (a.title or t('agenda.blocked')) %}
+    {% set sub_txt %}{% if a.patient_id %}{{ (a.type_fr if lang == 'fr' else a.type_de) or '' }}{% if it.session %} · {{ session_label(it.session, it.beyond) | striptags }}{% endif %}{% if a.room_name %} · {{ a.room_name }}{% endif %}{% if a.device_name %} · {{ a.device_name }}{% endif %}{% endif %}{% endset %}
+    <{{ 'a' if link_appts else 'div' }} class="appt {{ a.status }}{{ ' beyond' if it.beyond else '' }}{{ ' short' if it.height < 34 else '' }}"{% if link_appts %} href="{{ S }}/agenda/termine/{{ a.id }}"{% endif %} title="{{ fmt_time(a.starts_at) }}–{{ fmt_time(a.ends_at) }} {{ who_txt }}{% if sub_txt | trim %} · {{ sub_txt | trim }}{% endif %}" style="top:{{ it.top }}px;height:{{ it.height }}px;{% if a.type_color and a.status in ('booked', 'arrived') and not it.beyond %}border-color:{{ a.type_color }}{% endif %}">
+      <span class="t">{{ fmt_time(a.starts_at) }} {{ who_txt }}</span>
+      {%- if a.patient_id and view == 'woche' %}{#- schmale Spalten: Raum und Sitzung zuerst (die Behandlungsart zeigt der farbige Rand) -#}
+      <span class="s" style="--l:{{ [1, ((it.height - 22) / 16) | int] | max }}">{% if a.room_name %}{{ a.room_name }} · {% endif %}{% if it.session %}{{ session_label(it.session, it.beyond) }} · {% endif %}{{ (a.type_fr if lang == 'fr' else a.type_de) or '' }}{% if a.device_name %} · {{ a.device_name }}{% endif %}</span>
+      {%- elif a.patient_id %}<span class="s" style="--l:{{ [1, ((it.height - 22) / 16) | int] | max }}">{{ (a.type_fr if lang == 'fr' else a.type_de) or '' }}{% if it.session %} · {{ session_label(it.session, it.beyond) }}{% endif %}{% if a.room_name %} · {{ a.room_name }}{% endif %}{% if a.device_name %} · {{ a.device_name }}{% endif %}</span>{% endif %}
+    </{{ 'a' if link_appts else 'div' }}>
+    {% endfor %}
+  </div>
+  {% endfor %}
+</div>
+</div>
+<ul class="agenda-legend" aria-label="{{ t('agenda.legend.title') }}">
+  <li><i class="lg booked"></i>{{ t('agenda.st.booked') }}</li>
+  <li><i class="lg arrived"></i>{{ t('agenda.st.arrived') }}</li>
+  <li><i class="lg done"></i>{{ t('agenda.st.done') }}</li>
+  <li><i class="lg cancelled"></i>{{ t('agenda.st.cancelled') }}</li>
+  <li><i class="lg blocked"></i>{{ t('agenda.blocked') }}</li>
+  <li><i class="lg type"></i>{{ t('agenda.legend.type') }}</li>
+  <li><i class="lg beyond"></i>{{ t('agenda.beyond_rx') }}</li>
+  <li><i class="lg hours"></i>{{ t('agenda.legend.hours') }}</li>
+  <li><i class="lg off"></i>{{ t('agenda.legend.off') }}</li>
+</ul>
+{% if can_book %}<p class="small muted" style="margin-top:8px">{{ t('agenda.click_hint') }}</p>{% endif %}
+{% endblock %}
+{% block scripts %}{{ super() }}{% if can_book %}<span hidden data-agenda-new="{{ S }}/agenda/neu" data-location="{{ loc_id or '' }}"></span>{% endif %}
+<script src="{{ static('js/agenda.js') }}" defer></script>{% endblock %}

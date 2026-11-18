@@ -1,0 +1,61 @@
+{
+  "intake": {
+    "title": "Şikâyetlerim",
+    "hello": "Merhaba, {name}",
+    "intro": "Şikâyetlerinizi kendi dilinizde anlatın. Terapistiniz tedaviden önce okuyacak.",
+    "where": "Nerenizde şikâyet var?",
+    "where_hint": "Vücuttaki yerlere dokunun (birden fazla seçebilirsiniz). «Ön/Arka» ile değiştirin.",
+    "list_instead": "Resim yerine liste",
+    "none_selected": "Henüz bir yer seçilmedi",
+    "pain": "Ağrınız ne kadar şiddetli?",
+    "pain_0": "yok",
+    "pain_2": "hafif",
+    "pain_4": "orta",
+    "pain_6": "şiddetli",
+    "pain_8": "çok şiddetli",
+    "pain_10": "dayanılmaz",
+    "since": "Ne zamandan beri?",
+    "since_opt": {
+      "days": "1 haftadan az",
+      "weeks": "1–6 hafta",
+      "months": "6 haftadan fazla",
+      "years": "1 yıldan fazla"
+    },
+    "worse": "Ne zaman daha kötü?",
+    "worse_opt": {
+      "move": "hareket ederken",
+      "rest": "dinlenirken",
+      "night": "geceleri",
+      "sitting": "otururken",
+      "standing": "ayakta dururken",
+      "walking": "yürürken",
+      "stairs": "merdivende",
+      "lifting": "bir şey kaldırırken",
+      "morning": "sabahları"
+    },
+    "goals": "Neyi yeniden yapabilmek istersiniz?",
+    "goal_opt": {
+      "sleep": "ağrısız uyumak",
+      "walk": "yürümek / gezmek",
+      "stairs": "merdiven çıkmak",
+      "work": "çalışmak",
+      "sport": "spor yapmak",
+      "lift": "kaldırmak ve taşımak",
+      "overhead": "kolu başın üzerine kaldırmak",
+      "household": "ev işleri",
+      "drive": "araba kullanmak"
+    },
+    "text": "Kendi sözlerinizle",
+    "text_hint": "Kendi dilinizde yazın veya konuşun. Muayenehane için çevrilecek.",
+    "text_ph": "Ne oldu? Ne kötüleştiriyor veya iyileştiriyor?",
+    "voice": "Yazmak yerine konuşun",
+    "voice_stop": "Kaydı durdur",
+    "voice_busy": "Tanınıyor …",
+    "emergency": "Şiddetli veya yeni ve ani şikâyetlerde doktorunuza başvurun. Acil durumda 144'ü arayın.",
+    "privacy": "Cevaplarınız muayenehanenin sunucusunda kalır.",
+    "send": "Gönder",
+    "sent_flash": "Teşekkürler! Muayenehane cevaplarınızı aldı.",
+    "text_hint_same": "Sizi neyin rahatsız ettiğini kendi sözlerinizle anlatın. Yazabilir veya konuşabilirsiniz."
+  },
+  "_review": "Erstübersetzung NSystem – vor Einsatz von Muttersprachler/in prüfen lassen."
+}

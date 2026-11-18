@@ -1,0 +1,72 @@
+{% extends "layouts/staff.html" %}
+{% from "agenda/_session.html" import session_label with context %}
+{% block back %}<a class="icon-btn" href="{{ S }}/{{ 'heute' if screen.key == 'therapie' else 'agenda' }}?d={{ start.date().isoformat() }}" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{% if a.patient_id %}{{ a.first_name }} {{ a.last_name }}{% else %}{{ a.title or t('agenda.blocked') }}{% endif %}{% endblock %}
+{% block subtitle %}{{ fmt_date(start, weekday=True) }} · {{ fmt_time(start) }}–{{ fmt_time(end) }}{% if a.location_name %} · {{ a.location_name }}{% endif %}{% if a.room_name %} · {{ a.room_name }}{% endif %}{% endblock %}
+{% block actions %}
+  {% if a.patient_id and screen.key != 'leitung' %}<a class="btn tonal" href="{{ S }}/patienten/{{ a.patient_id }}">{{ icon('medical_information' if screen.key == 'therapie' else 'person', 18) }}<span>{{ t('today.open_patient') if screen.key == 'therapie' else t('agenda.open_record') }}</span></a>{% endif %}
+  {% for x in actions %}<a class="btn{{ '' if x.primary else ' tonal' }}" href="{{ x.href }}">{{ icon(x.icon, 18) }}<span>{{ t(x.label_key) }}</span></a>{% endfor %}
+{% endblock %}
+{% block content %}
+{% set icons = {'arrived': 'login', 'done': 'task_alt', 'no_show': 'event_busy', 'booked': 'undo'} %}
+<div class="grid-main-side">
+  <div class="col">
+    {% if here_offs %}<div class="banner warn" role="status" data-off>{{ icon('event_busy') }}<span>{{ t('agenda.in_off_here') }}: {{ here_offs | join(' · ') }}</span></div>{% endif %}
+    <section class="card">
+      <div class="kv" style="grid-template-columns:minmax(120px,30%) 1fr">
+        <div class="k">{{ t('agenda.status') }}</div><div><span class="pill-label {{ {'arrived': 'info', 'done': 'ok', 'cancelled': 'error', 'no_show': 'warn'}.get(a.status, '') }}">{{ t('agenda.st.' ~ a.status) }}</span>{% if a.cancel_reason %} · {{ a.cancel_reason }}{% endif %}</div>
+        <div class="k">{{ t('agenda.therapist') }}</div><div>{{ a.therapist_name }}</div>
+        {% if a.type_de %}<div class="k">{{ t('agenda.type') }}</div><div>{{ a.type_fr if lang == 'fr' else a.type_de }}</div>{% endif %}
+        {% if session %}<div class="k">{{ t('agenda.prescription') }}</div><div>{{ t('agenda.session_of', n=session[0], total=session[1] or '?') }}{% if beyond %} {{ session_label(session, beyond) }}<br><span class="small muted">{{ t('agenda.beyond_rx_hint', n=session[0], total=session[1]) }}</span>{% endif %}</div>{% endif %}
+        {% if a.device_name %}<div class="k">{{ t('agenda.device') }}</div><div>{{ a.device_name }}</div>{% endif %}
+        {% if a.note %}<div class="k">{{ t('agenda.note') }}</div><div>{{ a.note }}</div>{% endif %}
+        {% if a.patient_phone %}<div class="k">{{ t('patients.phone') }}</div><div><a href="tel:{{ a.patient_phone }}">{{ a.patient_phone | phone }}</a></div>{% endif %}
+      </div>
+    </section>
+    {% if a.patient_id and (next_status or can_cancel) %}
+    <section class="card" data-status-actions>
+      <h2 style="margin-bottom:12px">{{ t('agenda.change_status') }}</h2>
+      <div class="row">
+        {% for st in next_status %}
+        <form method="post" action="{{ S }}/agenda/termine/{{ a.id }}/status"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="status" value="{{ st }}"><button class="btn outlined" type="submit" data-to="{{ st }}">{{ icon(icons[st], 18) }}{{ t('agenda.to.' ~ st) }}</button></form>
+        {% endfor %}
+      </div>
+      {% if can_cancel %}
+      <form method="post" action="{{ S }}/agenda/termine/{{ a.id }}/status" class="row" style="margin-top:12px" data-confirm="{{ t('agenda.cancel_confirm') }}" data-confirm-yes="{{ t('agenda.to.cancelled') }}">
+        <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="status" value="cancelled">
+        <input class="input grow" name="reason" placeholder="{{ t('agenda.cancel_reason') }}" style="min-height:40px;padding:8px 12px" aria-label="{{ t('agenda.cancel_reason') }}">
+        {% if can_sms_cancel %}<label class="check small"><input type="checkbox" name="notify" value="1" checked> {{ t('agenda.cancel_sms') }}</label>{% endif %}
+        <button class="btn danger outlined" type="submit" data-to="cancelled">{{ icon('event_busy', 18) }}{{ t('agenda.to.cancelled') }}</button>
+      </form>
+      {% endif %}
+    </section>
+    {% endif %}
+    {% if gap %}{% include "agenda/_gap.html" %}{% endif %}
+  </div>
+  <div class="col">
+    {% if can_move %}
+    <section class="card" data-move>
+      <h2 style="margin-bottom:12px">{{ t('agenda.move') }}</h2>
+      {% if request.query.get('konflikt') %}<div class="banner warn" style="margin-bottom:12px">{{ icon('warning') }}<div class="stack-s"><span>{{ t('agenda.conflict') if not move_offs else t('agenda.off_warning') }}</span>
+        {% for o in move_offs %}<span data-off>{{ icon('event_busy', 16) }} {{ o }}</span>{% endfor %}</div></div>{% endif %}
+      <form method="post" action="{{ S }}/agenda/termine/{{ a.id }}/verschieben" class="form">
+        <input type="hidden" name="_csrf" value="{{ csrf }}">
+        <div class="form-grid">
+          <div class="field"><label for="m-date">{{ t('agenda.date') }}</label><input id="m-date" type="date" name="date" value="{{ request.query.get('date', start.date().isoformat()) }}"></div>
+          <div class="field"><label for="m-time">{{ t('agenda.time') }}</label><input id="m-time" type="time" step="300" name="time" value="{{ request.query.get('time', fmt_time(start)) }}"></div>
+        </div>
+        {% set move_th = request.query.get('therapist_id', a.therapist_id | string) %}
+        <div class="field"><label for="m-th">{{ t('agenda.therapist') }}</label><select id="m-th" name="therapist_id">{% for th in therapists %}<option value="{{ th.id }}"{% if (th.id | string) == move_th %} selected{% endif %}>{{ th.name }}</option>{% endfor %}</select></div>
+        <div class="field"><label for="m-room">{{ t('agenda.room') }}</label><select id="m-room" name="room_id"><option value="">–</option>{% for r in rooms %}<option value="{{ r.id }}"{% if r.id == a.room_id %} selected{% endif %}>{{ r.location_name }} · {{ r.name }}</option>{% endfor %}</select></div>
+        <div class="field"><label for="m-dev">{{ t('agenda.device') }}</label><select id="m-dev" name="device_id"><option value="">–</option>{% for d in devices %}<option value="{{ d.id }}"{% if d.id == a.device_id %} selected{% endif %}>{{ d.location_name }} · {{ d.name }}</option>{% endfor %}</select></div>
+        <div class="field"><label for="m-note">{{ t('agenda.note') }}</label><input id="m-note" name="note" value="{{ a.note or '' }}"></div>
+        {% if request.query.get('konflikt') %}<label class="check"><input type="checkbox" name="force" value="1">{{ t('agenda.save_anyway') }}</label>{% endif %}
+        <div class="form-actions"><button class="btn tonal" type="submit">{{ t('common.save') }}</button></div>
+      </form>
+    </section>
+    {% else %}
+    <section class="card tonal" data-final><p class="small">{{ icon('info', 16) }} {{ t('agenda.final_' ~ a.status) }}</p></section>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

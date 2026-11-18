@@ -1,0 +1,8 @@
+{
+  "p": {
+    "mail": {
+      "receipt_subject": "Potvrda o plaćanju {number}",
+      "receipt_body": "Poštovani/a {name}\n\nU prilogu je potvrda o plaćanju {number}. Hvala vam.\n\nSrdačan pozdrav\n{practice}"
+    }
+  }
+}

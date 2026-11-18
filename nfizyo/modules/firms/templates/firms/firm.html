@@ -1,0 +1,46 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/firmen" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ firm.name }}{% endblock %}
+{% block subtitle %}{{ firm.zip or '' }} {{ firm.city or '' }}{% if firm.contact %} · {{ firm.contact }}{% endif %}{% if not firm.active %} · {{ t('firms.archived') }}{% endif %}{% endblock %}
+{% block content %}
+<div class="grid-main-side">
+  <div class="col stack">
+    {% if firm.active %}
+    <section class="card stack-s">
+      <h2>{{ t('firms.new_invoice') }}</h2>
+      <form method="post" class="row" style="gap:8px;align-items:flex-end;flex-wrap:wrap">
+        <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="invoice">
+        <div class="field grow"><label for="isub">{{ t('firms.subject') }}</label><input id="isub" name="subject" maxlength="160" placeholder="{{ t('firms.subject_ph') }}"></div>
+        <button class="btn" type="submit">{{ icon('add', 18) }}{{ t('firms.create_invoice') }}</button>
+      </form>
+    </section>
+    {% endif %}
+    <section class="card flush">
+      <h2 style="padding:16px 16px 8px">{{ t('firms.invoices') }}{% if open_chf %} <span class="small muted">· {{ t('firms.open_firm', chf=chf(open_chf)) }}</span>{% endif %}</h2>
+      <div class="list" style="padding:0 8px 8px">
+        {% for x in invoices %}
+        <a class="list-item" href="{{ S }}/firmen/rechnungen/{{ x.inv.id }}">
+          <span class="lead avatar">{{ icon('draft' if x.inv.status == 'draft' else 'receipt_long', 20) }}</span>
+          <span class="body"><span class="title">{{ x.inv.number or t('firms.status.draft') }} · {{ x.inv.subject or '–' }}</span><br>
+            <span class="sub">{{ fmt_date(x.inv.finalized_at or x.inv.created_at) }}{% if x.inv.due_on and x.inv.status == 'final' %} · {{ t('firms.due') }} {{ fmt_date(x.inv.due_on) }}{% endif %}</span></span>
+          <span class="trail"><span class="mono">{{ chf(x.inv.total_chf) }}</span>
+            <span class="pill-label {{ {'paid': 'ok', 'overdue': 'error', 'partial': 'warn', 'open': 'info', 'cancelled': 'error', 'draft': 'warn'}.get(x.b.state, '') }}">{{ t('firms.state.' ~ x.b.state) }}</span></span>
+        </a>
+        {% else %}<div class="empty">{{ icon('receipt_long', 40) }}<p>{{ t('firms.no_invoices') }}</p></div>{% endfor %}
+      </div>
+    </section>
+  </div>
+  <div class="col stack">
+    <section class="card stack-s">
+      <h2>{{ t('firms.master') }}</h2>
+      <form method="post" class="form">
+        <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="save">
+        {% include "firms/_fields.html" %}
+        <button class="btn tonal" type="submit">{{ t('common.save') }}</button>
+      </form>
+      <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="{{ 'archive' if firm.active else 'activate' }}">
+        <button class="btn text sm" type="submit">{{ icon('inventory_2', 18) }}{{ t('firms.archive') if firm.active else t('firms.activate') }}</button></form>
+    </section>
+  </div>
+</div>
+{% endblock %}

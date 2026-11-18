@@ -1,0 +1,63 @@
+{#- Körperfiguren: Muskelkarte (Lizenz MIT, react-body-highlighter) und eigenes Skelett-Schema.
+    marks = {"muscle": {region: "hl-1"}, "skeleton": {id: "hl-1"}} -#}
+
+{% macro _shape(s, extra='') -%}
+<{{ s.t }}{% for k, v in s.items() if k not in ('t', 'hole') %} {{ k }}="{{ v }}"{% endfor %}{{ extra | safe }}/>
+{%- endmacro %}
+
+{% macro region_title(region) -%}
+{%- if region == 'head' %}{{ t('common.region.head') }}{% else %}{{ t('common.region.' ~ region[:-2]) }} {{ t('common.side.' ~ region[-1]) }}{% endif -%}
+{%- endmacro %}
+
+{% macro muscle_svg(view, marks, editable=False, k='anatomy.') -%}
+<svg viewBox="0 0 100 {{ 196 if view == 'front' else 221 }}" class="bm-svg" role="{{ 'group' if editable else 'img' }}" aria-label="{{ t(k ~ 'figure') if k == 'p.body.' else t('anatomy.muscles') }} · {{ t(k ~ view) }}">
+  {% for r in BODYMAP[view] %}<path class="bm-region {{ marks.get(r.region, '') }}" data-region="{{ r.region }}" d="{{ r.d }}"{% if editable %} tabindex="0" role="button" aria-label="{{ region_title(r.region) }}"{% endif %}><title>{{ region_title(r.region) }}</title></path>{% endfor %}
+</svg>
+{%- endmacro %}
+
+{% macro skeleton_svg(view, marks, editable=False) -%}
+<svg viewBox="{{ SKELETON.viewBox }}" class="skeleton" role="{{ 'group' if editable else 'img' }}" aria-label="{{ t('anatomy.skeleton') }} · {{ t('anatomy.' ~ view) }}">
+  {% for e in SKELETON[view] %}
+  {% set cls = marks.get(e.id, '') %}
+  {% if e.kind == 'joint' %}
+  <g class="sk-joint {{ cls }}" data-bone="{{ e.id }}">{% for s in e.shapes %}{{ _shape(s) }}{% endfor %}</g>
+  {% else %}
+  <g class="sk-{{ 'rib' if e.kind == 'rib' else 'bone' }} {{ cls }}" data-bone="{{ e.id }}"{% if editable %} tabindex="0" role="button"{% endif %}>
+    <title>{{ anat.bone_label(e.id, lang) }}</title>
+    <g class="o">{% for s in e.shapes %}{{ _shape(s) }}{% endfor %}</g>
+    <g class="f">{% for s in e.shapes %}{{ _shape(s) }}{% endfor %}</g>
+    {% for s in e.details %}{{ _shape(s, ' class="hole"' if s.hole else ' class="det"') }}{% endfor %}
+  </g>
+  {% endif %}
+  {% endfor %}
+</svg>
+{%- endmacro %}
+
+{% macro body_figure(marks, id='fig', editable=False, layer='muscle', view='front', compact=False, pick_dialog='', bone_href='', patient=False) -%}
+{#- patient=True (Formulare der Patienten-App): nur die Muskelkarte, kein Skelett-Umschalter (Knochen sind dort nicht wählbar),
+    Beschriftung aus p.body.* (alle 11 Sprachen) statt anatomy.* (nur DE/FR) -#}
+{%- set k = 'p.body.' if patient else 'anatomy.' -%}
+{%- set layers = ('muscle',) if patient else ('muscle', 'skeleton') -%}
+<div class="bodyfig{% if editable %} editable{% endif %}" id="{{ id }}" data-bodyfig data-layer="{{ 'muscle' if patient else layer }}" data-view="{{ view }}"{% if pick_dialog %} data-pick-dialog="{{ pick_dialog }}"{% endif %}{% if bone_href %} data-bone-href="{{ bone_href }}"{% endif %}>
+  <div class="row" style="justify-content:space-between;margin-bottom:8px">
+    <div class="seg" role="group" aria-label="{{ t(k ~ 'view') }}">
+      <button type="button" data-bf-view="front" aria-pressed="{{ 'true' if view == 'front' else 'false' }}">{{ icon('check', 18, 'check') }}{{ t(k ~ 'front') }}</button>
+      <button type="button" data-bf-view="back" aria-pressed="{{ 'true' if view == 'back' else 'false' }}">{{ icon('check', 18, 'check') }}{{ t(k ~ 'back') }}</button>
+    </div>
+    {% if editable %}<button type="button" class="icon-btn bf-zoom" data-bf-zoom aria-pressed="false" aria-label="{{ t(k ~ 'zoom') }}" title="{{ t(k ~ 'zoom') }}">{{ icon('zoom_in', 22) }}</button>{% endif %}
+    {% if not patient %}
+    <div class="seg" role="group" aria-label="{{ t('anatomy.layer') }}">
+      <button type="button" data-bf-layer="muscle" aria-pressed="{{ 'true' if layer == 'muscle' else 'false' }}" title="{{ t('anatomy.muscles') }}" aria-label="{{ t('anatomy.muscles') }}">{{ icon('accessibility_new', 20) }}</button>
+      <button type="button" data-bf-layer="skeleton" aria-pressed="{{ 'true' if layer == 'skeleton' else 'false' }}" title="{{ t('anatomy.skeleton') }}" aria-label="{{ t('anatomy.skeleton') }}">{{ icon('skeleton', 20) }}</button>
+    </div>
+    {% endif %}
+  </div>
+  {% for lyr in layers %}{% for v in ('front', 'back') %}
+  <div class="bodymap{% if editable %} editable{% endif %}" data-pane data-layer="{{ lyr }}" data-view="{{ v }}"{% if not ((lyr == layer or patient) and v == view) %} hidden{% endif %}>
+    <span class="side-label r">{{ t(k ~ 'right_short') if v == 'front' else t(k ~ 'left_short') }}</span>
+    <span class="side-label l">{{ t(k ~ 'left_short') if v == 'front' else t(k ~ 'right_short') }}</span>
+    {% if lyr == 'muscle' %}{{ muscle_svg(v, marks.muscle, editable, k) }}{% else %}{{ skeleton_svg(v, marks.skeleton, editable) }}{% endif %}
+  </div>
+  {% endfor %}{% endfor %}
+</div>
+{%- endmacro %}

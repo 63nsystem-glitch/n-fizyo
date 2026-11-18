@@ -1,0 +1,22 @@
+{% extends "layouts/staff.html" %}
+{% import "intake/_show.html" as show with context %}
+{% block title %}{{ t('intake_staff.list_title') }}{% endblock %}
+{% block subtitle %}{{ t('intake_staff.list_hint') }}{% endblock %}
+{% block content %}
+<div class="stack" style="max-width:960px">
+  <div class="chips"><a class="chip{% if not all %} selected{% endif %}" href="{{ S }}/anliegen">{{ t('intake_staff.f_new') }}</a><a class="chip{% if all %} selected{% endif %}" href="{{ S }}/anliegen?alle=1">{{ t('intake_staff.f_all') }}</a></div>
+  {% for x in rows %}
+  <section class="card">
+    <div class="card-head"><h2><a href="{{ S }}/patienten/{{ x.it.patient_id }}" style="color:inherit">{{ x.it.first_name }} {{ x.it.last_name }}</a></h2>
+      <span class="meta">{{ fmt_date(x.it.created_at) }} {{ fmt_time(x.it.created_at) }} · {{ t('intake_staff.ch.' ~ x.it.channel) }} · {{ x.lang_name }} · {{ t('intake_staff.st.' ~ x.it.status) }}</span></div>
+    {{ show.show(x, S ~ '/anliegen', translate_on) }}
+    {% if x.it.status == 'new' %}<div class="row" style="justify-content:flex-end;margin-top:12px">
+      <form method="post" action="{{ S }}/anliegen/{{ x.it.id }}/gesehen"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="back" value="{{ S }}/anliegen"><button class="btn text sm" type="submit">{{ t('intake_staff.seen') }}</button></form>
+      <form method="post" action="{{ S }}/anliegen/{{ x.it.id }}/uebernehmen"><input type="hidden" name="_csrf" value="{{ csrf }}"><button class="btn sm" type="submit">{{ t('intake_staff.take') }}</button></form>
+    </div>{% endif %}
+  </section>
+  {% else %}
+  <div class="card empty">{{ icon('record_voice_over', 40) }}<p>{{ t('intake_staff.none') }}</p></div>
+  {% endfor %}
+</div>
+{% endblock %}

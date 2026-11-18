@@ -1,0 +1,22 @@
+<section class="card" aria-labelledby="h-clin">
+  <div class="card-head"><h2 id="h-clin">{{ t('patients.clinical') }}</h2>
+    <span class="meta">{{ t('patients.clinical_meta') }}</span></div>
+  {% if ctx.rows %}
+  <div class="kv">
+    {% for f in ctx.rows %}
+    <div class="k">{{ t('finding.' ~ f.kind) }}</div>
+    <div>{{ f.title }}{% if f.structure_id %} <button type="button" class="term small" data-sheet="{{ S }}/anatomie/{{ f.structure_id }}/blatt?side={{ f.side or '' }}&patient={{ ctx.patient.id }}">{{ anat.name(anat.get(f.structure_id), lang) }}</button>{% endif %}
+      {% if f.on_date %}<span class="muted small"> · {{ fmt_date(f.on_date) }}</span>{% endif %}
+      {% if f.severity is not none %}<span class="pill-label {{ 'error' if f.severity >= 7 else ('warn' if f.severity >= 4 else '') }}">{{ t('patients.pain_short') }} {{ f.severity }}/10</span>{% endif %}
+    </div>
+    <div class="small" style="text-align:end">
+      {% if f.source == 'document' and f.source_document_id %}<a href="{{ S }}/posteingang/{{ f.source_document_id }}" data-sheet="{{ S }}/posteingang/{{ f.source_document_id }}/blatt">{{ t('patients.source_document') }}</a>
+      {% elif f.source == 'intake' %}<span class="muted">{{ t('patients.source_intake') }}</span>
+      {% elif f.source == 'app' %}<span class="muted">{{ t('patients.source_app') }}</span>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty">{{ icon('clinical_notes', 32) }}{{ t('patients.no_clinical') }}</div>
+  {% endif %}
+</section>

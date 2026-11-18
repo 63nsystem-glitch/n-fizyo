@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block body %}
+<main class="auth">
+  <div class="auth-card">
+    <div class="brand"><span class="brand-mark">N</span><span class="brand-name">N-Fizyo</span>{% if demo %}<span class="demo-tag">{{ t('common.demo_ribbon') }}</span>{% endif %}</div>
+    {% block content %}{% endblock %}
+  </div>
+</main>
+{% endblock %}

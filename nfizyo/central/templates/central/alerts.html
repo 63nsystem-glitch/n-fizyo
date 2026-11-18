@@ -1,0 +1,10 @@
+{% extends "central/layout.html" %}
+{% block content %}
+<h1 style="margin-bottom:16px">Warnungen</h1>
+<section class="card" style="padding:0;overflow:hidden"><div class="table-wrap"><table class="table">
+  <thead><tr><th>Box</th><th>Problem</th><th>Seit</th><th>Status</th></tr></thead><tbody>
+  {% for a in alerts %}<tr><td><a href="/box/{{ a.box_id }}">{{ a.box_name }}</a></td><td>{{ a.message }}</td><td>{{ a.opened_at[:16].replace('T', ' ') }}</td>
+    <td>{% if a.closed_at %}<span class="pill-label ok">erledigt</span>{% else %}<span class="pill-label error">offen</span>{% endif %}{% if a.pushed %} <span class="small muted">Push</span>{% endif %}</td></tr>
+  {% else %}<tr><td colspan="4" class="muted">Keine Warnungen.</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

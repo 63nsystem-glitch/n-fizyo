@@ -1,0 +1,15 @@
+{% extends "patients/_file.html" %}
+{% import "briefing/_handover.html" as ho with context %}
+{% block content %}
+<div style="max-width:860px">
+{% if h %}
+<section class="card" aria-labelledby="h-handover-full">
+  <div class="card-head"><h2 id="h-handover-full">{{ icon('swap_horiz', 20) }} {{ t('brief.ho_title_takeover', names=h.names | join(', ')) if h.mode == 'takeover' else t('brief.ho_title_away') }}</h2></div>
+  {{ ho.body(h, S) }}
+</section>
+{% else %}
+<section class="card"><div class="empty">{{ icon('check_circle', 40) }}<p>{{ t('brief.ho_none') }}</p></div></section>
+{% endif %}
+<p class="small muted" style="margin-top:8px">{{ icon('lock', 14) }} {{ t('brief.source_hint') }}</p>
+</div>
+{% endblock %}

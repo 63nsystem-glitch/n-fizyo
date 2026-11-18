@@ -1,0 +1,61 @@
+{
+  "p": {
+    "booking": {
+      "title": "Zatražite termin",
+      "closed": "Online zakazivanje trenutno nije moguće. Molimo nazovite nas.",
+      "choose_type": "Za šta želite termin?",
+      "minutes": "{n} minuta",
+      "other_type": "Drugi tretman",
+      "choose_slot": "Izaberite slobodno vrijeme. Praksa će zatim potvrditi termin putem SMS-a.",
+      "no_slots": "Ove sedmice više nema slobodnih termina.",
+      "earlier": "Ranije",
+      "later": "Kasnije",
+      "other_slot": "Izaberite drugo vrijeme",
+      "err_fields": "Molimo provjerite označena polja.",
+      "first_name": "Ime",
+      "last_name": "Prezime",
+      "birthdate": "Datum rođenja",
+      "phone": "Mobilni telefon",
+      "phone_hint": "Dobit ćete kod putem SMS-a.",
+      "email": "E-mail (neobavezno)",
+      "email_ok": "Primati potvrdu i podsjetnike i putem e-maila (e-mail nije šifrovan).",
+      "insurance": "Osiguranje",
+      "ins_KVG": "Osnovno osiguranje (bolest)",
+      "ins_UVG": "Osiguranje od nesreće",
+      "ins_IVG": "Invalidsko osiguranje",
+      "ins_VVG": "Dopunsko osiguranje",
+      "ins_privat": "Plaćam sam/a",
+      "prescription": "Imam ljekarski recept za fizioterapiju.",
+      "note": "Napomena (neobavezno)",
+      "note_hint": "Molimo bez detaljnih podataka o zdravlju – o tome ćemo razgovarati u praksi.",
+      "consent": "Slažem se da {practice} sačuva moje podatke radi zakazivanja termina.",
+      "send_code": "Pošalji kod putem SMS-a",
+      "code_intro": "Poslali smo vam kod putem SMS-a. Unesite ga ovdje.",
+      "confirm": "Pošalji zahtjev",
+      "sent_title": "Zahtjev primljen",
+      "sent_text": "{practice} provjerava vaš zahtjev i potvrđuje termin putem SMS-a. Tek tada je termin dogovoren.",
+      "err_slot": "Ovo vrijeme više nije važeće. Molimo izaberite ponovo.",
+      "err_taken": "Ovo vrijeme je upravo zauzeto. Izaberite drugo.",
+      "err_blocked": "Previše pokušaja. Pokušajte kasnije ili nas nazovite.",
+      "err_phone": "Unesite švicarski ili lihtenštajnski broj mobitela (npr. 079 123 45 67).",
+      "err_sms_limit": "Na ovaj broj je već poslano nekoliko kodova. Pokušajte ponovo za sat vremena ili nas nazovite.",
+      "err_code": "Kod nije tačan.",
+      "err_expired": "Zahtjev je istekao. Molimo počnite ponovo.",
+      "all_places": "Sve lokacije",
+      "closure": "Ordinacija je zatvorena: {dates}.",
+      "original": "Prikaži original",
+      "err_busy": "Trenutno ne možemo poslati nove kodove. Pokušajte ponovo kasnije ili nas nazovite."
+    },
+    "sms": {
+      "booking_code": "{practice}: vaš kod za zahtjev za termin: {code}",
+      "booking_confirmed": "{practice}: vaš termin {when} je potvrđen ({place}). Otkazivanje najmanje 24 sata ranije: {phone}",
+      "booking_declined": "{practice}: nažalost ne možemo potvrditi termin {when}. Molimo nazovite nas: {phone}"
+    },
+    "mail": {
+      "booking_confirmed_subject": "Termin potvrđen: {when}",
+      "booking_confirmed_body": "Poštovani/a {name}\n\nVaš termin {when} je potvrđen ({place}).\nOtkazivanje najmanje 24 sata ranije: {phone}\n\nSrdačan pozdrav\n{practice}",
+      "booking_declined_subject": "Vaš zahtjev za termin",
+      "booking_declined_body": "Poštovani/a {name}\n\nNažalost ne možemo potvrditi termin {when}. Molimo nazovite nas: {phone}\n\nSrdačan pozdrav\n{practice}"
+    }
+  }
+}

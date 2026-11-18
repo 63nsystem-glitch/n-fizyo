@@ -1,0 +1,55 @@
+{% extends "layouts/staff.html" %}
+{% import "homeprogram/_pic.html" as pic with context %}
+{% block head %}<link rel="stylesheet" href="{{ static('css/homeprogram.css') }}">{% endblock %}
+{% block back %}<a class="icon-btn" href="{{ S }}/uebungen" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ (ex.name_fr if lang == 'fr' else ex.name_de) if ex else t('hp.new_exercise') }}{% endblock %}
+{% block subtitle %}{% if ex and not ex.active %}{{ t('hp.inactive_badge') }}{% endif %}{% endblock %}
+{% block content %}
+<form method="post" action="{{ S }}/uebungen/{{ ex.id if ex else 'neu' }}" class="stack hp-form">
+  <input type="hidden" name="_csrf" value="{{ csrf }}">
+  {% if errors %}<div class="banner error" role="alert">{{ icon('error') }}<span>{{ t('hp.form_errors') }}</span></div>{% endif %}
+  {% if usage %}<div class="banner info">{{ icon('info') }}<span>{{ usage }}</span></div>{% endif %}
+  <section class="card stack-s">
+    <div class="field{% if 'name' in errors %} invalid{% endif %}"><label for="nde">{{ t('hp.name') }} (DE)</label><input id="nde" name="name_de" value="{{ v.name_de or '' }}" maxlength="120"></div>
+    <div class="field{% if 'instructions' in errors %} invalid{% endif %}"><label for="tde">{{ t('hp.instructions') }} (DE)</label><textarea id="tde" name="instructions_de" rows="3" maxlength="1200">{{ v.instructions_de or '' }}</textarea></div>
+    <div class="field{% if 'name' in errors %} invalid{% endif %}"><label for="nfr">{{ t('hp.name') }} (FR)</label><input id="nfr" name="name_fr" value="{{ v.name_fr or '' }}" maxlength="120"></div>
+    <div class="field{% if 'instructions' in errors %} invalid{% endif %}"><label for="tfr">{{ t('hp.instructions') }} (FR)</label><textarea id="tfr" name="instructions_fr" rows="3" maxlength="1200">{{ v.instructions_fr or '' }}</textarea></div>
+    <p class="small muted">{{ t('hp.translate_hint') }}</p>
+  </section>
+  <section class="card stack-s">
+    <h2>{{ t('hp.area_label') }}</h2>
+    <div class="chips">{% for a in areas %}<label class="chip-choice"><input type="checkbox" name="area" value="{{ a }}"{{ ' checked' if a in (v.areas or []) else '' }}>{{ t('hp.area.' ~ a) }}</label>{% endfor %}</div>
+  </section>
+  <section class="card stack-s">
+    <h2>{{ t('hp.dose_title') }}</h2>
+    <p class="small muted">{{ t('hp.dose_hint') }}</p>
+    <div class="hp-dose-grid">
+      {% for k, lbl in (('sets', 'hp.sets'), ('reps', 'hp.reps'), ('hold_sec', 'hp.hold'), ('duration_min', 'hp.duration'), ('per_day', 'hp.per_day')) %}
+      <div class="field{% if k in errors %} invalid{% endif %}"><label for="f-{{ k }}">{{ t(lbl) }}</label><input id="f-{{ k }}" name="{{ k }}" value="{{ v[k] or '' }}" inputmode="numeric" pattern="[0-9]*" maxlength="3"{% if k in errors %} aria-invalid="true" aria-describedby="f-{{ k }}-err"{% endif %}>
+        {% if k in errors %}<span class="small" id="f-{{ k }}-err" style="color:var(--error)">{{ t('hp.range', max=limits[k]) }}</span>{% endif %}</div>
+      {% endfor %}
+    </div>
+  </section>
+  <section class="card stack-s">
+    <h2>{{ t('hp.drawing') }}</h2>
+    <p class="small muted">{{ t('hp.drawing_hint') }}</p>
+    <div class="ex-choices" role="radiogroup" aria-label="{{ t('hp.drawing') }}">
+      <label class="ex-choice"><input type="radio" name="drawing" value=""{{ ' checked' if not v.drawing else '' }}>{{ pic.svg({'kind': 'region', 'src': 'img/exercises/region-' ~ ((v.areas or ['general'])[0]) ~ '.svg'}) }}<span>{{ t('hp.drawing_none') }}</span></label>
+      {% for c in choices %}<label class="ex-choice"><input type="radio" name="drawing" value="{{ c.code }}"{{ ' checked' if v.drawing == c.code else '' }}>{{ pic.svg({'kind': 'drawing', 'src': c.src}) }}<span>{{ c.label }}</span></label>{% endfor %}
+    </div>
+  </section>
+  <div class="form-actions"><a class="btn text" href="{{ S }}/uebungen">{{ t('common.cancel') }}</a><button class="btn" type="submit">{{ icon('check', 18) }}{{ t('common.save') }}</button></div>
+</form>
+{% if ex %}
+<form method="post" action="{{ S }}/uebungen/{{ ex.id }}/aktiv" class="card stack-s hp-form" style="margin-top:16px">
+  <input type="hidden" name="_csrf" value="{{ csrf }}">
+  {% if ex.active %}
+  <p class="small muted">{{ t('hp.deactivate_hint') }}</p>
+  <div><button class="btn tonal" type="submit" name="on" value="0">{{ icon('visibility_off', 18) }}{{ t('hp.deactivate') }}</button></div>
+  {% else %}
+  <p class="small muted">{{ t('hp.reactivate_hint') }}</p>
+  <div><button class="btn tonal" type="submit" name="on" value="1">{{ icon('visibility', 18) }}{{ t('hp.reactivate') }}</button></div>
+  {% endif %}
+</form>
+{% endif %}
+{% endblock %}

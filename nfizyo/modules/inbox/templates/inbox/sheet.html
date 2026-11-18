@@ -1,0 +1,7 @@
+<div class="sheet-head"><h2>{{ doc.title or t('inbox.kind.' ~ doc.kind) }}</h2><button class="icon-btn" type="button" data-close aria-label="{{ t('common.close') }}">{{ icon('close') }}</button></div>
+<div class="sheet-body">
+  <p class="small muted">{% if doc.sender %}{{ doc.sender }} · {% endif %}{% if doc.doc_date %}{{ fmt_date(doc.doc_date) }} · {% endif %}{{ t('inbox.src.' ~ doc.source) }}</p>
+  <div class="doc-text" style="max-height:none">{{ marked }}</div>
+  <p class="small muted">{{ t('inbox.sheet_hint') }}</p>
+  <a class="btn tonal" href="{{ S }}/posteingang/{{ doc.id }}">{{ t('inbox.open_doc') }}</a>
+</div>

@@ -1,0 +1,43 @@
+{
+  "p": {
+    "appt": {
+      "title": "Termini",
+      "none": "Nema zakazanih termina.",
+      "cancel_hint": "Za otkazivanje ili pomjeranje termina nazovite najmanje 24 sata ranije.",
+      "request": "Zatražiti termin",
+      "wish": "Vaša želja",
+      "wish_ph": "npr. raniji termin",
+      "preferred": "Kada vam odgovara?",
+      "preferred_ph": "npr. ponedjeljak ili srijeda ujutro",
+      "send": "Poslati zahtjev",
+      "requested": "Zahtjev je poslan. Praksa će vas kontaktirati.",
+      "closure": "Ordinacija je zatvorena: {dates}."
+    },
+    "sms": {
+      "reminder": "Podsjetnik: vaš termin fizioterapije {when} ({place}). Otkazivanje telefonom najmanje 24 sata ranije.",
+      "offer": "{practice}: oslobodio se termin – {when}, {place}. Želite li ga? Odgovorite ovdje: {url}",
+      "offer_booked": "{practice}: Vaš termin {when} je potvrđen. Otkazivanje najmanje 24 sata ranije: {phone}",
+      "offer_gone": "{practice}: ponuđeni termin {when} više nije slobodan. Ostajete na listi čekanja.",
+      "cancelled": "{practice}: Vaši termini su otkazani: {dates}. Za pitanja nas nazovite: {phone}"
+    },
+    "mail": {
+      "reminder_subject": "Podsjetnik: termin {when}",
+      "reminder_body": "Poštovani/a {name}\n\nPodsjećamo vas na vaš termin fizioterapije {when} ({place}).\nOtkazivanje najmanje 24 sata ranije: {phone}\n\nSrdačan pozdrav\n{practice}"
+    },
+    "offer": {
+      "title": "Slobodan termin",
+      "minutes": "{n} minuta",
+      "first_wins": "Ovaj termin je ponuđen više osoba. Ko prvi potvrdi, dobija ga.",
+      "accept": "Da, uzimam termin",
+      "decline": "Ne, hvala",
+      "booked_title": "Vaš termin je rezervisan",
+      "booked_text": "Dobićete potvrdu putem SMS-a. Otkazivanje najmanje 24 sata ranije.",
+      "declined": "Hvala na odgovoru. Ostajete na listi čekanja.",
+      "changed_mind": "Ipak želim termin",
+      "taken": "Nažalost, termin je već dodijeljen. Ostajete na listi čekanja.",
+      "expired": "Ova ponuda je istekla. Ostajete na listi čekanja.",
+      "invalid": "Ovaj link nije važeći ili je istekao.",
+      "call": "Pitanja? Nazovite nas:"
+    }
+  }
+}

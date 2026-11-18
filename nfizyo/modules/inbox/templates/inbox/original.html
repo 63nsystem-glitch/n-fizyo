@@ -1,0 +1,20 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/posteingang/{{ doc.id }}" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('inbox.original_title') }} · {{ doc.title or t('inbox.kind.' ~ doc.kind) }}{% endblock %}
+{% block subtitle %}{% if doc.sender %}{{ doc.sender }} · {% endif %}{{ fmt_date(doc.doc_date or doc.created_at) }} · {{ doc.filename }}{% endblock %}
+{% block actions %}<a class="btn text" href="{{ S }}/posteingang/{{ doc.id }}/datei" target="_blank" rel="noopener">{{ icon('open_in_new', 18) }}<span>{{ t('inbox.original_download') }}</span></a>{% endblock %}
+{% block content %}
+<section class="card" style="max-width:920px">
+  {% if text is not none %}
+  <pre class="doc-text" style="max-height:none;white-space:pre-wrap;font-family:inherit" dir="auto">{{ text }}</pre>
+  {% elif image %}
+  <img src="{{ S }}/posteingang/{{ doc.id }}/datei" alt="{{ doc.title or t('inbox.kind.' ~ doc.kind) }}" style="max-width:100%;height:auto;display:block">
+  {% elif pdf %}
+  <p class="small muted" style="margin-bottom:12px">{{ t('inbox.original_pdf_hint') }}</p>
+  <a class="btn" href="{{ S }}/posteingang/{{ doc.id }}/datei" target="_blank" rel="noopener">{{ icon('picture_as_pdf', 18) }}{{ t('inbox.original_open_pdf') }}</a>
+  {% else %}
+  <p class="small muted" style="margin-bottom:12px">{{ t('inbox.original_tiff') }}</p>
+  <a class="btn tonal" href="{{ S }}/posteingang/{{ doc.id }}/datei" target="_blank" rel="noopener">{{ icon('download', 18) }}{{ t('inbox.original_download') }}</a>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,28 @@
+{
+  "p": {
+    "sms": {
+      "video": "{practice}: a sua consulta por vídeo de {when}. Entrada a partir de 15 minutos antes: {url} – não é para emergências, em caso de emergência 144."
+    },
+    "video": {
+      "title": "Consulta por vídeo",
+      "card_title": "Consulta por vídeo",
+      "open_now": "aberta agora",
+      "invalid": "Este link não é válido. Ligue para o consultório.",
+      "cancelled": "Esta consulta foi cancelada.",
+      "over": "Esta consulta por vídeo já terminou.",
+      "consent_title": "Antes de entrar",
+      "c_server": "O vídeo passa pelo servidor do consultório na Suíça.",
+      "c_record": "Nada é gravado.",
+      "c_place": "Procure um lugar calmo onde ninguém esteja a ouvir.",
+      "c_agree": "Concordo com a sessão por vídeo.",
+      "need_consent": "Confirme primeiro o seu acordo.",
+      "early": "Pode entrar a partir das {time}.",
+      "save_consent": "Guardar o meu acordo",
+      "not_ready": "A sala de vídeo ainda não está pronta. Ligue para o consultório.",
+      "camera_hint": "No passo seguinte, o seu aparelho pede a câmara e o microfone – permita, por favor.",
+      "join": "Entrar na consulta por vídeo",
+      "call": "Problemas? Ligue-nos:",
+      "emergency": "A sessão por vídeo não é para emergências. Em caso de emergência, ligue para o 144."
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{% extends layout %}
+{% import "ui/figure.html" as fig with context %}
+{% block title %}{{ t('intake.title') }}{% endblock %}
+{% block back %}<a class="icon-btn" href="/p/heute" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block content %}
+<form method="post" action="{{ action }}" class="stack" id="intake-form">
+  <input type="hidden" name="_csrf" value="{{ csrf }}">
+  <p class="muted" style="font-size:16px;line-height:24px">{{ t('intake.intro') }}</p>
+
+  <section class="card">
+    <h2 class="step-title" style="margin-bottom:4px">1 · {{ t('intake.where') }}</h2>
+    <p class="muted small" style="margin-bottom:12px">{{ t('intake.where_hint') }}</p>
+    <div data-region-picker>
+      {{ fig.body_figure({'muscle': {}, 'skeleton': {}}, id='intake-fig', editable=True, patient=True) }}
+      <p class="small" style="margin-top:8px"><strong data-region-summary>{{ t('intake.none_selected') }}</strong></p>
+      <details style="margin-top:8px"><summary class="btn text">{{ t('intake.list_instead') }}</summary>
+        <div class="optgrid" style="margin-top:8px">
+          {% for base in region_bases %}{% for side in ([''] if base == 'head' else ['_r', '_l']) %}{% set rid = base ~ side %}
+          <label class="opt"><input type="checkbox" name="region" value="{{ rid }}" data-region-box>{{ t('common.region.' ~ base) }}{% if side %} {{ t('common.side.' ~ side[1]) }}{% endif %}</label>
+          {% endfor %}{% endfor %}
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 class="step-title">2 · {{ t('intake.pain') }}</h2>
+    <div class="faces" role="radiogroup" aria-label="{{ t('intake.pain') }}">
+      {% for value, ic, cls in faces %}
+      <label class="{{ cls }}"><input type="radio" name="pain" value="{{ value }}">{{ icon(ic, 40) }}<span>{{ value }}</span><span class="small">{{ t('intake.pain_' ~ value) }}</span></label>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 class="step-title">3 · {{ t('intake.since') }}</h2>
+    <div class="optgrid">{% for o in since_opts %}<label class="opt"><input type="radio" name="since" value="{{ o }}">{{ t('intake.since_opt.' ~ o) }}</label>{% endfor %}</div>
+  </section>
+
+  <section class="card">
+    <h2 class="step-title">4 · {{ t('intake.worse') }}</h2>
+    <div class="optgrid">{% for o in worse_opts %}<label class="opt"><input type="checkbox" name="worse" value="{{ o }}">{{ t('intake.worse_opt.' ~ o) }}</label>{% endfor %}</div>
+  </section>
+
+  <section class="card">
+    <h2 class="step-title">5 · {{ t('intake.goals') }}</h2>
+    <div class="optgrid">{% for o in goal_opts %}<label class="opt"><input type="checkbox" name="goal" value="{{ o }}">{{ t('intake.goal_opt.' ~ o) }}</label>{% endfor %}</div>
+  </section>
+
+  <section class="card">
+    <h2 class="step-title">6 · {{ t('intake.text') }}</h2>
+    <p class="muted small" style="margin-bottom:8px">{{ t('intake.text_hint') if translated|default(false) else t('intake.text_hint_same') }}</p>
+    <div class="field"><label class="sr-only" for="text">{{ t('intake.text') }}</label>
+      <textarea id="text" name="text" rows="5" data-autogrow dir="auto" placeholder="{{ t('intake.text_ph') }}"></textarea></div>
+    {% if stt %}
+    <div class="row" style="margin-top:8px"><button type="button" class="btn tonal" data-voice="{{ voice_url }}" data-label-stop="{{ t('intake.voice_stop') }}" data-label-start="{{ t('intake.voice') }}" data-label-busy="{{ t('intake.voice_busy') }}">{{ icon('mic', 20) }}<span>{{ t('intake.voice') }}</span></button>
+      <span class="small muted" data-voice-status></span></div>
+    {% endif %}
+  </section>
+
+  <div class="emergency">{{ icon('emergency', 20) }}<span>{{ t('intake.emergency') }}</span></div>
+  <p class="small muted">{{ icon('lock', 14) }} {{ t('intake.privacy') }}</p>
+  <button class="btn lg block" type="submit">{{ icon('send', 20) }}{{ t('intake.send') }}</button>
+</form>
+{% endblock %}
+{% block scripts %}{{ super() }}<script src="{{ static('js/intake.js') }}" defer></script>{% endblock %}

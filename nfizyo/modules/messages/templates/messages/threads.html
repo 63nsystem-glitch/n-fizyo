@@ -1,0 +1,17 @@
+{% extends "layouts/staff.html" %}
+{% block title %}{{ t('messages.title') }}{% endblock %}
+{% block subtitle %}{{ t('messages.subtitle') }}{% endblock %}
+{% block content %}
+<section class="card" style="max-width:880px">
+  <div class="list">
+    {% for th in threads %}
+    <a class="list-item" href="{{ S }}/nachrichten/{{ th.patient_id }}">
+      <span class="lead avatar{{ ' primary' if th.unread else '' }}">{{ (th.first_name[:1] ~ th.last_name[:1]) | upper }}</span>
+      <span class="body"><span class="title" style="{{ 'font-weight:500' if th.unread else '' }}">{{ th.first_name }} {{ th.last_name }}</span>{% if th.spoken_lang and th.spoken_lang not in ('de', 'fr', 'gsw') %} <span class="lang-tag">{{ icon('translate', 12) }}{{ th.spoken_lang | upper }}</span>{% endif %}<br>
+        <span class="sub msg-preview" dir="auto" style="{{ 'color:var(--on-surface)' if th.unread else '' }}">{% if th.last_direction == 'out' %}{{ t('messages.from_practice') }} {% endif %}{% if th.last_kind == 'problem' %}{{ icon('report', 12) }} {% endif %}{% if th.problem_only %}{{ t('messages.problem_preview') }}{% else %}{{ th.preview | truncate(90) }}{% endif %}</span></span>
+      <span class="trail"><span class="small muted" style="white-space:nowrap">{% if th.when.kind == 'time' %}{{ fmt_time(th.when.at) }}{% elif th.when.kind == 'yesterday' %}{{ t('messages.yesterday') }}{% elif th.when.kind == 'date' %}{{ fmt_date(th.when.at, year=th.when.year) }}{% endif %}</span>{% if th.open_problems %}<span class="pill-label error">{{ icon('report', 14) }} {{ th.open_problems }}</span>{% endif %}{% if th.unread %}<span class="pill-label info">{{ th.unread }}</span>{% endif %}{{ icon('chevron_right', 20, 'flip-rtl') }}</span>
+    </a>
+    {% else %}<div class="empty">{{ icon('forum', 40) }}<p>{{ t('messages.none') }}</p></div>{% endfor %}
+  </div>
+</section>
+{% endblock %}

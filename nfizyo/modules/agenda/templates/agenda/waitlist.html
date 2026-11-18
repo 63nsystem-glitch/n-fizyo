@@ -1,0 +1,54 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/agenda" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('agenda.waitlist') }}{% endblock %}
+{% block subtitle %}{{ t('agenda.waitlist_hint') }}{% endblock %}
+{% block content %}
+<div class="grid-main-side">
+  <div class="col">
+  {% if gaps %}
+  <section class="card warn" aria-labelledby="h-gaps">
+    <h2 id="h-gaps" style="margin-bottom:8px">{{ icon('event_available', 20) }} {{ t('gap.list_title') }}</h2>
+    <div class="list">
+      {% for g in gaps %}
+      <a class="list-item" href="{{ S }}/agenda/termine/{{ g.a.id }}">
+        <span class="lead avatar">{{ icon('event_busy', 20) }}</span>
+        <span class="body"><span class="title">{{ fmt_date(g.start, weekday=True, year=False) }} · {{ fmt_time(g.start) }} · {{ g.a.therapist_name }}</span><br>
+          <span class="sub">{% if g.offer and g.offer.status == 'open' %}{{ t('gap.list_offer') }}{% elif g.n_fit %}{{ t('gap.list_fit', n=g.n_fit) }}{% elif g.n_all %}{{ t('gap.list_maybe', n=g.n_all) }}{% else %}{{ t('gap.list_nobody') }}{% endif %}</span></span>
+        <span class="trail">{{ icon('chevron_right', 20, 'flip-rtl') }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+  <section class="card">
+    <div class="list">
+      {% for w in items %}
+      <div class="list-item">
+        <span class="lead avatar">{{ icon('hourglass_top', 20) }}</span>
+        <span class="body"><span class="title">{% if w.patient_id %}<a href="{{ S }}/patienten/{{ w.patient_id }}">{{ w.first_name }} {{ w.last_name }}</a>{% else %}{{ w.name }}{% endif %}</span>
+          {% if w.source == 'app' %} <span class="pill-label info">{{ t('agenda.from_app') }}</span>{% endif %}<br>
+          <span class="sub">{{ w.wish or '' }}{% if w.preferred %} · {{ w.preferred }}{% endif %}{% if w.therapist_name %} · {{ w.therapist_name }}{% endif %}{% if w.location_name %} · {{ w.location_name }}{% endif %}{% if w.phone %} · {{ w.phone | phone }}{% endif %} · {{ fmt_date(w.created_at) }}</span></span>
+        <span class="trail"><form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="done" value="{{ w.id }}"><button class="btn text" type="submit">{{ icon('check', 18) }}{{ t('agenda.waitlist_done') }}</button></form></span>
+      </div>
+      {% else %}<div class="empty">{{ icon('hourglass_top', 40) }}<p>{{ t('agenda.waitlist_empty') }}</p></div>{% endfor %}
+    </div>
+  </section>
+  </div>
+  <section class="card">
+    <h2 style="margin-bottom:12px">{{ t('agenda.waitlist_add') }}</h2>
+    <form method="post" class="form">
+      {% include "agenda/_form.html" %}
+      <div class="field"><label for="patient">{{ t('agenda.patient') }}</label><input id="patient" name="patient" list="patients-dl" autocomplete="off"></div>
+      <div class="form-grid">
+        <div class="field"><label for="name">{{ t('agenda.or_name') }}</label><input id="name" name="name"></div>
+        <div class="field"><label for="phone">{{ t('patients.phone') }}</label><input id="phone" name="phone" type="tel"></div>
+      </div>
+      <div class="field"><label for="wish">{{ t('agenda.wish') }}</label><input id="wish" name="wish" placeholder="{{ t('agenda.wish_ph') }}"></div>
+      <div class="field"><label for="preferred">{{ t('agenda.preferred') }}</label><input id="preferred" name="preferred" placeholder="{{ t('agenda.preferred_ph') }}"></div>
+      <div class="field"><label for="w-th">{{ t('agenda.therapist') }}</label><select id="w-th" name="therapist_id"><option value="">{{ t('agenda.any') }}</option>{% for th in therapists %}<option value="{{ th.id }}">{{ th.name }}</option>{% endfor %}</select></div>
+      <div class="field"><label for="w-loc">{{ t('agenda.location') }}</label><select id="w-loc" name="location_id"><option value="">{{ t('agenda.any') }}</option>{% for l in locations %}<option value="{{ l.id }}">{{ l.name }}</option>{% endfor %}</select></div>
+      <div class="form-actions"><button class="btn" type="submit">{{ icon('add', 18) }}{{ t('agenda.waitlist_add') }}</button></div>
+    </form>
+  </section>
+</div>
+{% endblock %}

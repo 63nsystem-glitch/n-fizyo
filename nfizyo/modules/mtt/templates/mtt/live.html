@@ -1,0 +1,8 @@
+{% extends "layouts/staff.html" %}
+{% block title %}{{ t('mtt.live_title') }}{% endblock %}
+{% block subtitle %}{{ t('mtt.live_hint') }}{% endblock %}
+{% block actions %}<a class="btn tonal" href="{{ S }}/mtt/geraete">{{ icon('qr_code', 18) }}<span>{{ t('mtt.machines') }}</span></a>{% endblock %}
+{% block content %}
+<div id="mtt-live" data-refresh="{{ S }}/mtt/live" aria-live="polite">{% include "mtt/_live.html" %}</div>
+{% endblock %}
+{% block scripts %}{{ super() }}<script src="{{ static('js/mtt_live.js') }}" defer></script>{% endblock %}

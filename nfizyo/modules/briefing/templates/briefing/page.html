@@ -1,0 +1,38 @@
+{% extends "layouts/staff.html" %}
+{% import "briefing/_parts.html" as bp with context %}
+{% set p = b.patient %}{% set a = b.appt %}
+{% block back %}<a class="icon-btn" href="{{ S }}/heute" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ p.first_name }} {{ p.last_name }}{% endblock %}
+{% block subtitle %}{{ t('brief.page_title') }} · {{ fmt_date(a.starts_at, weekday=True) }} · {{ fmt_time(a.starts_at) }}{% if a.room_name %} · {{ a.room_name }}{% endif %}{% endblock %}
+{% block content %}
+<div class="grid-main-side">
+  <div class="col">
+    <section class="card info" aria-labelledby="h-brief">
+      <div class="card-head"><h2 id="h-brief">{{ (a.type_fr if lang == 'fr' else a.type_de) or t('brief.page_title') }}{% if b.session %} · {{ t('brief.session', n=b.session[0], total=b.session[1]) }}{% endif %}</h2>
+        {% if a.spoken_lang and a.spoken_lang not in ('de', 'fr', 'gsw') %}<span class="chip {{ 'warn' if a.needs_interpreter else '' }}">{{ icon('translate', 16) }}{{ a.spoken_lang | upper }}{% if a.needs_interpreter %} · {{ t('brief.interpreter') }}{% endif %}</span>{% endif %}</div>
+      <div class="brief">
+        {% if b.takeover %}<div class="brief-row alert">{{ icon('swap_horiz', 20) }}<div><span class="lbl">{{ t('brief.takeover') }}</span>{{ t('brief.takeover_text', name=b.last_by_name, date=fmt_date(b.last_day, weekday=True, year=False)) }} <a href="{{ S }}/patienten/{{ p.id }}/uebergabe">{{ t('brief.open_handover') }}</a></div></div>{% endif %}
+        {% if b.last_note %}{{ bp.note_row(b.last_note, S) }}{% elif not b.last %}<div class="brief-row">{{ icon('person', 20) }}<div><span class="lbl">{{ t('brief.first_time') }}</span>{{ t('brief.first_text') }}</div></div>{% endif %}
+        {% if b.hp %}<div class="brief-row{{ ' good' if b.hp.done * 2 >= b.hp.total else '' }}">{{ icon('fitness_center', 20) }}<div><span class="lbl">{{ t('brief.since_label') if b.hp_since_last else t('brief.last_days') }}</span>{{ bp.hp_line(b.hp) }}</div></div>{% endif %}
+        {{ bp.mtt_row(b.mtt, S, b.patient.id) }}
+        {% for m in b.messages[:5] %}{{ bp.msg_row(m) }}{% endfor %}
+        {% for i in b.intakes[:2] %}<div class="brief-row">{{ icon('record_voice_over', 20) }}<div><span class="lbl">{{ t('brief.intake') }} · {{ fmt_date(i.at, weekday=True, year=False) }}{% if i.pain is not none %} · {{ t('brief.pain', n=i.pain) }}{% endif %}</span><span dir="auto">«{{ i.text | truncate(220) }}»</span></div></div>{% endfor %}
+        {% if b.trends %}<div class="brief-row">{{ icon('trending_up', 20) }}<div><span class="lbl">{{ t('brief.measures') }}</span>{% for s in b.trends %}{{ bp.trend_line(s) }}{% if not loop.last %}<br>{% endif %}{% endfor %}</div></div>{% endif %}
+        {{ bp.goal_row(b.goal) }}
+      </div>
+      <div class="row" style="justify-content:flex-end;margin-top:16px;gap:8px;flex-wrap:wrap">
+        <a class="btn tonal" href="{{ S }}/patienten/{{ p.id }}">{{ icon('medical_information', 18) }}{{ t('brief.open_record') }}</a>
+        {% if module_on('dictation') %}<a class="btn" href="{{ S }}/diktat/termin/{{ a.id }}">{{ icon('mic', 18) }}{{ t('brief.dictate') }}</a>{% endif %}
+      </div>
+    </section>
+  </div>
+  <div class="col">
+    {% if b.restrictions or b.alerts %}<section class="card"><div class="card-head"><h2>{{ t('brief.restrictions') }}</h2></div>{{ bp.finding_list(b.restrictions, 'restriction') }}{{ bp.finding_list(b.alerts, 'restriction') }}</section>{% endif %}
+    {% if b.clearances %}<section class="card"><div class="card-head"><h2>{{ t('brief.clearances') }}</h2></div>{{ bp.finding_list(b.clearances, 'clearance') }}</section>{% endif %}
+    {% if b.rx %}<section class="card"><div class="card-head"><h2>{{ icon('assignment', 20) }} {{ t('brief.rx') }}</h2><span class="mono">{{ b.rx.used }}/{{ b.rx.total }}</span></div>
+      {% for l in b.rx.lines %}<div class="rx-line {{ l.level }}">{{ icon(l.icon, 18) }}<span>{{ l.text }}</span></div>{% else %}<p class="small muted">{{ t('brief.rx_ok') }}</p>{% endfor %}</section>{% endif %}
+    {% if b.diagnoses %}<section class="card"><div class="card-head"><h2>{{ t('brief.diagnoses') }}</h2></div><ul class="small" style="margin:0;padding-inline-start:18px">{% for f in b.diagnoses %}<li>{{ f.title }}</li>{% endfor %}</ul></section>{% endif %}
+    <p class="small muted">{{ icon('lock', 14) }} {{ t('brief.source_hint') }}</p>
+  </div>
+</div>
+{% endblock %}

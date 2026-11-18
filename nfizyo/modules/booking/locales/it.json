@@ -1,0 +1,61 @@
+{
+  "p": {
+    "booking": {
+      "title": "Richiedere un appuntamento",
+      "closed": "Al momento non è possibile prenotare online. Per favore ci chiami.",
+      "choose_type": "Per che cosa desidera un appuntamento?",
+      "minutes": "{n} minuti",
+      "other_type": "Altro trattamento",
+      "choose_slot": "Scelga un orario libero. Lo studio confermerà poi l’appuntamento via SMS.",
+      "no_slots": "Questa settimana non c’è più nulla di libero.",
+      "earlier": "Prima",
+      "later": "Dopo",
+      "other_slot": "Scegliere un altro orario",
+      "err_fields": "Per favore controlli i dati evidenziati.",
+      "first_name": "Nome",
+      "last_name": "Cognome",
+      "birthdate": "Data di nascita",
+      "phone": "Cellulare",
+      "phone_hint": "Riceverà un codice via SMS.",
+      "email": "E-mail (facoltativo)",
+      "email_ok": "Ricevere conferma e promemoria anche via e-mail (l’e-mail non è cifrata).",
+      "insurance": "Assicurazione",
+      "ins_KVG": "Assicurazione di base (malattia)",
+      "ins_UVG": "Assicurazione infortuni",
+      "ins_IVG": "Assicurazione invalidità",
+      "ins_VVG": "Assicurazione complementare",
+      "ins_privat": "A mie spese",
+      "prescription": "Ho una prescrizione medica per la fisioterapia.",
+      "note": "Osservazione (facoltativo)",
+      "note_hint": "Per favore niente dettagli sulla salute – ne parleremo in studio.",
+      "consent": "Acconsento che {practice} salvi i miei dati per fissare l’appuntamento.",
+      "send_code": "Inviare il codice via SMS",
+      "code_intro": "Le abbiamo inviato un codice via SMS. Lo inserisca qui.",
+      "confirm": "Inviare la richiesta",
+      "sent_title": "Richiesta ricevuta",
+      "sent_text": "{practice} esamina la Sua richiesta e conferma l’appuntamento via SMS. Solo allora l’appuntamento è fissato.",
+      "err_slot": "Questo orario non è più valido. Scelga di nuovo.",
+      "err_taken": "Questo orario è stato appena occupato. Ne scelga un altro.",
+      "err_blocked": "Troppi tentativi. Riprovi più tardi o ci chiami.",
+      "err_phone": "Indichi un numero di cellulare svizzero o del Liechtenstein (p. es. 079 123 45 67).",
+      "err_sms_limit": "A questo numero sono già stati inviati diversi codici. Riprovi tra un'ora o ci chiami.",
+      "err_code": "Il codice non è corretto.",
+      "err_expired": "La richiesta è scaduta. Ricominci per favore.",
+      "all_places": "Tutte le sedi",
+      "closure": "Lo studio è chiuso: {dates}.",
+      "original": "Mostra l’originale",
+      "err_busy": "Al momento non possiamo inviare altri codici. Riprovi più tardi o ci chiami."
+    },
+    "sms": {
+      "booking_code": "{practice}: il Suo codice per la richiesta di appuntamento: {code}",
+      "booking_confirmed": "{practice}: il Suo appuntamento del {when} è confermato ({place}). Disdetta almeno 24 ore prima: {phone}",
+      "booking_declined": "{practice}: purtroppo non possiamo confermare l’appuntamento del {when}. Ci chiami per favore: {phone}"
+    },
+    "mail": {
+      "booking_confirmed_subject": "Appuntamento confermato: {when}",
+      "booking_confirmed_body": "Buongiorno {name}\n\nIl Suo appuntamento del {when} è confermato ({place}).\nDisdetta almeno 24 ore prima: {phone}\n\nCordiali saluti\n{practice}",
+      "booking_declined_subject": "La Sua richiesta di appuntamento",
+      "booking_declined_body": "Buongiorno {name}\n\nPurtroppo non possiamo confermare l’appuntamento del {when}. Ci chiami per favore: {phone}\n\nCordiali saluti\n{practice}"
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{% extends "ui/settings.html" %}
+{% block settings %}
+<div class="grid-main-side">
+  <div class="col stack">
+    {% for x in locations %}
+    <section class="card stack-s"{% if not x.l.active %} style="opacity:.6"{% endif %}>
+      <div class="card-head"><h2>{{ icon('domain', 20) }}{{ x.l.name }}</h2>
+        <div class="row" style="gap:4px">
+        {% if edit_id != x.l.id %}<a class="btn text sm" href="?bearbeiten={{ x.l.id }}" data-edit-location="{{ x.l.id }}">{{ icon('edit', 18) }}{{ t('agenda.loc.edit') }}</a>{% endif %}
+        <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="toggle"><input type="hidden" name="table" value="locations"><input type="hidden" name="id" value="{{ x.l.id }}">
+          <button class="btn text sm" type="submit">{{ t('settings.deactivate') if x.l.active else t('settings.activate') }}</button></form></div></div>
+      {% if x.l.address %}<p class="small muted">{{ x.l.address }}</p>{% endif %}
+      {% if edit_id == x.l.id %}
+      <div class="stack-s" data-edit-form>
+        <form method="post" class="form-grid"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="edit_location"><input type="hidden" name="id" value="{{ x.l.id }}">
+          <div class="field"><label for="el-n-{{ x.l.id }}">{{ t('settings.name') }}</label><input id="el-n-{{ x.l.id }}" name="name" value="{{ x.l.name }}" required maxlength="120"></div>
+          <div class="field"><label for="el-a-{{ x.l.id }}">{{ t('settings.address') }}</label><input id="el-a-{{ x.l.id }}" name="address" value="{{ x.l.address or '' }}" maxlength="300"></div>
+          <div class="field"><label for="el-p-{{ x.l.id }}">{{ t('settings.phone') }}</label><input id="el-p-{{ x.l.id }}" name="phone" value="{{ x.l.phone or '' }}" inputmode="tel"></div>
+          <div class="form-actions" style="grid-column:1/-1"><a class="btn text" href="?">{{ t('common.cancel') }}</a><button class="btn" type="submit">{{ t('common.save') }}</button></div>
+        </form>
+        {% for kind, items in (('room', x.rooms), ('device', x.devices)) %}{% for it in items %}
+        <form method="post" class="row" style="gap:6px"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="rename"><input type="hidden" name="table" value="{{ kind }}s"><input type="hidden" name="id" value="{{ it.id }}"><input type="hidden" name="location_id" value="{{ x.l.id }}">
+          <span class="small muted" style="min-width:64px">{{ t('agenda.loc.' ~ kind) }}</span>
+          <input name="name" class="select-sm grow" value="{{ it.name }}" required maxlength="120" aria-label="{{ t('agenda.loc.rename') }}: {{ it.name }}">
+          <button class="btn text sm" type="submit">{{ t('agenda.loc.rename') }}</button>
+          <span class="small muted">{{ '' if it.active else t('agenda.loc.inactive') }}</span></form>
+        {% endfor %}{% endfor %}
+      </div>
+      {% endif %}
+      <div class="loc-cols">
+        {% for kind, items, ic in (('room', x.rooms, 'meeting_room'), ('device', x.devices, 'memory')) %}
+        <div>
+          <h3 class="small muted" style="margin-bottom:6px">{{ t('settings.' ~ kind ~ 's') }}</h3>
+          <div class="chips" style="margin-bottom:8px">
+            {% for it in items %}
+            <form method="post" style="display:inline"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="toggle"><input type="hidden" name="table" value="{{ kind }}s"><input type="hidden" name="id" value="{{ it.id }}">
+              <button class="chip{{ '' if it.active else ' error' }}" type="submit" title="{{ t('settings.deactivate') if it.active else t('settings.activate') }}">{{ icon(ic, 16) }}{{ it.name }}</button></form>
+            {% else %}<span class="small muted">–</span>{% endfor %}
+          </div>
+          <form method="post" class="row" style="gap:6px"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="{{ kind }}"><input type="hidden" name="location_id" value="{{ x.l.id }}">
+            <input name="name" class="select-sm grow" placeholder="{{ t('settings.new_' ~ kind) }}" aria-label="{{ t('settings.new_' ~ kind) }}" required maxlength="120">
+            <button class="icon-btn tonal" type="submit" aria-label="{{ t('settings.add') }}">{{ icon('add', 20) }}</button></form>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endfor %}
+  </div>
+  <section class="card">
+    <h2 style="margin-bottom:16px">{{ t('settings.add_location') }}</h2>
+    <form method="post" class="form"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="location">
+      <div class="field"><label for="ln">{{ t('settings.name') }}</label><input id="ln" name="name" required maxlength="120"></div>
+      <div class="field"><label for="la">{{ t('settings.address') }}</label><input id="la" name="address" maxlength="300"></div>
+      <div class="field"><label for="lp">{{ t('settings.phone') }}</label><input id="lp" name="phone" inputmode="tel"></div>
+      <div class="form-actions"><button class="btn" type="submit">{{ icon('add', 18) }}{{ t('settings.add') }}</button></div>
+    </form>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,257 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/abrechnung{{ '?ansicht=entwuerfe' if inv.status == 'draft' else '?ansicht=abgeschlossen' }}" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('billing.invoice') }}{% if inv.number %} {{ inv.number }}{% endif %}{% endblock %}
+{% block subtitle %}{% if screen.key != 'leitung' %}<a href="{{ S }}/patienten/{{ inv.patient_id }}" style="color:inherit">{{ inv.first_name }} {{ inv.last_name }}</a>{% else %}{{ inv.first_name }} {{ inv.last_name }}{% endif %} · {{ t('billing.law.' ~ inv.law) }} · {{ inv.insurer_name or '–' }} · {{ t('billing.tiers.' ~ inv.tiers) }}{% endblock %}
+{% block actions %}
+  <span class="pill-label {{ {'draft': 'warn', 'final': 'ok', 'cancelled': 'error'}[inv.status] }}">{% if inv.status != 'draft' %}{{ icon('lock', 14) }} {% endif %}{{ t('billing.status.' ~ inv.status) }}</span>
+  {% if inv.status == 'final' %}<span class="pill-label {{ {'paid': 'ok', 'overdue': 'error', 'partial': 'warn', 'open': 'info'}.get(b.state, '') }}">{{ t('billing.state.' ~ b.state) }}</span>{% endif %}
+  <a class="btn tonal" href="{{ S }}/rechnungen/{{ inv.id }}/pdf" target="_blank" rel="noopener">{{ icon('picture_as_pdf', 18) }}<span>{{ t('billing.pdf_btn') }}</span></a>
+  {% if inv.status == 'final' and inv.tiers == 'garant' and email_ok %}
+  <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="email">
+    <button class="btn tonal" type="submit" title="{{ t('billing.mail.last', date=fmt_date(emailed)) if emailed else t('billing.mail.hint') }}">{{ icon('mail', 18) }}<span>{{ t('billing.mail.btn') }}{% if emailed %} ✓{% endif %}</span></button></form>
+  {% endif %}
+{% endblock %}
+{% block content %}
+<div class="grid-main-side">
+  <div class="col stack">
+    {% for p in problems %}<div class="banner warn">{{ icon('warning', 20) }}<div>{{ t('billing.problem.' ~ p) }}</div></div>{% endfor %}
+    {% for h in hints %}<div class="banner info">{{ icon('info', 20) }}<div>{{ t('billing.hint.' ~ h) }}</div></div>{% endfor %}
+    {% for w in warnings %}<div class="banner {{ 'error' if w == 'rejected_open' else 'warn' }}">{{ icon('assignment_return' if w == 'rejected_open' else 'info', 20) }}<div>{{ t('billing.warn.' ~ w) }}</div></div>{% endfor %}
+    {% if inv.status == 'cancelled' %}<div class="banner error">{{ icon('info', 20) }}<div>{{ t('billing.cancelled_on', date=fmt_date(inv.cancelled_at), reason=inv.cancel_reason) }}</div></div>{% endif %}
+    <section class="card flush">
+      <div class="table-wrap">
+      {% set edit = inv.status == 'draft' and can_write %}
+      <table class="table">
+        <thead><tr><th>{{ t('billing.col_date') }}</th>{% if edit %}<th>{{ t('billing.col_label') }}</th>{% else %}<th>{{ t('billing.col_code') }}</th><th>{{ t('billing.col_label') }}</th>{% endif %}
+          <th class="num">{{ t('billing.col_qty') }}</th>{% if private %}<th class="num">{{ t('billing.col_price') }}</th><th class="num">{{ t('billing.col_vat') }}</th>{% else %}<th class="num">TP</th><th class="num">TPW</th><th class="num" title="{{ t('billing.ef_long') }}">EF</th>{% endif %}<th class="num">CHF</th>{% if edit %}<th></th>{% endif %}</tr></thead>
+        <tbody>
+        {% for l in lines %}
+        <tr>
+          <td style="white-space:nowrap">{{ fmt_date(l.service_date) }}</td>
+          {% if edit %}
+          <td><form id="lf{{ l.id }}" method="post" data-multi><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="line"><input type="hidden" name="line_id" value="{{ l.id }}"></form>
+            <select name="code" form="lf{{ l.id }}" class="select-sm" style="max-width:340px;width:100%" data-autosubmit aria-label="{{ t('billing.col_code') }}">
+              {% if not l.code %}<option value="">– {{ l.label }} –</option>{% endif %}
+              {% for p in positions %}<option value="{{ p.code }}"{% if p.code == l.code %} selected{% endif %}>{{ p.code }} · {{ p.label_fr if lang == 'fr' else p.label_de }}{% if p.price is defined %} · {{ chf(p.price) }}{% endif %}</option>{% endfor %}
+            </select></td>
+          <td class="num"><span class="row" style="gap:4px;justify-content:flex-end;flex-wrap:nowrap">
+            <input name="quantity" form="lf{{ l.id }}" value="{{ l.quantity | num }}" inputmode="decimal" class="select-sm" style="width:64px;text-align:end" aria-label="{{ t('billing.col_qty') }}">
+            <button class="icon-btn" type="submit" form="lf{{ l.id }}" aria-label="{{ t('common.save') }}" title="{{ t('common.save') }}">{{ icon('check', 20) }}</button></span></td>
+          {% else %}
+          <td class="mono">{{ l.code or '–' }}</td><td>{{ l.label }}</td><td class="num">{{ l.quantity | num }}</td>
+          {% endif %}
+          {% if private %}
+          <td class="num mono">{{ l.unit_price | money }}</td>
+          <td class="num mono">{{ (l.vat_rate | num) ~ ' %' if l.vat_rate else '–' }}</td>
+          {% else %}
+          <td class="num mono">{{ '%.2f' | format(l.tp) if l.tp is not none else '–' }}</td>
+          <td class="num mono">{{ '%.2f' | format(l.tp_value) if l.tp_value else '–' }}</td>
+          <td class="num mono">{{ (l.external_factor or 1) | money }}</td>
+          {% endif %}
+          <td class="num mono">{{ l.amount_chf | money }}</td>
+          {% if edit %}
+          <td><form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="remove"><input type="hidden" name="line_id" value="{{ l.id }}">
+            <button class="icon-btn" type="submit" aria-label="{{ t('common.delete') }}" title="{{ t('common.delete') }}">{{ icon('delete', 20) }}</button></form></td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+        {% set span = (5 if edit else 6) if private else (6 if edit else 7) %}
+        <tfoot><tr><td colspan="{{ span }}"><strong>{{ t('billing.total') }}</strong></td><td class="num mono"><strong>{{ inv.total_chf | money }}</strong></td>{% if edit %}<td></td>{% endif %}</tr>
+          {% for v in vat %}<tr><td colspan="{{ span }}" class="small muted">{{ t('billing.vat_incl', rate=pct(v.rate)) }}</td><td class="num mono small muted">{{ v.vat | money }}</td>{% if edit %}<td></td>{% endif %}</tr>{% endfor %}</tfoot>
+      </table>
+      </div>
+    </section>
+    {% if payments %}
+    <section class="card flush">
+      <h2 style="padding:16px 16px 8px">{{ t('billing.pay.list') }}</h2>
+      <div class="table-wrap"><table class="table"><thead><tr><th>{{ t('billing.col_date') }}</th><th>{{ t('billing.pay.source') }}</th><th>{{ t('billing.pay.from') }}</th><th class="num">CHF</th><th></th></tr></thead><tbody>
+      {% for pm in payments %}<tr{% if pm.reversed_by_id or pm.kind == 'reversal' %} class="muted"{% endif %}><td>{{ fmt_date(pm.booked_on) }}</td>
+        <td>{% if pm.kind != 'payment' %}<strong>{{ t('billing.pay.kind_' ~ pm.kind) }}</strong> · {% endif %}{{ t('billing.pay.src_' ~ pm.source) }}{% if pm.method and pm.method != 'bank' %} · {{ t('billing.pay.method_' ~ pm.method) }}{% endif %}{% if pm.note %} · {{ pm.note }}{% endif %}{% if pm.reversed_by_id %} · <span class="pill-label error">{{ t('billing.pay.is_reversed') }}</span>{% endif %}</td>
+        <td>{{ pm.debtor or '–' }}{% if pm.message %}<br><span class="small muted">«{{ pm.message }}»</span>{% endif %}</td><td class="num mono">{{ pm.amount_chf | money }}{% if pm.rounding_chf %}<br><span class="small muted">{{ t('billing.pay.cash_rounding', cash=(pm.amount_chf + pm.rounding_chf) | money, rounding='%+.2f' | format(pm.rounding_chf)) }}</span>{% endif %}</td>
+        <td>{% if pm.kind != 'reversal' and not pm.reversed_by_id %}
+          <details class="row-actions"><summary class="icon-btn" aria-label="{{ t('billing.pay.correct') }}" title="{{ t('billing.pay.correct') }}">{{ icon('more_vert', 20) }}</summary>
+            <div class="stack-s" style="padding:8px 0;min-width:240px">
+            {% if pm.kind == 'payment' %}
+            <form method="post" class="form"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="pay_unassign"><input type="hidden" name="payment_id" value="{{ pm.id }}">
+              <div class="field"><label for="ur{{ pm.id }}">{{ t('billing.pay.unassign_reason') }}</label><input id="ur{{ pm.id }}" name="reason" required maxlength="200"></div>
+              <button class="btn outlined sm" type="submit">{{ t('billing.pay.unassign') }}</button></form>
+            {% endif %}
+            {% if can_finalize %}
+            <form method="post" class="form" data-confirm="{{ t('billing.pay.reverse_confirm') }}" data-confirm-yes="{{ t('billing.pay.reverse') }}"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="pay_reverse"><input type="hidden" name="payment_id" value="{{ pm.id }}">
+              <div class="field"><label for="rr{{ pm.id }}">{{ t('billing.pay.reverse_reason') }}</label><input id="rr{{ pm.id }}" name="reason" required maxlength="200"></div>
+              <button class="btn outlined sm" type="submit">{{ t('billing.pay.reverse') }}</button></form>
+            {% endif %}
+            </div></details>
+        {% endif %}</td></tr>{% endfor %}
+      </tbody></table></div>
+      <p class="small muted" style="padding:0 16px 12px">{{ t('billing.pay.never_deleted') }}</p>
+    </section>
+    {% endif %}
+    {% if inv.status == 'draft' and can_write %}
+    <section class="card">
+      <h2 style="margin-bottom:12px">{{ t('billing.add_line') }}</h2>
+      <form method="post" class="row" style="gap:8px;align-items:flex-end;flex-wrap:wrap">
+        <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="add">
+        <div class="field grow"><label for="acode">{{ t('billing.col_code') }}</label>
+          <select id="acode" name="code">{% for p in positions %}<option value="{{ p.code }}">{{ p.code }} · {{ p.label_fr if lang == 'fr' else p.label_de }}{% if p.price is defined %} · {{ chf(p.price) }}{% elif p.unit == 'chf' %} · {{ chf(p.tp) }}{% endif %}</option>{% endfor %}</select>
+          {% if private and not positions %}<p class="hint">{{ t('billing.price.empty_hint') }}</p>{% endif %}</div>
+        <div class="field" style="width:96px"><label for="aqty">{{ t('billing.col_qty') }}</label><input id="aqty" name="quantity" value="1" inputmode="decimal"></div>
+        {% if not private and positions | selectattr('unit', 'equalto', 'chf_var') | list %}
+        <div class="field" style="width:120px"><label for="achf">{{ t('billing.material_chf') }}</label><input id="achf" name="chf" inputmode="decimal" placeholder="7361"></div>
+        <div class="field grow"><label for="adetail">{{ t('billing.material_detail') }}</label><input id="adetail" name="detail" maxlength="120" placeholder="{{ t('billing.material_ph') }}"></div>
+        {% endif %}
+        <div class="field"><label for="adate">{{ t('billing.col_date') }}</label><input id="adate" name="service_date" type="date" value="{{ today }}"></div>
+        <button class="btn tonal" type="submit">{{ icon('add', 18) }}{{ t('billing.add') }}</button>
+      </form>
+    </section>
+    {% endif %}
+  </div>
+  <div class="col stack">
+    <section class="card stack-s">
+      <h2>{{ t('billing.details') }}</h2>
+      <dl class="facts">
+        <dt>{{ t('billing.tariff') }}</dt><dd>{{ (tariff.name_fr if lang == 'fr' else tariff.name_de) if tariff else t('billing.tariff_private') }}</dd>
+        {% if inv.vat_number %}<dt>{{ t('billing.set.vat_number') }}</dt><dd class="mono">{{ inv.vat_number }}</dd>{% endif %}
+        <dt>{{ t('billing.period') }}</dt><dd>{{ date_range(inv.period_from, inv.period_to) }}</dd>
+        {% if inv.case_number %}<dt>{{ t('billing.case_number') }}</dt><dd>{{ inv.case_number }}</dd>{% endif %}
+        {% if inv.accident_date %}<dt>{{ t('billing.accident_date') }}</dt><dd>{{ fmt_date(inv.accident_date) }}</dd>{% endif %}
+        <dt>{{ t('billing.created') }}</dt><dd>{{ inv.creator_name }} · {{ fmt_date(inv.created_at) }}</dd>
+        {% if inv.finalized_at %}<dt>{{ t('billing.finalized_at') }}</dt><dd>{{ fmt_date(inv.finalized_at) }}</dd>{% endif %}
+      </dl>
+      {% if can_write and inv.status == 'draft' %}
+      {% if can_finalize %}
+      <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="finalize">
+        <button class="btn block" type="submit"{% if problems %} disabled{% endif %}>{{ icon('lock', 18) }}{{ t('billing.finalize') }}</button></form>
+      <p class="small muted">{{ t('billing.finalize_hint') }}</p>
+      {% else %}
+      <div class="banner info">{{ icon('task_alt', 20) }}<span>{{ t('billing.to_control') }}</span></div>
+      {% endif %}
+      <form method="post" data-confirm="{{ t('billing.delete_confirm') }}" data-confirm-yes="{{ t('common.delete') }}"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="delete">
+        <button class="btn text sm" type="submit" style="color:var(--error)">{{ icon('delete', 18) }}{{ t('billing.delete') }}</button></form>
+      {% elif can_finalize and inv.status == 'final' %}
+      <form method="post" class="form"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="cancel">
+        <div class="field"><label for="reason">{{ t('billing.cancel_reason') }}</label><input id="reason" name="reason" required maxlength="200"></div>
+        <button class="btn outlined" type="submit">{{ t('billing.cancel') }}</button></form>
+      {% endif %}
+    </section>
+    {% if inv.status == 'final' %}
+    <section class="card stack-s">
+      <h2>{{ t('billing.pay.title') }}</h2>
+      <dl class="facts">
+        <dt>{{ t('billing.pay.due') }}</dt><dd>{{ fmt_date(inv.due_on) if inv.due_on else '–' }}</dd>
+        <dt>{{ t('billing.pay.paid') }}</dt><dd class="mono">{{ chf(b.paid) }}</dd>
+        {% if b.fees %}<dt>{{ t('billing.pay.fees') }}</dt><dd class="mono">{{ chf(b.fees) }}</dd>{% endif %}
+        <dt>{{ t('billing.pay.open') }}</dt><dd class="mono"><strong>{{ chf(b.open) }}</strong></dd>
+        {% if b.overpaid %}<dt>{{ t('billing.pay.overpaid') }}</dt><dd class="mono">{{ chf(b.overpaid) }}</dd>{% endif %}
+        {% if inv.qr_reference %}<dt>{{ t('billing.pay.reference') }}</dt><dd class="mono small" style="user-select:all">{{ ref }}</dd>{% endif %}
+      </dl>
+      {% if b.open > 0 %}
+      <details><summary class="disclose">{{ t('billing.pay.add') }}</summary>
+        <form method="post" class="form" style="margin-top:8px"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="payment">
+          <div class="row" style="gap:8px;flex-wrap:wrap">
+            <div class="field" style="width:120px"><label for="pamt">CHF</label><input id="pamt" name="amount" inputmode="decimal" required value="{{ '%.2f' | format(b.open) }}"></div>
+            <div class="field"><label for="pdate">{{ t('billing.col_date') }}</label><input id="pdate" name="booked_on" type="date" value="{{ today }}" required></div>
+            <div class="field"><label for="pmeth">{{ t('billing.pay.method') }}</label><select id="pmeth" name="method">{% for m in methods %}<option value="{{ m }}">{{ t('billing.pay.method_' ~ m) }}</option>{% endfor %}</select></div>
+          </div>
+          <div class="field"><label for="pnote">{{ t('billing.pay.note') }}</label><input id="pnote" name="note" maxlength="200" placeholder="{{ t('billing.pay.note_ph') }}"></div>
+          <p class="hint">{{ t('billing.pay.cash_hint') }}</p>
+          <button class="btn tonal" type="submit">{{ t('common.save') }}</button>
+        </form></details>
+      {% endif %}
+      {% if can_finalize and b.paid > 0 %}
+      <details{% if b.overpaid %} open{% endif %}><summary class="disclose">{{ t('billing.pay.refund') }}</summary>
+        <form method="post" class="form" style="margin-top:8px" data-confirm="{{ t('billing.pay.refund_confirm') }}" data-confirm-yes="{{ t('billing.pay.refund_btn') }}"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="refund">
+          <div class="row" style="gap:8px;flex-wrap:wrap">
+            <div class="field" style="width:120px"><label for="ramt">CHF</label><input id="ramt" name="amount" inputmode="decimal" required value="{{ '%.2f' | format(b.overpaid or b.paid) }}"></div>
+            <div class="field"><label for="rdate">{{ t('billing.col_date') }}</label><input id="rdate" name="booked_on" type="date" value="{{ today }}" required></div>
+            <div class="field"><label for="rmeth">{{ t('billing.pay.method') }}</label><select id="rmeth" name="method">{% for m in methods %}<option value="{{ m }}">{{ t('billing.pay.method_' ~ m) }}</option>{% endfor %}</select></div>
+          </div>
+          <div class="field"><label for="rreason">{{ t('billing.pay.refund_reason') }}</label><input id="rreason" name="reason" required maxlength="200"></div>
+          <button class="btn outlined" type="submit">{{ t('billing.pay.refund_btn') }}</button>
+        </form></details>
+      {% endif %}
+    </section>
+    <section class="card stack-s">
+      <h2>{{ t('billing.rem.title') }}</h2>
+      {% for r in reminders %}
+      <div class="row-between"><span>{{ t('billing.rem.level_' ~ r.level) }} · {{ fmt_date(r.created_at) }}{% if r.fee_chf %} · {{ chf(r.fee_chf) }}{% endif %}</span>
+        <a class="btn text sm" href="{{ S }}/rechnungen/{{ inv.id }}/mahnung/{{ r.level }}/pdf" target="_blank" rel="noopener">{{ icon('picture_as_pdf', 16) }}PDF</a></div>
+      {% else %}<p class="small muted">{{ t('billing.rem.none') }}</p>{% endfor %}
+      {% if next_reminder %}
+      <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="reminder"><input type="hidden" name="level" value="{{ next_reminder }}">
+        <button class="btn outlined block" type="submit">{{ icon('assignment_late', 18) }}{{ t('billing.rem.create_' ~ next_reminder) }}</button></form>
+      {% endif %}
+    </section>
+    {% endif %}
+    {% if responses %}
+    <section class="card stack-s" id="antworten">
+      <h2>{{ t('billing.resp.title') }}</h2>
+      {% set labels = line_labels %}{% set show_invoice = False %}
+      {% for r in responses %}{% include "billing/_response.html" %}{% endfor %}
+      {% if can_finalize and inv.status == 'final' and responses | selectattr('kind', 'equalto', 'rejected') | list %}
+      <details><summary class="disclose">{{ t('billing.resp.correct') }}</summary>
+        <p class="small muted" style="margin-top:6px">{{ t('billing.resp.correct_hint') }}</p>
+        <form method="post" class="form"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="correct">
+          <div class="field"><label for="creason">{{ t('billing.cancel_reason') }}</label><input id="creason" name="reason" required maxlength="200" value="{{ t('billing.resp.correct_reason') }}"></div>
+          <button class="btn outlined" type="submit">{{ icon('edit', 18) }}{{ t('billing.resp.correct_btn') }}</button></form></details>
+      {% endif %}
+    </section>
+    {% endif %}
+    {% if inv.status != 'draft' and can_finalize %}
+    <section class="card stack-s">
+      <h2>{{ t('billing.xml.title') }}</h2>
+      {% if xml_missing %}
+      <div class="banner warn">{{ icon('warning', 20) }}<div>{{ t('billing.xml.missing') }}<ul style="margin:4px 0 0 18px">{% for m in xml_missing %}<li>{{ t('billing.' ~ m) }}</li>{% endfor %}</ul></div></div>
+      {% elif xml_kinds %}
+      <p class="small muted">{{ t('billing.xml.mode_' ~ medidata_mode) }}</p>
+      {% if medidata and md_check %}
+      {% if md_check.reach is none %}<div class="banner warn">{{ icon('warning', 20) }}<span>{{ t('billing.md.chk_no_directory') }}</span></div>
+      {% elif md_check.problems %}<div class="banner warn">{{ icon('warning', 20) }}<div>{% for pb in md_check.problems %}<div>{{ t('billing.md.' ~ pb) }}</div>{% endfor %}</div></div>
+      {% else %}<p class="small">{{ icon('verified', 16) }} {{ t('billing.md.chk_ok', receiver=md_check.reach.receiver) }}</p>
+        {% if md_check.reach.additional_costs %}<p class="small muted">{{ t('billing.md.chk_costs') }}</p>{% endif %}{% endif %}
+      {% endif %}
+      {% for k in xml_kinds %}
+      <form method="post" class="row" style="gap:8px;flex-wrap:wrap"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="kind" value="{{ k.kind }}">{% if k.level %}<input type="hidden" name="level" value="{{ k.level }}">{% endif %}
+        <span class="grow small">{{ t(k.label_key) }}</span>
+        <button class="btn text sm" type="submit" name="do" value="xml">{{ icon('download', 16) }}XML</button>
+        {% if medidata and not (md_check and md_check.problems) %}{% set prev = transmissions | selectattr('kind', 'equalto', k.kind) | selectattr('channel', 'equalto', 'medidata') | list %}
+        {% set prev = prev | selectattr('reminder_level', 'equalto', k.get('level')) | list if k.get('level') else prev | selectattr('reminder_level', 'none') | list %}
+        {% if prev | selectattr('status', 'equalto', 'unknown') | list %}<span class="pill-label warn">{{ t('billing.xml.st_unknown') }}</span>
+        {% elif prev | selectattr('status', 'equalto', 'sent') | list %}<input type="hidden" name="again" value="1"><button class="btn text sm" type="submit" name="do" value="send" title="{{ t('billing.xml.again_hint') }}">{{ icon('send', 16) }}{{ t('billing.xml.send_again') }}</button>
+        {% else %}<button class="btn tonal sm" type="submit" name="do" value="send">{{ icon('send', 16) }}{{ t('billing.xml.send') }}</button>{% endif %}{% endif %}
+      </form>
+      {% endfor %}
+      {% else %}<p class="small muted">{{ t('billing.xml.not_needed') }}</p>{% endif %}
+      {% for tr in transmissions %}
+      <div class="row-between small"><span>{{ t('billing.xml.kind_' ~ tr.kind) }}{% if tr.reminder_level %} {{ tr.reminder_level }}{% endif %} · {{ fmt_date(tr.created_at) }} {{ fmt_time(tr.created_at) }}
+        · <span class="pill-label {{ {'sent': 'ok', 'failed': 'error', 'unknown': 'warn'}.get(tr.status, 'info') }}">{{ t('billing.xml.st_' ~ tr.status) }}{% if tr.modus == 'test' %} · Test{% endif %}</span>
+        {% if tr.md_status %}<span class="pill-label {{ {'DONE': 'ok', 'ERROR': 'error', 'PROCESSING': 'info'}.get(tr.md_status, 'warn') }}">{{ t('billing.md.md_status', status=t('billing.xml.md_' ~ tr.md_status)) }}</span>{% endif %}
+        {% if tr.resolution %}<span class="muted">({{ t('billing.xml.res_' ~ tr.resolution) }})</span>{% elif tr.checked_at %} <span class="muted">({{ t('billing.xml.checked', date=fmt_date(tr.checked_at)) }})</span>{% endif %}
+        {% if tr.error_code and tr.error_code in md_codes %}<br><span>{{ md_codes[tr.error_code] }}</span>{% endif %}
+        {% if tr.md_error_reason %}<br><span>{{ md_codes.get(tr.md_error_reason, tr.md_error_reason) }}</span>{% endif %}
+        {% if tr.error %}<br><span class="muted">{{ tr.error }}</span>{% endif %}
+        {% if tr.md_detail %}<br><span class="muted">{{ t('billing.md.receivers') }}: {% for r in tr.md_detail %}{{ r.receiverDisplayName or r.receiverType }} ({{ t('billing.xml.md_' ~ r.status) if r.status in ('DONE', 'PROCESSING', 'ERROR') else r.status }}){% if not loop.last %}, {% endif %}{% endfor %}</span>{% endif %}</span>
+        <a class="icon-btn" href="{{ S }}/rechnungen/{{ inv.id }}/xml/{{ tr.id }}" aria-label="XML" title="XML">{{ icon('download', 18) }}</a></div>
+      {% if tr.status == 'unknown' %}
+      <div class="banner warn">{{ icon('help', 20) }}<div class="stack-s"><span>{{ t('billing.xml.unknown_hint') }}</span>
+        <div class="row" style="gap:6px;flex-wrap:wrap">
+          <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="tr_mark"><input type="hidden" name="tid" value="{{ tr.id }}"><input type="hidden" name="status" value="sent">
+            <button class="btn tonal sm" type="submit">{{ icon('check', 16) }}{{ t('billing.xml.mark_sent') }}</button></form>
+          <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="tr_mark"><input type="hidden" name="tid" value="{{ tr.id }}"><input type="hidden" name="status" value="failed">
+            <button class="btn text sm" type="submit">{{ icon('replay', 16) }}{{ t('billing.xml.mark_failed') }}</button></form>
+        </div></div></div>
+      {% endif %}
+      {% endfor %}
+      {% for n in md_notes %}
+      <div class="banner {{ {'ERROR': 'error', 'WARNING': 'warn'}.get(n.severity, 'info') }}">{{ icon('notifications', 20) }}<div class="stack-s">
+        <strong>{{ n.subject.get(lang) or n.subject.get('de') or n.error_code }}</strong>
+        <span class="small">{{ n.message.get(lang) or n.message.get('de') or '' }}</span>
+        {% if n.possible_solutions %}<span class="small">{{ t('billing.md.note_solutions') }}: {{ n.possible_solutions.get(lang) or n.possible_solutions.get('de') }}</span>{% endif %}
+        <span class="small muted">{{ fmt_date(n.fetched_at) }} · {{ n.error_code or n.template or '' }}</span></div></div>
+      {% endfor %}
+    </section>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

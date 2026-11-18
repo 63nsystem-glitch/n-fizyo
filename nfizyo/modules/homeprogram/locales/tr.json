@@ -1,0 +1,68 @@
+{
+  "p": {
+    "ex": {
+      "title": "Egzersizler",
+      "intro": "Muayenehanenin sizin için hazırladığı program. Bir egzersize dokunun.",
+      "none": "Henüz onaylanmış bir egzersiz programı yok.",
+      "not_translated": "Bu açıklama henüz sizin dilinizde mevcut değil.",
+      "stop_if_pain": "Ağrı çok artarsa durun ve muayenehaneye haber verin.",
+      "pain_after": "Ağrı ne kadar şiddetliydi?",
+      "done": "Yaptım",
+      "done_again": "Tekrar yaptım",
+      "logged": "Kaydedildi – aferin!",
+      "answer": {
+        "forgot": "Olur böyle şeyler. Sabit bir saat yardımcı olur, örneğin diş fırçaladıktan sonra. Yarın yeni bir gün.",
+        "unclear": "Teşekkürler. Muayenehane bunu bir sonraki randevunuzdan önce görecek ve egzersizi size tekrar gösterecek.",
+        "no_time": "Anlaşılır. Tek bir egzersiz bile hiç yapmamaktan iyidir.",
+        "no_time_star": "Anlaşılır. Vaktiniz azsa: sadece yıldızlı egzersizleri yapın.",
+        "pain": "Çok ağrıdığı sürece egzersize devam etmeyin ve muayenehaneye haber verin. Acil durumda 144'ü arayın.",
+        "app": "Teşekkürler. Bir sonraki ziyaretinizde resepsiyona sorun – uygulama konusunda memnuniyetle yardım ederiz.",
+        "no_benefit": "Açık sözlülüğünüz için teşekkürler. Bir sonraki randevuda bunu konuşun – hedefinize birlikte bakarsınız."
+      },
+      "write_practice": "Muayenehaneye yaz",
+      "star_hint": "Vaktiniz azsa: önce yıldızlı egzersizler.",
+      "star_one": "Vaktiniz azsa: önce bu egzersiz.",
+      "skip_q": "Bugün yapamadınız mı?",
+      "skip_saved": "Kaydedildi: {reason}. Cevabınızı değiştirebilirsiniz.",
+      "skip_intro": "İsteğe bağlı. Muayenehane cevabınızı bir sonraki randevudan önce görür.",
+      "skip": {
+        "forgot": "Unuttum",
+        "unclear": "Egzersiz anlaşılır değildi",
+        "no_time": "Vaktim olmadı",
+        "pain": "Çok ağrı vardı",
+        "app": "Uygulamayla ilgili sorun",
+        "no_benefit": "Faydasını görmüyorum"
+      },
+      "skip_note": "Eklemek istediğiniz bir şey var mı? (isteğe bağlı)",
+      "skip_send": "Gönder",
+      "skip_choose": "Lütfen bir sebep seçin.",
+      "own_video": "Kendi videonuz – muayenehanede çekildi",
+      "video_delete_hint": "Videonuzu istediğiniz zaman silebilirsiniz. Muayenehanede de silinir.",
+      "video_delete": "Videomu sil",
+      "video_deleted": "Video silindi",
+      "dose": {
+        "sets": {
+          "one": "{n} set",
+          "other": "{n} set"
+        },
+        "reps": {
+          "one": "{n} tekrar",
+          "other": "{n} tekrar"
+        },
+        "hold": {
+          "one": "{n} sn tutun",
+          "other": "{n} sn tutun"
+        },
+        "minutes": {
+          "one": "{n} dakika",
+          "other": "{n} dakika"
+        },
+        "per_day": {
+          "one": "günde {n} kez",
+          "other": "günde {n} kez"
+        },
+        "sets_reps": "{reps}lık {sets}"
+      }
+    }
+  }
+}

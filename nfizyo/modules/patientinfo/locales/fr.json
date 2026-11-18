@@ -1,0 +1,61 @@
+{
+  "p": {
+    "info": {
+      "title": "Info de votre thérapie",
+      "intro": "Voici ce que votre thérapeute a écrit pour vous.",
+      "new": "nouveau",
+      "home": "Ce que vous pouvez faire à la maison",
+      "contact": "Quand nous contacter",
+      "original": "Original",
+      "translation_soon": "La traduction suit sous peu.",
+      "none": "Pas encore d’information.",
+      "card": "Info de votre thérapie",
+      "card_hint": "À lire ou à écouter",
+      "not_translated": "Ce texte n’est pas traduit. Si quelque chose n’est pas clair, posez la question lors de votre prochain rendez-vous."
+    },
+    "nav": {
+      "info": "Info"
+    }
+  },
+  "patientinfo": {
+    "title": "Information pour le/la patient·e",
+    "tab": "Info",
+    "last": "Dernière info au/à la patient·e",
+    "all": "Toutes les infos",
+    "review_hint": "Proposition tirée de la dictée – à vérifier. Après validation, elle est traduite en {language} et affichée dans l’app.",
+    "preparing": "Proposition en préparation …",
+    "home": "Ce que vous pouvez faire à la maison",
+    "contact": "Quand nous contacter",
+    "home_ph": "p. ex. Faire les exercices 2× par jour. Refroidir le genou 15 minutes après l’effort.",
+    "contact_ph": "p. ex. Contactez-nous si le genou gonfle fortement ou devient chaud.",
+    "contact_default": "Contactez-nous si les douleurs augmentent nettement, si vous avez de la fièvre ou si la zone devient rouge et chaude. En cas d’urgence, appelez le 144.",
+    "insert_default": "Insérer le texte standard",
+    "send": "Valider avec la note et envoyer à l’app patient ({language})",
+    "no_advice": "L’IA ne propose que ce que vous avez dicté – elle n’invente rien. Vous décidez de ce que lit le/la patient·e.",
+    "read": "lu",
+    "not_read": "pas encore lu",
+    "translating": "Traduction en cours …",
+    "check_translation": "Traduction automatique – merci de confirmer oralement les points importants.",
+    "none": "Aucune information envoyée.",
+    "write": "Écrire une information",
+    "write_hint": "Sans dictée : écrire court et simple. Traduit en {language} et affiché dans l’app.",
+    "no_translator": "La traduction automatique n’est pas encore configurée – l’info apparaît non traduite, dans votre langue.",
+    "send_now": "Envoyer à l’app patient",
+    "sent": "Information envoyée",
+    "empty": "Veuillez remplir au moins une partie.",
+    "st": {
+      "generating": "en préparation",
+      "draft": "brouillon",
+      "discarded": "écartée"
+    },
+    "nothing_found": "Rien trouvé pour la maison dans la dictée – à compléter ou à laisser vide.",
+    "llm_invalid": "Proposition de l’IA inutilisable – phrases reprises directement de la dictée.",
+    "llm_numbers_rejected": "L’IA a ajouté des chiffres non dictés – proposition écartée, phrases reprises de la dictée.",
+    "llm_unavailable": "Modèle de langue indisponible – phrases reprises directement de la dictée.",
+    "description": "Information pour patient·e·s tirée de la dictée – traduite et lisible à voix haute dans l’app",
+    "write_hint_same": "Sans dictée : écrire court et simple. S’affiche dans l’app.",
+    "review_hint_same": "Proposition issue de la dictée – à vérifier. Après validation, elle apparaît dans l’app.",
+    "review_hint_no_translator": "Proposition tirée de la dictée – à vérifier. Lit {language}. L’info ne sera pas traduite automatiquement – la traduction automatique n’est pas encore configurée. Merci d’écrire court et simple.",
+    "not_translated": "Non traduit – le/la patient·e voit le texte original."
+  }
+}

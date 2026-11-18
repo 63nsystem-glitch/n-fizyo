@@ -1,0 +1,24 @@
+{% extends "patients/_file.html" %}
+{% block content %}
+<div class="grid-main-side">
+  <section class="card">
+    <div class="list">
+      {% for d in docs %}
+      <a class="list-item" href="{{ S }}/posteingang/{{ d.id }}">
+        <span class="lead avatar">{{ icon('description', 20) }}</span>
+        <span class="body"><span class="title">{{ d.title or t('inbox.kind.' ~ d.kind) }}</span><br><span class="sub">{{ d.sender or '' }}{% if d.doc_date %} · {{ fmt_date(d.doc_date) }}{% endif %} · {{ t('inbox.src.' ~ d.source) }}</span></span>
+        <span class="trail">{% if d.open_count %}<span class="pill-label info">{{ t('inbox.n_suggestions', n=d.open_count) }}</span>{% endif %}{{ icon('chevron_right', 20, 'flip-rtl') }}</span>
+      </a>
+      {% else %}<div class="empty">{{ icon('folder_open', 40) }}<p>{{ t('inbox.no_docs') }}</p></div>{% endfor %}
+    </div>
+  </section>
+  <section class="card">
+    <h2 style="margin-bottom:12px">{{ t('inbox.upload') }}</h2>
+    <form method="post" action="{{ S }}/posteingang/hochladen" enctype="multipart/form-data" class="form">
+      <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="patient_id" value="{{ patient.id }}">
+      <div class="field"><label for="files">{{ t('inbox.files') }}</label><input id="files" name="files" type="file" multiple accept=".pdf,.txt,.png,.jpg,.jpeg,.tif,.tiff,.webp" required></div>
+      <div class="form-actions"><button class="btn" type="submit">{{ icon('upload_file', 18) }}{{ t('inbox.upload_go') }}</button></div>
+    </form>
+  </section>
+</div>
+{% endblock %}

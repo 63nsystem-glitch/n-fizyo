@@ -1,0 +1,73 @@
+{
+  "brief": {
+    "title": "Aperçu rapide et transmission",
+    "description": "Avant chaque rendez-vous, l'essentiel en un coup d'œil ; lors d'un changement de thérapeute, une transmission tirée du dossier.",
+    "action": "Aperçu rapide",
+    "page_title": "Aperçu rapide",
+    "session": "Séance {n} sur {total}",
+    "interpreter": "Interprète nécessaire",
+    "takeover": "Reprise",
+    "takeover_text": "Dernière séance chez {name} ({date}).",
+    "open_handover": "Voir la transmission",
+    "last_time": "Dernière note · {date} · {name}",
+    "first_time": "Première séance",
+    "first_text": "Aucune séance dans le dossier.",
+    "since_label": "Depuis la dernière séance",
+    "last_days": "Derniers jours",
+    "hp_days": "Exercices faits {done} jours sur {total}",
+    "pain_max": "Douleur au plus {n}/10",
+    "pain": "Douleur {n}/10",
+    "msg": "Message",
+    "msg_problem": "Problème signalé",
+    "translated": "traduit",
+    "intake": "Nouvelle demande dans l'app",
+    "rx": "Prescription",
+    "rx_ok": "En ordre.",
+    "measures": "Mesures",
+    "goal": "Objectif du/de la patient·e",
+    "goal_value": "Objectif {v}",
+    "plan": "Plan",
+    "until": "jusqu'au {date}",
+    "restrictions": "Restrictions",
+    "clearances": "Autorisations",
+    "diagnoses": "Diagnostics",
+    "open_record": "Ouvrir le dossier",
+    "dictate": "Dictée pour ce rendez-vous",
+    "messages": "Ouvrir les messages",
+    "source_hint": "Établi à partir du dossier – sans IA. Chaque élément provient d'une note validée, d'un constat, du programme à domicile ou d'un message.",
+    "source_short": "tiré des notes validées, sans IA",
+    "src_note": "Note du {date}",
+    "ho_title_takeover": "Transmission de {names}",
+    "ho_title_away": "Pendant votre absence",
+    "ho_notes": "Évolution",
+    "ho_hp": "Programme à domicile (14 jours)",
+    "ho_messages": "En suspens dans les messages",
+    "ho_open_msgs": "{unread} non lus · {problems} problèmes signalés en suspens.",
+    "ho_upcoming": "Prochains rendez-vous",
+    "ho_full": "Transmission complète",
+    "ho_none": "Pas de transmission nécessaire – vous avez traité en dernier.",
+    "findings": "Bilan",
+    "treatment": "Traitement",
+    "skips": "Pas fait, car",
+    "mtt": "MTT depuis la dernière séance",
+    "auto_translated": "traduit automatiquement",
+    "demo_translation": "traduction d'exemple (démo)",
+    "show_original": "Afficher l'original",
+    "items": {
+      "one": "{n} exercice",
+      "other": "{n} exercices"
+    },
+    "ho_sub": {
+      "one": "{n} séance · {first} – {last}",
+      "other": "{n} séances · {first} – {last}"
+    },
+    "ho_away_sub": {
+      "one": "{n} séance chez {names} depuis votre dernière séance",
+      "other": "{n} séances chez {names} depuis votre dernière séance"
+    },
+    "mtt_line": {
+      "one": "{n} entraînement · {sets} séries",
+      "other": "{n} entraînements · {sets} séries"
+    }
+  }
+}

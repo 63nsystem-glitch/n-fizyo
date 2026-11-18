@@ -1,0 +1,24 @@
+{% extends "layouts/staff.html" %}
+{% import "documentation/_template_form.html" as tf with context %}
+{% block back %}<a class="icon-btn" href="{{ S }}/notizen/entwuerfe" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('notes.tpl_title') }}{% endblock %}
+{% block subtitle %}{{ t('notes.tpl_subtitle') }}{% endblock %}
+{% block content %}
+<div class="grid-main-side">
+  <div class="col stack">
+    <section class="card stack-s">
+      <h2>{{ t('notes.tpl_own') }}</h2>
+      {{ tf.list(own, True, action) }}
+    </section>
+    <section class="card stack-s">
+      <h2>{{ t('notes.tpl_practice') }}</h2>
+      <p class="small muted">{{ t('notes.tpl_practice_hint') }}</p>
+      {{ tf.list(shared, False, action) }}
+    </section>
+  </div>
+  <section class="card">
+    <h2 style="margin-bottom:12px">{{ t('notes.tpl_edit_title') if edit else t('notes.tpl_new') }}</h2>
+    {{ tf.form(edit, langs, action) }}
+  </section>
+</div>
+{% endblock %}

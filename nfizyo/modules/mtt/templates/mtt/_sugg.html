@@ -1,0 +1,13 @@
+{# Ein offener Vorschlag – g: Zeile aus open_suggestions; back: Rücksprung #}
+{% macro sugg(g, back, with_name=false) %}
+<div class="rx-line {{ 'act' if g.kind == 'decrease' else ('soon' if g.kind == 'hold' else 'info') }}" style="align-items:center;flex-wrap:wrap">
+  {{ icon('trending_up' if g.kind == 'increase' else ('trending_down' if g.kind == 'decrease' else 'pause'), 18) }}
+  <span class="grow">{% if with_name %}<strong style="font-weight:500">{{ g.first_name }} {{ g.last_name }}</strong> · {% endif %}<strong style="font-weight:500">{{ g.machine_name }}</strong>:
+    {{ t('mtt.sugg.' ~ g.kind, old=dec(g.from_load), new=dec(g.to_load)) }} <span class="small">({{ t('mtt.reason.' ~ g.reason) }})</span></span>
+  <form method="post" action="{{ S }}/mtt/vorschlag/{{ g.id }}" class="row" style="gap:4px">
+    <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="back" value="{{ back }}">
+    <button class="btn tonal sm" type="submit" name="decision" value="accept">{{ icon('check', 16) }}{{ t('mtt.accept') }}</button>
+    <button class="btn text sm" type="submit" name="decision" value="dismiss">{{ t('mtt.dismiss') }}</button>
+  </form>
+</div>
+{% endmacro %}

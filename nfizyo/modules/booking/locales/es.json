@@ -1,0 +1,61 @@
+{
+  "p": {
+    "booking": {
+      "title": "Solicitar una cita",
+      "closed": "En este momento no se puede reservar en línea. Por favor, llámenos.",
+      "choose_type": "¿Para qué desea una cita?",
+      "minutes": "{n} minutos",
+      "other_type": "Otro tratamiento",
+      "choose_slot": "Elija una hora libre. La consulta confirmará después la cita por SMS.",
+      "no_slots": "Esta semana ya no queda nada libre.",
+      "earlier": "Antes",
+      "later": "Después",
+      "other_slot": "Elegir otra hora",
+      "err_fields": "Por favor, revise los campos marcados.",
+      "first_name": "Nombre",
+      "last_name": "Apellido",
+      "birthdate": "Fecha de nacimiento",
+      "phone": "Teléfono móvil",
+      "phone_hint": "Recibirá un código por SMS.",
+      "email": "Correo electrónico (opcional)",
+      "email_ok": "Recibir también la confirmación y los recordatorios por correo (el correo no está cifrado).",
+      "insurance": "Seguro",
+      "ins_KVG": "Seguro básico (enfermedad)",
+      "ins_UVG": "Seguro de accidentes",
+      "ins_IVG": "Seguro de invalidez",
+      "ins_VVG": "Seguro complementario",
+      "ins_privat": "Pago yo mismo",
+      "prescription": "Tengo una prescripción médica de fisioterapia.",
+      "note": "Comentario (opcional)",
+      "note_hint": "Por favor, no indique detalles de salud – lo hablaremos en la consulta.",
+      "consent": "Acepto que {practice} guarde mis datos para concertar la cita.",
+      "send_code": "Enviar código por SMS",
+      "code_intro": "Le hemos enviado un código por SMS. Introdúzcalo aquí.",
+      "confirm": "Enviar solicitud",
+      "sent_title": "Solicitud recibida",
+      "sent_text": "{practice} revisa su solicitud y confirmará la cita por SMS. Solo entonces la cita queda fijada.",
+      "err_slot": "Esta hora ya no es válida. Elija de nuevo.",
+      "err_taken": "Esta hora acaba de ocuparse. Elija otra.",
+      "err_blocked": "Demasiados intentos. Inténtelo más tarde o llámenos.",
+      "err_phone": "Indique un número de móvil suizo o de Liechtenstein (p. ej. 079 123 45 67).",
+      "err_sms_limit": "Ya se han enviado varios códigos a este número. Inténtelo de nuevo en una hora o llámenos.",
+      "err_code": "El código no es correcto.",
+      "err_expired": "La solicitud ha caducado. Por favor, empiece de nuevo.",
+      "all_places": "Todos los centros",
+      "closure": "La consulta está cerrada: {dates}.",
+      "original": "Mostrar el original",
+      "err_busy": "En este momento no podemos enviar más códigos. Inténtelo más tarde o llámenos."
+    },
+    "sms": {
+      "booking_code": "{practice}: su código para la solicitud de cita: {code}",
+      "booking_confirmed": "{practice}: su cita del {when} está confirmada ({place}). Anulación al menos 24 h antes: {phone}",
+      "booking_declined": "{practice}: lamentablemente no podemos confirmar la cita del {when}. Por favor, llámenos: {phone}"
+    },
+    "mail": {
+      "booking_confirmed_subject": "Cita confirmada: {when}",
+      "booking_confirmed_body": "Buenos días, {name}\n\nSu cita del {when} está confirmada ({place}).\nAnulación al menos 24 horas antes: {phone}\n\nUn saludo cordial\n{practice}",
+      "booking_declined_subject": "Su solicitud de cita",
+      "booking_declined_body": "Buenos días, {name}\n\nLamentablemente no podemos confirmar la cita del {when}. Por favor, llámenos: {phone}\n\nUn saludo cordial\n{practice}"
+    }
+  }
+}

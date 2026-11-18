@@ -1,0 +1,99 @@
+{% extends "patients/_file.html" %}
+{% import "homeprogram/_pic.html" as pic with context %}
+{% block head %}{{ super() }}<link rel="stylesheet" href="{{ static('css/homeprogram.css') }}">{% endblock %}
+{% block content %}
+<div class="grid-main-side" style="--side:minmax(300px,400px)">
+  <div class="col">
+    <section class="card">
+      <div class="card-head"><h2>{{ t('hp.program') }}</h2>
+        {% if prog %}<span class="pill-label {{ 'ok' if prog.status == 'active' else 'warn' }}">{{ t('hp.st.' ~ prog.status) }}{% if prog.approved_at %} · {{ fmt_date(prog.approved_at) }}{% endif %}</span>{% endif %}</div>
+      {% if patient.lang not in ('de', 'fr') %}<p class="small muted" style="margin-bottom:8px">{{ icon('translate', 14) }} {{ t('hp.lang_hint', language=patient_lang_name) if translate_on else t('hp.lang_hint_off', language=patient_lang_name) }}</p>{% endif %}
+      {% for it in items %}
+      <div class="hp-item">
+      <form method="post" action="{{ S }}/heimprogramm/{{ it.id }}" class="suggestion" style="align-items:flex-start">
+        <input type="hidden" name="_csrf" value="{{ csrf }}">
+        {{ pic.thumb(pic_of(it), 'sm', it.video_path) }}
+        <div class="what">
+          <strong style="font-weight:500">{{ it.name_fr if lang == 'fr' else it.name_de }}</strong>{% if it.essential %} <span class="pill-label info">{{ icon('star', 14) }} {{ t('hp.essential_short') }}</span>{% endif %}
+          <p class="small muted">{{ it.instructions_fr if lang == 'fr' else it.instructions_de }}</p>
+          <div class="row" style="margin-top:8px">
+            <label class="small">{{ t('hp.sets') }} <input class="input" name="sets" value="{{ it.sets or '' }}" inputmode="numeric" style="width:64px;min-height:36px;padding:4px 8px"></label>
+            <label class="small">{{ t('hp.reps') }} <input class="input" name="reps" value="{{ it.reps or '' }}" inputmode="numeric" style="width:64px;min-height:36px;padding:4px 8px"></label>
+            <label class="small">{{ t('hp.hold') }} <input class="input" name="hold_sec" value="{{ it.hold_sec or '' }}" inputmode="numeric" style="width:64px;min-height:36px;padding:4px 8px"></label>
+            <label class="small">{{ t('hp.duration') }} <input class="input" name="duration_min" value="{{ it.duration_min or '' }}" inputmode="numeric" style="width:64px;min-height:36px;padding:4px 8px"></label>
+            <label class="small">{{ t('hp.per_day') }} <input class="input" name="per_day" value="{{ it.per_day or 1 }}" inputmode="numeric" style="width:56px;min-height:36px;padding:4px 8px"></label>
+          </div>
+          {% set d = dose_text(it, short=False) %}<p class="small muted hp-dose-preview">{{ icon('mobile', 14) }}<span>{{ t('hp.app_shows') }}: {{ d if d else t('hp.no_dose') }}</span></p>
+          <input class="input" name="note" value="{{ it.note or '' }}" placeholder="{{ t('hp.note_ph') }}" style="margin-top:8px;min-height:40px;padding:6px 12px">
+          <label class="small row" style="gap:6px;margin-top:8px"><input type="checkbox" name="essential" value="1"{{ ' checked' if it.essential else '' }}> {{ icon('star', 16) }} {{ t('hp.essential') }}</label>
+        </div>
+        <div class="stack-s"><button class="btn tonal sm" type="submit">{{ t('common.save') }}</button><button class="btn text sm" type="submit" name="remove" value="1" style="color:var(--error)">{{ t('hp.remove') }}</button></div>
+      </form>
+      <div class="hp-video">
+        {% if it.video_path %}
+        <div class="row" style="gap:8px;align-items:center">
+          <span class="pill-label ok">{{ icon('videocam', 16) }} {{ t('hp.video_has') }}</span>
+          <span class="small muted">{{ t('hp.video_meta', mb=((it.video_size or 0) / 1048576) | round(1), date=fmt_date(it.video_consent_at)) }}</span>
+          <a class="btn text sm" href="{{ S }}/heimprogramm/{{ it.id }}/video" target="_blank" rel="noopener">{{ icon('play_arrow', 18) }}{{ t('hp.video_play') }}</a>
+          <form method="post" action="{{ S }}/heimprogramm/{{ it.id }}/video/loeschen" style="display:inline"><input type="hidden" name="_csrf" value="{{ csrf }}"><button class="btn text sm" type="submit" style="color:var(--error)">{{ icon('delete', 18) }}{{ t('hp.video_delete') }}</button></form>
+        </div>
+        {% else %}
+        <details>
+          <summary class="small">{{ icon('videocam', 16) }} {{ t('hp.video_add') }}</summary>
+          <form method="post" action="{{ S }}/heimprogramm/{{ it.id }}/video" enctype="multipart/form-data" class="stack-s" style="margin-top:8px">
+            <input type="hidden" name="_csrf" value="{{ csrf }}">
+            <input class="input" type="file" name="video" accept="video/mp4,video/quicktime,video/webm,video/*" capture="environment" required>
+            <label class="small row" style="gap:6px;align-items:flex-start;flex-wrap:nowrap"><input type="checkbox" name="consent" value="1" required> <span>{{ t('hp.video_consent') }}</span></label>
+            <p class="small muted">{{ t('hp.video_hint') }}</p>
+            <div><button class="btn tonal sm" type="submit">{{ icon('upload', 18) }}{{ t('hp.video_upload') }}</button></div>
+          </form>
+        </details>
+        {% endif %}
+      </div>
+      </div>
+      {% else %}<p class="muted">{{ t('hp.empty') }}</p>{% endfor %}
+      {% if prog and items %}
+      <form method="post" action="{{ S }}/patienten/{{ patient.id }}/heimprogramm/freigeben" class="form-actions" style="margin-top:12px">
+        <input type="hidden" name="_csrf" value="{{ csrf }}"><button class="btn" type="submit">{{ icon('send', 18) }}{{ t('hp.approve') if prog.status != 'active' else t('hp.approve_again') }}</button>
+      </form>
+      <p class="small muted" style="text-align:end">{{ t('hp.approve_hint') }}</p>
+      {% endif %}
+    </section>
+    <section class="card">
+      <h2 style="margin-bottom:8px">{{ t('hp.adherence') }}</h2>
+      <div class="adh-grid">
+        {% for d in adherence %}<div><div class="small muted">{{ fmt_date(d.date, weekday=False, year=False)[:5] }}</div>
+          <div style="width:30px;height:30px;border-radius:8px;margin:4px auto;background:{{ 'var(--ok-container)' if d.n else 'var(--surface-mid)' }};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500">{{ d.n or '' }}</div>
+          {% if d.pain is not none %}<div class="small" style="color:var(--error)">{{ d.pain }}</div>{% elif d.skip %}<div class="small" style="color:{{ 'var(--error)' if d.skip == 'pain' else 'var(--on-surface-variant)' }}" title="{{ t('hp.skip.' ~ d.skip) }}">?</div>{% endif %}</div>{% endfor %}
+      </div>
+      <p class="small muted" style="margin-top:6px">{{ t('hp.adherence_hint') }}</p>
+      {% set skipped = adherence | selectattr('skip') | list %}
+      {% if skipped %}
+      <h3 class="small" style="margin-top:12px;font-weight:500">{{ t('hp.skips_title') }}</h3>
+      <div class="stack-s" style="margin-top:4px">
+        {% for d in skipped | reverse %}
+        <div class="rx-line {{ 'act' if d.skip == 'pain' else 'info' }}">{{ icon('warning' if d.skip == 'pain' else 'info', 18) }}<span><strong style="font-weight:500">{{ fmt_date(d.date, weekday=True, year=False) }}</strong> · {{ t('hp.skip.' ~ d.skip) }}{% if d.skip_note %} – «<span dir="auto">{{ d.skip_note }}</span>»{% endif %}</span></div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </section>
+  </div>
+  
+  <section class="card">
+    <h2 style="margin-bottom:8px">{{ t('hp.library') }}</h2>
+    <form method="get" class="search" style="margin-bottom:8px">{{ icon('search') }}<input name="q" value="{{ q }}" placeholder="{{ t('hp.search') }}" aria-label="{{ t('hp.search') }}">{% if area %}<input type="hidden" name="bereich" value="{{ area }}">{% endif %}</form>
+    <div class="chips" style="margin-bottom:8px">{% for a in areas %}<a class="chip{{ ' selected' if a == area else '' }}" href="?bereich={{ '' if a == area else a }}{% if q %}&q={{ q | urlencode }}{% endif %}">{{ t('hp.area.' ~ a) }}</a>{% endfor %}</div>
+    <div class="list">
+      {% for e in lib %}
+      <form method="post" action="{{ S }}/patienten/{{ patient.id }}/heimprogramm" class="list-item"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="exercise_id" value="{{ e.id }}">
+        {{ pic.thumb(pic_of(e), 'sm lead') }}
+        <span class="body"><span>{{ e.name_fr if lang == 'fr' else e.name_de }}</span><br><span class="sub small">{{ dose_text(e) }}</span></span>
+        <button class="icon-btn tonal" type="submit" aria-label="{{ t('hp.add') }}" title="{{ t('hp.add') }}">{{ icon('add') }}</button>
+      </form>
+      {% endfor %}
+    </div>
+    <a class="btn text" href="{{ S }}/uebungen">{{ t('hp.manage_library') }}</a>
+  </section>
+  
+</div>
+{% endblock %}

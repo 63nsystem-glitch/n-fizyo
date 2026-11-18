@@ -1,0 +1,55 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/agenda" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('agenda.abs.title') if editable else t('agenda.abs.mine') }}{% endblock %}
+{% block subtitle %}{{ t('agenda.abs.subtitle') if editable else t('agenda.abs.subtitle_own') }}{% endblock %}
+{% block actions %}
+  {% if screen.key == 'leitung' %}<a class="btn tonal" href="{{ S }}/einstellungen/feiertage">{{ icon('event_note', 18) }}<span>{{ t('agenda.hol.settings_title') }}</span></a>{% endif %}
+{% endblock %}
+{% block content %}
+<div class="grid-main-side">
+  <div class="col">
+    <section class="card flush">
+      <div class="card-head" style="padding:16px 16px 0"><h2>{{ t('agenda.abs.list') }}</h2>
+        {% if editable %}<a class="btn text sm" href="?{{ '' if show_all else 'alle=1' }}">{{ t('agenda.abs.show_current') if show_all else t('agenda.abs.show_all') }}</a>{% endif %}</div>
+      <div class="table-wrap"><table class="table">
+        <thead><tr><th>{{ t('agenda.abs.who') }}</th><th>{{ t('agenda.abs.kind_label') }}</th><th>{{ t('agenda.abs.period') }}</th><th class="hide-compact">{{ t('agenda.abs.note') }}</th>{% if editable %}<th></th>{% endif %}</tr></thead>
+        <tbody>
+        {% for r in rows %}
+          <tr{% if r.ends_on < today.isoformat() %} style="opacity:.6"{% endif %} data-absence="{{ r.id }}">
+            <td>{% if r.user_id %}{{ r.user_name }}{% else %}<strong>{{ t('agenda.abs.whole_practice') }}</strong>{% endif %}</td>
+            {% set k = 'other' if r.kind == 'sick' and screen.key != 'leitung' and r.user_id != user.id else r.kind %}
+            <td><span class="pill-label {{ 'error' if k == 'closure' else ('warn' if k == 'sick' else 'info') }}">{{ t('agenda.abs.kind.' ~ k) }}</span></td>
+            <td class="nowrap">{{ fmt_date(r.starts_on, weekday=True) }}{% if r.ends_on != r.starts_on %} – {{ fmt_date(r.ends_on, weekday=True) }}{% endif %}
+              <br><span class="small muted">{% if r.start_time %}{{ r.start_time }}–{{ r.end_time }}{% else %}{{ t('agenda.abs.whole_day') }}{% endif %}</span></td>
+            <td class="hide-compact">{{ r.note or '' }}</td>
+            {% if editable %}<td><a class="icon-btn" href="{{ S }}/agenda/abwesenheiten/{{ r.id }}" aria-label="{{ t('agenda.abs.edit') }}" title="{{ t('agenda.abs.edit') }}">{{ icon('edit', 20) }}</a></td>{% endif %}
+          </tr>
+        {% else %}<tr><td colspan="5"><div class="empty">{{ icon('event_available', 40) }}<p>{{ t('agenda.abs.none') }}</p></div></td></tr>{% endfor %}
+        </tbody>
+      </table></div>
+    </section>
+    <section class="card">
+      <div class="card-head"><h2>{{ t('agenda.hol.upcoming') }}</h2><span class="meta">{{ t('agenda.hol.canton', canton=canton) }}</span></div>
+      <div class="list">
+        {% for h in holidays %}<div class="list-item" style="padding-inline:0"><span class="lead">{{ icon('event_busy', 20) }}</span>
+          <span class="body"><span class="title">{{ t('agenda.hol.' ~ h.code) }}</span>{% if h.from_time %} <span class="small muted">({{ t('agenda.abs.from_time', time=h.from_time) }})</span>{% endif %}<br><span class="sub">{{ fmt_date(h.day, weekday=True) }}</span></span></div>
+        {% else %}<p class="muted small">{{ t('agenda.hol.none_ahead') }}</p>{% endfor %}
+      </div>
+    </section>
+  </div>
+  <div class="col">
+    {% if editable %}
+    <section class="card">
+      <h2 style="margin-bottom:16px">{{ t('agenda.abs.new') }}</h2>
+      <form method="post" class="form">
+        {% include "agenda/_absence_form.html" %}
+        <div class="form-actions"><button class="btn" type="submit">{{ icon('add', 18) }}{{ t('agenda.abs.add') }}</button></div>
+      </form>
+    </section>
+    {% else %}
+    <section class="card tonal"><p class="small">{{ icon('info', 16) }} {{ t('agenda.abs.own_hint') }}</p></section>
+    {% endif %}
+    <section class="card tonal"><p class="small">{{ t('agenda.abs.effect_hint') }}</p></section>
+  </div>
+</div>
+{% endblock %}

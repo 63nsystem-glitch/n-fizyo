@@ -1,0 +1,28 @@
+{
+  "p": {
+    "sms": {
+      "video": "{practice}: su cita por vídeo del {when}. Entrada desde 15 minutos antes: {url} – no es para emergencias, en caso de emergencia 144."
+    },
+    "video": {
+      "title": "Cita por vídeo",
+      "card_title": "Cita por vídeo",
+      "open_now": "abierta ahora",
+      "invalid": "Este enlace no es válido. Llame a la consulta.",
+      "cancelled": "Esta cita se ha cancelado.",
+      "over": "Esta cita por vídeo ha terminado.",
+      "consent_title": "Antes de entrar",
+      "c_server": "El vídeo pasa por el servidor de la consulta en Suiza.",
+      "c_record": "No se graba nada.",
+      "c_place": "Busque un lugar tranquilo donde nadie escuche.",
+      "c_agree": "Acepto la sesión por vídeo.",
+      "need_consent": "Confirme primero su consentimiento.",
+      "early": "Puede entrar a partir de las {time}.",
+      "save_consent": "Guardar mi consentimiento",
+      "not_ready": "La sala de vídeo aún no está lista. Llame a la consulta.",
+      "camera_hint": "En el siguiente paso su dispositivo pedirá cámara y micrófono – permítalo, por favor.",
+      "join": "Entrar en la cita por vídeo",
+      "call": "¿Problemas? Llámenos:",
+      "emergency": "La sesión por vídeo no es para emergencias. En caso de emergencia, llame al 144."
+    }
+  }
+}

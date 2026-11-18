@@ -1,0 +1,8 @@
+{
+  "p": {
+    "mail": {
+      "invoice_subject": "Fatura {number}",
+      "invoice_body": "Merhaba {name}\n\nCHF {amount} tutarındaki {number} numaralı faturanız ektedir. Lütfen {due} tarihine kadar QR ödeme bölümüyle ödeyin.\n\nSaygılarımızla\n{practice}"
+    }
+  }
+}

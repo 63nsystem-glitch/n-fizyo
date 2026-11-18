@@ -1,0 +1,41 @@
+{% extends "layouts/patient.html" %}
+{% import "homeprogram/_pic.html" as pic with context %}
+{% import "homeprogram/_localized.html" as loc with context %}
+{% block head %}{{ super() }}<link rel="stylesheet" href="{{ static('css/homeprogram.css') }}">{% endblock %}
+{% block back %}<a class="icon-btn" href="/p/uebungen" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ name.text }}{% endblock %}
+{% block content %}
+{% if it.video_path %}
+<figure class="card stack-s" style="padding:12px">
+  <video class="hp-own-video" controls playsinline preload="metadata" src="/p/uebungen/{{ it.id }}/video"></video>
+  <figcaption class="small muted">{{ icon('videocam', 16) }} {{ t('p.ex.own_video') }}</figcaption>
+</figure>
+{% else %}
+{{ pic.media(picture, name.text) }}
+{% endif %}
+<section class="card">
+  {% if it.essential %}<p class="small" style="display:flex;gap:6px;align-items:center;margin-bottom:6px">{{ icon('star', 18) }}{{ t('p.ex.star_one') }}</p>{% endif %}
+  {% if dose %}<p class="hp-dose-big" dir="auto">{{ dose }}</p>{% endif %}
+  <div style="margin-top:12px;font-size:17px;line-height:26px">{{ loc.text(text, id='ex-text') }}</div>
+  <div class="row" style="gap:8px;margin-top:8px">
+    <button type="button" class="btn tonal sm" data-speak="ex-text" data-lang="{{ text.lang }}" hidden>{{ icon('volume_up', 18) }}{{ t('p.listen') }}</button>
+  </div>
+  {% if text.untranslated %}<p class="small muted" style="margin-top:6px">{{ t('p.ex.not_translated') }}</p>{% endif %}
+  {% if note %}<div class="banner info" style="margin-top:12px">{{ icon('info') }}<div>{{ loc.text(note, id='ex-note') }}
+    <div class="row" style="gap:8px;margin-top:6px"><button type="button" class="btn text sm" data-speak="ex-note" data-lang="{{ note.lang }}" hidden>{{ icon('volume_up', 18) }}{{ t('p.listen') }}</button></div></div></div>{% endif %}
+</section>
+<div class="emergency">{{ icon('emergency', 20) }}<span>{{ t('p.ex.stop_if_pain') }}</span></div>
+<form method="post" class="card stack-s"><input type="hidden" name="_csrf" value="{{ csrf }}">
+  <h2>{{ t('p.ex.pain_after') }}</h2>
+  <div class="faces">{% for value, ic, cls in faces %}<label class="{{ cls }}"><input type="radio" name="pain" value="{{ value }}">{{ icon(ic, 32) }}<span>{{ value }}</span></label>{% endfor %}</div>
+  <button class="btn lg block" type="submit">{{ icon('check', 20) }}{{ t('p.ex.done') if not done else t('p.ex.done_again') }}</button>
+</form>
+{% if it.video_path %}
+<form method="post" action="/p/uebungen/{{ it.id }}/video/loeschen" class="card stack-s">
+  <input type="hidden" name="_csrf" value="{{ csrf }}">
+  <p class="small muted">{{ t('p.ex.video_delete_hint') }}</p>
+  <button class="btn text" type="submit" style="color:var(--error)">{{ icon('delete', 18) }}{{ t('p.ex.video_delete') }}</button>
+</form>
+{% endif %}
+{% endblock %}
+{% block scripts %}{{ super() }}<script src="{{ static('js/speak.js') }}" defer></script>{% endblock %}

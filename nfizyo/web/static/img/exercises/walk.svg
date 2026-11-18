@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <title>Spazieren gehen</title>
+  <g id="fig" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 186 L300 186" stroke-width="3" opacity="0.3"/>
+    <path d="M143.5 57.1 L156.5 86.4 L181.6 100.9" stroke-width="10" opacity="0.45"/>
+    <path d="M140 107 L137.4 148.9 L106.4 174.2" stroke-width="10" opacity="0.45"/>
+    <path d="M106.4 174.2 L118 182" stroke-width="8" opacity="0.45"/>
+    <path d="M140 107 L143.5 57.1" stroke-width="13"/>
+    <path d="M143.5 57.1 L145.3 40.2" stroke-width="10"/>
+    <circle cx="145.3" cy="40.2" r="11" fill="currentColor" stroke="none"/>
+    <path d="M140 107 L166.3 139.7 L174 179" stroke-width="10"/>
+    <path d="M174 179 L186.1 172" stroke-width="8"/>
+    <path d="M143.5 57.1 L130.5 86.4 L125.4 114.9" stroke-width="10"/>
+    <path d="M212 120 L260.5 120" stroke-width="4" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M266 120 L257.1 124.6 L257.1 115.4 Z" stroke-width="2.5" style="fill:var(--ex-accent, #D9661F);stroke:var(--ex-accent, #D9661F)"/>
+  </g>
+</svg>

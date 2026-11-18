@@ -1,0 +1,30 @@
+{
+  "p": {
+    "msg": {
+      "title": "Mesajlar",
+      "empty": "Henüz mesaj yok.",
+      "write": "Mesajınız",
+      "write_ph": "Kendi dilinizde yazın.",
+      "reply_time": "Muayenehane genellikle bir iş günü içinde yanıt verir. Acil durumlar için uygulamayı kullanmayın.",
+      "too_many": "Kısa sürede çok fazla mesaj gönderdiniz. Lütfen daha sonra tekrar deneyin veya muayenehaneyi arayın.",
+      "sent": "Mesaj gönderildi.",
+      "report_sent": "Bildirim gönderildi. Muayenehane bir sonraki açışında görecek.",
+      "problem": "Sorun bildirildi",
+      "machine": "Aslını göster (makine çevirisi)",
+      "reply": {
+        "same_day": "Muayenehane genellikle aynı iş günü içinde yanıt verir.",
+        "next_day": "Muayenehane genellikle bir sonraki iş gününe kadar yanıt verir.",
+        "two_days": "Muayenehane genellikle iki iş günü içinde yanıt verir.",
+        "three_days": "Muayenehane genellikle üç iş günü içinde yanıt verir.",
+        "week": "Muayenehane genellikle bir hafta içinde yanıt verir."
+      },
+      "no_emergency": "Acil durumlar için uygulamayı kullanmayın."
+    },
+    "report": {
+      "title": "Sorun bildir",
+      "what": "Ne oldu?",
+      "what_ph": "örn. merdiven çıktıktan sonra dizim şişti",
+      "send": "Gönder"
+    }
+  }
+}

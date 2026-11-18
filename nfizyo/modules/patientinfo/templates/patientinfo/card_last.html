@@ -1,0 +1,8 @@
+{% set i = ctx.info %}
+<section class="card" aria-labelledby="h-pi-last">
+  <div class="card-head"><h2 id="h-pi-last">{{ t('patientinfo.last') }}</h2>
+    <span class="meta">{{ fmt_date(i.approved_at) }} · {% if i.read_at %}<span class="pill-label ok">{{ t('patientinfo.read') }}</span>{% else %}<span class="pill-label">{{ t('patientinfo.not_read') }}</span>{% endif %}</span></div>
+  {% if i.home %}<p class="small"><span class="muted">{{ t('patientinfo.home') }}:</span> {{ i.home | truncate(160) }}</p>{% endif %}
+  {% if i.contact %}<p class="small" style="margin-top:4px"><span class="muted">{{ t('patientinfo.contact') }}:</span> {{ i.contact | truncate(160) }}</p>{% endif %}
+  <div class="row" style="justify-content:flex-end;margin-top:8px"><a class="btn text" href="{{ S }}/patienten/{{ ctx.patient.id }}/info">{{ t('patientinfo.all') }}</a></div>
+</section>

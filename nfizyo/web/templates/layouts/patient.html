@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block head %}
+<link rel="manifest" href="/p/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+{% endblock %}
+{% block body %}
+<div class="papp">
+  {% if demo %}<div class="demo-strip">{{ t('common.demo_ribbon') }}</div>{% endif %}
+  <header class="papp-top">
+    {% block back %}{% endblock %}
+    <h1>{% block title %}{% endblock %}</h1>
+    {% block actions %}{% endblock %}
+  </header>
+  <main id="main" class="stack">{% block content %}{% endblock %}</main>
+</div>
+{% if patient_user %}
+<nav class="papp-nav" aria-label="{{ t('p.nav.main') }}">
+  {% for n in nav[:5] %}
+  <a href="{{ n.href }}"{% if n.active %} aria-current="page"{% endif %}><span class="pill">{{ icon(n.icon) }}{% if n.badge %}<span class="nav-badge">{{ n.badge }}</span>{% endif %}</span><span class="ellipsis">{{ t(n.short_key) }}</span></a>
+  {% endfor %}
+</nav>
+{% endif %}
+{% endblock %}
+{% block scripts %}<script src="{{ static('js/patient.js') }}" defer></script>{% endblock %}

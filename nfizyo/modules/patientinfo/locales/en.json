@@ -1,0 +1,20 @@
+{
+  "p": {
+    "info": {
+      "title": "Info from your therapist",
+      "intro": "This is what your therapist wrote down for you.",
+      "new": "new",
+      "home": "What you can do at home",
+      "contact": "When to contact us",
+      "original": "Original",
+      "translation_soon": "The translation will follow shortly.",
+      "none": "No information yet.",
+      "card": "Info from your therapist",
+      "card_hint": "Read it or have it read aloud",
+      "not_translated": "This text has not been translated. If anything is unclear, please ask at your next appointment."
+    },
+    "nav": {
+      "info": "Info"
+    }
+  }
+}

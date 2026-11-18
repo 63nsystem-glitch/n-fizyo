@@ -1,0 +1,7 @@
+{% import "briefing/_handover.html" as ho with context %}
+{% set h = ctx %}
+<section class="card" aria-labelledby="h-handover" style="border:2px solid var(--amber)">
+  <div class="card-head"><h2 id="h-handover">{{ icon('swap_horiz', 20) }} {{ t('brief.ho_title_takeover', names=h.names | join(', ')) if h.mode == 'takeover' else t('brief.ho_title_away') }}</h2>
+    <a class="btn text sm" href="{{ S }}/patienten/{{ h.patient.id }}/uebergabe">{{ t('brief.ho_full') }}</a></div>
+  {{ ho.body(h, S) }}
+</section>

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head><meta charset="utf-8"><title>{{ t('mtt.print_qr') }}</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 16px; color: #191C20; background: #fff; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+  .qr { border: 1px dashed #999; border-radius: 12px; padding: 12px; text-align: center; break-inside: avoid; }
+  .qr svg { width: 150px; height: 150px; }
+  .qr strong { display: block; font-size: 18px; margin-top: 6px; }
+  .qr span { font-size: 12px; color: #555; }
+  @media print { .noprint { display: none; } body { margin: 0; } }
+</style></head>
+<body>
+<p class="noprint">{{ t('mtt.qr_hint') }}</p>
+<div class="grid">
+  {% for c in cards %}<div class="qr">{{ c.svg | safe }}<strong>{{ c.m.name }}</strong><span>{{ t('mtt.qr_scan') }}</span></div>{% endfor %}
+</div>
+</body></html>

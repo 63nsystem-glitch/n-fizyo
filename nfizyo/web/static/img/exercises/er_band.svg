@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <title>Aussenrotation mit Band</title>
+  <g id="fig" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 186 L300 186" stroke-width="3" opacity="0.3"/>
+    <path d="M132 96 L147 102" stroke-width="10" opacity="0.2"/>
+    <path d="M188 96 L173 102" stroke-width="10" opacity="0.2"/>
+    <path d="M147 102 L173 102" stroke-width="3" opacity="0.2"/>
+    <path d="M150 114 L148 148 L147 181" stroke-width="10"/>
+    <path d="M147 181 L136 182" stroke-width="8"/>
+    <path d="M170 114 L172 148 L173 181" stroke-width="10"/>
+    <path d="M173 181 L184 182" stroke-width="8"/>
+    <path d="M138 62 Q138 54 148 53 L172 53 Q182 54 182 62 L175 116 L145 116 Z" stroke-width="10"/>
+    <path d="M160 52 L160 42" stroke-width="10"/>
+    <circle cx="160" cy="29" r="13" fill="currentColor" stroke="none"/>
+    <path d="M131 59 L132 96" stroke-width="10"/>
+    <path d="M132 96 L102 94" stroke-width="10" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M189 59 L188 96" stroke-width="10"/>
+    <path d="M188 96 L218 94" stroke-width="10" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M102 94 Q160 99 218 94" stroke-width="2.5" opacity="0.6"/>
+    <path d="M144 114 Q122 126 105.9 113.1" stroke-width="4" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M102 110 L110.8 111.7 L105.6 118.2 Z" stroke-width="2.5" style="fill:var(--ex-accent, #D9661F);stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M176 114 Q198 126 214.1 113.1" stroke-width="4" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M218 110 L214.4 118.2 L209.2 111.7 Z" stroke-width="2.5" style="fill:var(--ex-accent, #D9661F);stroke:var(--ex-accent, #D9661F)"/>
+  </g>
+</svg>

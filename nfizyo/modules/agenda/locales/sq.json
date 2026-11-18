@@ -1,0 +1,43 @@
+{
+  "p": {
+    "appt": {
+      "title": "Terminet",
+      "none": "Nuk ka termine të planifikuara.",
+      "cancel_hint": "Për të anuluar ose zhvendosur një termin, telefononi të paktën 24 orë më parë.",
+      "request": "Kërkoni një termin",
+      "wish": "Dëshira juaj",
+      "wish_ph": "p.sh. termin më herët",
+      "preferred": "Kur ju përshtatet?",
+      "preferred_ph": "p.sh. të hënën ose të mërkurën në mëngjes",
+      "send": "Dërgoni kërkesën",
+      "requested": "Kërkesa u dërgua. Praktika do t'ju kontaktojë.",
+      "closure": "Praktika është e mbyllur: {dates}."
+    },
+    "sms": {
+      "reminder": "Kujtesë: termini juaj i fizioterapisë më {when} ({place}). Anulimi me telefon të paktën 24 orë më parë.",
+      "offer": "{practice}: u lirua një takim – {when}, {place}. E dëshironi? Përgjigjuni këtu: {url}",
+      "offer_booked": "{practice}: takimi juaj më {when} është konfirmuar. Për anulim telefononi të paktën 24 orë më parë: {phone}",
+      "offer_gone": "{practice}: takimi i ofruar më {when} nuk është më i lirë. Mbeteni në listën e pritjes.",
+      "cancelled": "{practice}: takimet tuaja janë anuluar: {dates}. Për pyetje na telefononi: {phone}"
+    },
+    "mail": {
+      "reminder_subject": "Kujtesë: termin më {when}",
+      "reminder_body": "Përshëndetje {name}\n\nJu kujtojmë terminin tuaj të fizioterapisë më {when} ({place}).\nAnulimi të paktën 24 orë më parë: {phone}\n\nMe respekt\n{practice}"
+    },
+    "offer": {
+      "title": "Takim i lirë",
+      "minutes": "{n} minuta",
+      "first_wins": "Ky takim u është ofruar disa personave. Kush konfirmon i pari, e merr.",
+      "accept": "Po, e marr takimin",
+      "decline": "Jo, faleminderit",
+      "booked_title": "Takimi juaj është rezervuar",
+      "booked_text": "Do të merrni një konfirmim me SMS. Për anulim telefononi të paktën 24 orë më parë.",
+      "declined": "Faleminderit për përgjigjen. Mbeteni në listën e pritjes.",
+      "changed_mind": "Po, e dua takimin",
+      "taken": "Na vjen keq, takimi është dhënë tashmë. Mbeteni në listën e pritjes.",
+      "expired": "Kjo ofertë ka skaduar. Mbeteni në listën e pritjes.",
+      "invalid": "Ky link nuk është i vlefshëm ose ka skaduar.",
+      "call": "Pyetje? Na telefononi:"
+    }
+  }
+}

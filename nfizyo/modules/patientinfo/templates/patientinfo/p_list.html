@@ -1,0 +1,29 @@
+{% extends "layouts/patient.html" %}
+{% block title %}{{ t('p.info.title') }}{% endblock %}
+{% block content %}
+<p class="muted">{{ t('p.info.intro') }}</p>
+{% for i in infos %}
+<article class="card stack-s{{ ' info' if i.id in unread else '' }}">
+  <p class="small muted">{{ fmt_date(i.approved_at) }} · {{ i.author_name }}{% if i.id in unread %} · <strong>{{ t('p.info.new') }}</strong>{% endif %}</p>
+  {% for key, ic in (('home', 'home'), ('contact', 'call')) if i[key] %}
+  {% set txt = i[key ~ '_translated'] or i[key] %}
+  {% set tl = i.target_lang if i[key ~ '_translated'] else i.source_lang %}
+  <section class="stack-s">
+    <h2>{{ icon(ic, 20) }} {{ t('p.info.' ~ key) }}</h2>
+    <p id="pi-{{ i.id }}-{{ key }}" dir="auto" lang="{{ tl }}" style="font-size:18px;line-height:28px">{{ txt }}</p>
+    <div class="row" style="gap:8px">
+      <button type="button" class="btn tonal sm" data-speak="pi-{{ i.id }}-{{ key }}" data-lang="{{ tl }}" hidden>{{ icon('volume_up', 18) }}{{ t('p.listen') }}</button>
+    </div>
+    {% if i[key ~ '_translated'] and i.source_lang != i.target_lang %}
+    <details class="small"><summary class="muted">{{ t('p.machine_translated') }} · {{ t('p.info.original') }}</summary><p dir="auto" lang="{{ i.source_lang }}" style="margin-top:6px">{{ i[key] }}</p></details>
+    {% elif i.source_lang != plang and i.translation_engine is none %}<p class="small muted">{{ t('p.info.translation_soon') }}</p>
+    {% elif i.source_lang != plang %}<p class="small muted">{{ t('p.info.not_translated') }}</p>{% endif %}
+  </section>
+  {% endfor %}
+</article>
+{% else %}
+<div class="empty">{{ icon('info', 40) }}<p>{{ t('p.info.none') }}</p></div>
+{% endfor %}
+<div class="emergency">{{ icon('emergency', 20) }}<span>{{ t('p.emergency') }}</span></div>
+{% endblock %}
+{% block scripts %}{{ super() }}<script src="{{ static('js/speak.js') }}" defer></script>{% endblock %}

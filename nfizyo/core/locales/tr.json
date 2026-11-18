@@ -1,0 +1,77 @@
+{
+  "_review": "Maschinennahe Erstübersetzung durch NSystem – vor Einsatz von Muttersprachler/in prüfen lassen.",
+  "common": {
+    "demo_ribbon": "Demo · kurgusal veriler",
+    "save": "Kaydet",
+    "saved": "Kaydedildi",
+    "cancel": "Vazgeç",
+    "close": "Kapat",
+    "back": "Geri",
+    "yes": "Evet",
+    "no": "Hayır",
+    "next": "İleri",
+    "done": "Tamam",
+    "send": "Gönder",
+    "edit": "Düzenle",
+    "delete": "Sil",
+    "loading": "Yükleniyor …",
+    "offline": "Bağlantı yok – daha sonra gönderilecek",
+    "retry": "Tekrar dene",
+    "today": "Bugün",
+    "tomorrow": "Yarın",
+    "yesterday": "Dün",
+    "region": {
+      "head": "Baş",
+      "neck": "Boyun",
+      "trapezius": "Ense / omuz",
+      "chest": "Göğüs",
+      "abs": "Karın",
+      "obliques": "Bel yanı",
+      "front_deltoids": "Omuz (ön)",
+      "back_deltoids": "Omuz (arka)",
+      "biceps": "Üst kol (ön)",
+      "triceps": "Üst kol (arka)",
+      "forearm": "Ön kol / el",
+      "upper_back": "Sırtın üst kısmı",
+      "lower_back": "Bel",
+      "gluteal": "Kalça",
+      "abductors": "Kasık / uyluğun iç tarafı",
+      "quadriceps": "Uyluk (ön)",
+      "hamstring": "Uyluk (arka)",
+      "knees": "Diz",
+      "calves": "Bacak / ayak",
+      "soleus": "Baldır / topuk"
+    },
+    "side": {
+      "l": "(sol)",
+      "r": "(sağ)"
+    },
+    "hold_s": "{n} sn tutun",
+    "per_day": "günde {n} kez",
+    "search": "Ara"
+  },
+  "p": {
+    "mail": {
+      "footer": "Bu mesaj {practice} tarafından otomatik olarak gönderildi. Acil durumda 144’ü arayın."
+    },
+    "error": {
+      "title_403": "Erişim yok",
+      "text_403": "Bu sayfayı açamazsınız.",
+      "title_404": "Bulunamadı",
+      "text_404": "Bu sayfa mevcut değil.",
+      "title_500": "Bir sorun oluştu",
+      "text_500": "Lütfen daha sonra tekrar deneyin. Sorularınız için muayenehaneyi arayın.",
+      "home": "Ana sayfaya"
+    },
+    "body": {
+      "view": "Görünüm",
+      "front": "Ön",
+      "back": "Arka",
+      "figure": "Vücut",
+      "right_short": "Sağ",
+      "left_short": "Sol",
+      "zoom": "Büyüt"
+    },
+    "listen": "Sesli oku"
+  }
+}

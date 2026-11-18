@@ -1,0 +1,15 @@
+{% extends "ui/settings.html" %}
+{% import "documentation/_template_form.html" as tf with context %}
+{% block settings %}
+<div class="grid-main-side">
+  <section class="card stack-s">
+    <h2>{{ t('notes.tpl_practice') }}</h2>
+    <p class="small muted">{{ t('notes.tpl_settings_hint') }}</p>
+    {{ tf.list(shared, True, action) }}
+  </section>
+  <section class="card">
+    <h2 style="margin-bottom:12px">{{ t('notes.tpl_edit_title') if edit else t('notes.tpl_new') }}</h2>
+    {{ tf.form(edit, langs, action) }}
+  </section>
+</div>
+{% endblock %}

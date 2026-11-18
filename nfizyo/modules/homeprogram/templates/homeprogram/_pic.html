@@ -1,0 +1,12 @@
+{# Bild einer Übung: eigene Strichzeichnung oder neutrale Körperbereich-Kachel (static/img/exercises/). Farbe = currentColor. #}
+{% macro svg(p, cls='ex-thumb', label=none) -%}
+<svg class="{{ cls }} ex-{{ p.kind }}" viewBox="0 0 320 200" focusable="false"{% if label %} role="img" aria-label="{{ label }}"{% else %} aria-hidden="true"{% endif %}><use href="{{ static(p.src) }}#fig"/></svg>
+{%- endmacro %}
+
+{% macro thumb(p, cls='', video=false) -%}
+<span class="ex-thumb-wrap {{ cls }}">{{ svg(p) }}{% if video %}<span class="ex-badge">{{ icon('videocam', 16) }}</span>{% endif %}</span>
+{%- endmacro %}
+
+{% macro media(p, name) -%}
+<figure class="ex-media ex-media-{{ p.kind }}">{{ svg(p, 'ex-media-pic', name) }}{% if p.kind == 'region' %}<figcaption dir="auto">{{ name }}</figcaption>{% endif %}</figure>
+{%- endmacro %}

@@ -1,0 +1,10 @@
+{% from "agenda/_session.html" import session_label with context %}
+<div class="table-wrap"><table class="table appt-table">
+  <thead><tr><th>{{ t('agenda.date') }}</th><th>{{ t('agenda.time') }}</th><th>{{ t('agenda.type') }}</th><th>{{ t('agenda.therapist') }}</th><th>{{ t('agenda.status') }}</th><th></th></tr></thead>
+  <tbody>{% for r in rows %}{% set a = r.a %}
+    <tr><td class="nowrap c-date">{{ fmt_date(r.start, weekday=True) }}</td><td class="mono c-time">{{ fmt_time(r.start) }}–{{ fmt_time(r.end) }}</td>
+      <td class="c-type">{{ (a.type_fr if lang == 'fr' else a.type_de) or '' }}{% if r.session %} · {{ session_label(r.session, r.beyond) }}{% endif %}</td><td class="c-who">{{ a.therapist_name }}</td>
+      <td class="c-st"><span class="pill-label {{ {'arrived': 'info', 'done': 'ok', 'cancelled': 'error', 'no_show': 'warn'}.get(a.status, '') }}">{{ t('agenda.st.' ~ a.status) }}</span></td>
+      <td class="c-go"><a class="icon-btn" href="{{ S }}/agenda/termine/{{ a.id }}" aria-label="{{ t('agenda.details') }}">{{ icon('chevron_right', 20, 'flip-rtl') }}</a></td></tr>
+  {% else %}<tr><td colspan="6" class="empty">{{ t('agenda.no_appointments') }}</td></tr>{% endfor %}</tbody>
+</table></div>

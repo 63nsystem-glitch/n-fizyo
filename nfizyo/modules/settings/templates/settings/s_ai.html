@@ -1,0 +1,41 @@
+{% extends "ui/settings.html" %}
+{% block settings %}
+{% set cloud = ai.mode == 'cloud_demo' %}
+{% set remote = ai.mode == 'remote' %}
+{% set unreachable = (cloud or remote) and ai.error %}
+<div class="grid-main-side">
+  <section class="card stack">
+    <h2>{{ t('settings.ai_title_cloud') if cloud else (t('settings.ai_title_remote') if remote else t('settings.ai_title')) }}</h2>
+    {% if cloud %}
+    <div class="banner warn">{{ icon('cloud_sync') }}<span>{{ t('ai.cloud_demo', host=ai.server) }}</span></div>
+    <p class="small muted">{{ t('settings.ai_cloud_text', provider=ai.provider) }}</p>
+    {% else %}
+    <p class="small muted">{{ t('settings.ai_remote_text') if remote else t('settings.ai_local') }}</p>
+    {% endif %}
+    <div class="list">
+      {% for key, ic in (('stt', 'mic'), ('llm', 'description'), ('translate', 'translate'), ('ocr', 'upload_file')) %}
+      {% set s = ai[key] %}
+      <div class="list-item" style="padding-inline:0">
+        <span class="lead avatar">{{ icon(ic, 20) }}</span>
+        <span class="body"><span class="title">{{ t('settings.ai.' ~ key) }}</span>{% if cloud and s.model %}<br><span class="sub">{{ ai.provider }} · {{ s.model }}</span>{% endif %}</span>
+        <span class="trail"><span class="pill-label {{ 'ok' if s.available else 'warn' }}">{{ t('settings.ai_on') if s.available else (t('settings.ai_cloud_off') if unreachable and key != 'ocr' else t('settings.ai_off')) }}</span></span>
+      </div>
+      {% endfor %}
+    </div>
+    {% if unreachable %}<p class="small">{{ t('settings.ai_cloud_waiting') }}</p>{% endif %}
+    <p class="small muted">{{ t('settings.ai_fallback') }}</p>
+  </section>
+  <section class="card stack-s">
+    <h2>{{ t('settings.scan_title') }}</h2>
+    <p class="small">{{ t('settings.scan_text') }}</p>
+    <h2 style="margin-top:16px">{{ t('settings.ai_server') }}</h2>
+    {% if cloud %}
+    <p><span class="pill-label warn">{{ t('settings.ai_mode_cloud') }}</span></p>
+    <p class="small">{{ t('settings.ai_provider') }}: {{ ai.provider }}{% if ai.provider != ai.server %} ({{ ai.server }}){% endif %}</p>
+    {% else %}
+    <p><span class="pill-label info">{{ t('settings.ai_mode_remote') if remote else t('settings.ai_mode_local') }}</span></p>
+    <p class="small muted">{{ t('staff.nsystem_setup') }} {{ t('staff.nsystem_contact') }}</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

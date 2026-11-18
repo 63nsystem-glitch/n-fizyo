@@ -1,0 +1,12 @@
+{% import "intake/_show.html" as show with context %}
+<section class="card{{ ' info' if ctx.it.status == 'new' else '' }}" aria-labelledby="h-intake">
+  <div class="card-head"><h2 id="h-intake">{{ icon('record_voice_over', 20) }}{{ t('intake_staff.panel_title') }}</h2>
+    <span class="meta">{{ fmt_date(ctx.it.created_at) }} · {{ t('intake_staff.ch.' ~ ctx.it.channel) }}{% if ctx.foreign %} · {{ ctx.lang_name }}{% endif %}</span></div>
+  {{ show.show(ctx, S ~ '/patienten/' ~ ctx.patient.id, ctx.translate_on) }}
+  {% if ctx.it.status == 'new' %}
+  <div class="row" style="justify-content:flex-end;margin-top:12px">
+    <form method="post" action="{{ S }}/anliegen/{{ ctx.it.id }}/gesehen"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="back" value="{{ S }}/patienten/{{ ctx.patient.id }}"><button class="btn text sm" type="submit">{{ t('intake_staff.seen') }}</button></form>
+    <form method="post" action="{{ S }}/anliegen/{{ ctx.it.id }}/uebernehmen"><input type="hidden" name="_csrf" value="{{ csrf }}"><button class="btn sm" type="submit">{{ icon('add', 18) }}{{ t('intake_staff.take') }}</button></form>
+  </div>
+  {% endif %}
+</section>

@@ -1,0 +1,22 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/uebersicht" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('reports.l_title') }}{% endblock %}
+{% block subtitle %}{{ t('reports.l_subtitle') }}{% endblock %}
+{% block content %}
+<div class="grid-main-side">
+  <section class="card flush">
+    {% if rows %}
+    <div class="table-wrap"><table class="table">
+      <thead><tr><th>{{ t('reports.l_created') }}</th><th>{{ t('reports.kind_label') }}</th><th>{{ t('reports.l_patient') }}</th><th>{{ t('reports.l_author') }}</th></tr></thead>
+      <tbody>{% for r in rows %}<tr><td>{{ fmt_date(r.created_at) }}</td><td>{{ t('reports.kind.' ~ r.kind) }}</td>
+        <td>{{ r.first_name }} {{ r.last_name }}</td><td>{{ r.author_name }}</td></tr>{% endfor %}</tbody>
+    </table></div>
+    {% else %}<div class="empty">{{ icon('task_alt', 40) }}<p>{{ t('stats.nothing_open') }}</p></div>{% endif %}
+  </section>
+  <section class="card stack-s">
+    <h2>{{ t('reports.l_per') }}</h2>
+    <dl class="facts">{% for name, n in per %}<dt>{{ name }}</dt><dd>{{ n }}</dd>{% else %}<dt>–</dt><dd></dd>{% endfor %}</dl>
+    <p class="small muted">{{ t('reports.l_privacy') }}</p>
+  </section>
+</div>
+{% endblock %}

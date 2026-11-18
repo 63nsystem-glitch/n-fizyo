@@ -1,0 +1,30 @@
+{
+  "p": {
+    "msg": {
+      "title": "Mensagens",
+      "empty": "Ainda não há mensagens.",
+      "write": "A sua mensagem",
+      "write_ph": "Escreva na sua língua.",
+      "reply_time": "A clínica responde normalmente no prazo de um dia útil. Não use a app para emergências.",
+      "too_many": "Enviou muitas mensagens em pouco tempo. Tente novamente mais tarde ou ligue para o consultório.",
+      "sent": "Mensagem enviada.",
+      "report_sent": "Comunicação enviada. A clínica vai vê-la na próxima abertura.",
+      "problem": "Problema comunicado",
+      "machine": "Mostrar o original (tradução automática)",
+      "reply": {
+        "same_day": "A clínica responde normalmente no mesmo dia útil.",
+        "next_day": "A clínica responde normalmente até ao dia útil seguinte.",
+        "two_days": "A clínica responde normalmente no prazo de dois dias úteis.",
+        "three_days": "A clínica responde normalmente no prazo de três dias úteis.",
+        "week": "A clínica responde normalmente no prazo de uma semana."
+      },
+      "no_emergency": "Não use a app para emergências."
+    },
+    "report": {
+      "title": "Comunicar um problema",
+      "what": "O que aconteceu?",
+      "what_ph": "p. ex. joelho inchado depois de subir escadas",
+      "send": "Enviar"
+    }
+  }
+}

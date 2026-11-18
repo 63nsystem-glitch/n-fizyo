@@ -1,0 +1,23 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/patienten/{{ patient.id }}" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('pstaff.invite_title') }}{% endblock %}
+{% block subtitle %}{{ patient.first_name }} {{ patient.last_name }} · {{ LANG_NAMES[patient.lang] }}{% endblock %}
+{% block content %}
+<div class="grid-2" style="max-width:960px">
+  <section class="card" style="text-align:center">
+    {% if qr %}<div style="display:flex;justify-content:center">{{ qr | safe }}</div>{% endif %}
+    <p class="small muted" style="margin-top:8px">{{ t('pstaff.scan') }}</p>
+    <p style="font-size:36px;line-height:48px;letter-spacing:10px;font-weight:500;margin-top:16px" class="mono">{{ code[:3] }} {{ code[3:] }}</p>
+    <p class="small muted">{{ t('pstaff.code_hint', days=days) }}</p>
+  </section>
+  <section class="card stack-s">
+    <h2>{{ t('pstaff.howto') }}</h2>
+    <p class="small">{{ t('pstaff.howto_text') }}</p>
+    <div class="field"><label for="url">{{ t('pstaff.link') }}</label><input id="url" value="{{ url }}" readonly data-select-all></div>
+    {% if link_note %}<div class="banner warn" data-link-note>{{ icon('warning', 20) }}<span>{{ t(link_note) }}</span></div>{% endif %}
+    {% if sms_sent %}<div class="banner ok">{{ icon('sms') }}<span>{{ t('pstaff.sms_logged') }}</span></div>{% endif %}
+    {% if landline %}<div class="banner warn">{{ icon('sms') }}<span>{{ t('pstaff.sms_landline') }}</span></div>{% endif %}
+    <div class="banner info">{{ icon('info') }}<span>{{ t('pstaff.once') }}</span></div>
+  </section>
+</div>
+{% endblock %}

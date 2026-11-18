@@ -1,0 +1,20 @@
+{
+  "p": {
+    "info": {
+      "title": "Información de su terapia",
+      "intro": "Esto es lo que su fisioterapeuta ha escrito para usted.",
+      "new": "nuevo",
+      "home": "Lo que puede hacer en casa",
+      "contact": "Cuándo contactarnos",
+      "original": "Original",
+      "translation_soon": "La traducción llegará pronto.",
+      "none": "Todavía no hay información.",
+      "card": "Información de su terapia",
+      "card_hint": "Para leer o escuchar",
+      "not_translated": "Este texto no está traducido. Si algo no está claro, pregunte en su próxima cita."
+    },
+    "nav": {
+      "info": "Info"
+    }
+  }
+}

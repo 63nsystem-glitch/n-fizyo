@@ -1,0 +1,77 @@
+{
+  "_review": "Maschinennahe Erstübersetzung durch NSystem – vor Einsatz von Muttersprachler/in prüfen lassen.",
+  "common": {
+    "demo_ribbon": "Demo · izmišljeni podaci",
+    "save": "Sačuvaj",
+    "saved": "Sačuvano",
+    "cancel": "Odustani",
+    "close": "Zatvori",
+    "back": "Nazad",
+    "yes": "Da",
+    "no": "Ne",
+    "next": "Dalje",
+    "done": "Gotovo",
+    "send": "Pošalji",
+    "edit": "Uredi",
+    "delete": "Obriši",
+    "loading": "Učitavanje …",
+    "offline": "Nema veze – bit će poslano kasnije",
+    "retry": "Pokušaj ponovo",
+    "today": "Danas",
+    "tomorrow": "Sutra",
+    "yesterday": "Jučer",
+    "region": {
+      "head": "Glava",
+      "neck": "Vrat",
+      "trapezius": "Vrat / rame",
+      "chest": "Grudi",
+      "abs": "Stomak",
+      "obliques": "Bok",
+      "front_deltoids": "Rame (naprijed)",
+      "back_deltoids": "Rame (pozadi)",
+      "biceps": "Nadlaktica (naprijed)",
+      "triceps": "Nadlaktica (pozadi)",
+      "forearm": "Podlaktica / šaka",
+      "upper_back": "Gornji dio leđa",
+      "lower_back": "Donji dio leđa",
+      "gluteal": "Stražnjica / kuk",
+      "abductors": "Prepone / unutrašnja strana butine",
+      "quadriceps": "Butina (naprijed)",
+      "hamstring": "Butina (pozadi)",
+      "knees": "Koljeno",
+      "calves": "Potkoljenica / stopalo",
+      "soleus": "List / peta"
+    },
+    "side": {
+      "l": "(lijevo)",
+      "r": "(desno)"
+    },
+    "hold_s": "držati {n} s",
+    "per_day": "{n}× dnevno",
+    "search": "Pretraga"
+  },
+  "p": {
+    "mail": {
+      "footer": "Ovu poruku je automatski poslala {practice}. U hitnom slučaju nazovite 144."
+    },
+    "error": {
+      "title_403": "Nema pristupa",
+      "text_403": "Ovu stranicu ne možete otvoriti.",
+      "title_404": "Nije pronađeno",
+      "text_404": "Ova stranica ne postoji (više).",
+      "title_500": "Nešto nije u redu",
+      "text_500": "Molimo pokušajte ponovo kasnije. Za pitanja nazovite ordinaciju.",
+      "home": "Na početnu stranicu"
+    },
+    "body": {
+      "view": "Prikaz",
+      "front": "Sprijeda",
+      "back": "Straga",
+      "figure": "Tijelo",
+      "right_short": "D",
+      "left_short": "L",
+      "zoom": "Uvećaj"
+    },
+    "listen": "Pročitaj naglas"
+  }
+}

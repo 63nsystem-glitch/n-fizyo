@@ -1,0 +1,58 @@
+{% extends "layouts/staff.html" %}
+{% import "documentation/_sections.html" as sec with context %}
+{% block back %}<a class="icon-btn" href="{{ S }}/patienten/{{ patient.id }}/verlauf" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('notes.note_of', date=fmt_date(note.session_date)) }}{% endblock %}
+{% block subtitle %}<a href="{{ S }}/patienten/{{ patient.id }}" style="color:inherit">{{ patient.first_name }} {{ patient.last_name }}</a> · {{ note.author_name }} · {{ t('notes.version', n=note.version) }}{% endblock %}
+{% block actions %}<span class="pill-label {{ 'ok' if note.status == 'approved' else 'warn' }}">{{ icon('lock', 14) if note.status == 'approved' else '' }} {{ t('notes.status_' ~ note.status) }}</span>{% endblock %}
+{% block content %}
+<div class="grid-main-side">
+  <div class="col">
+    {% if note.status == 'draft' and can_write %}
+    <form method="post" class="stack">
+      <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="base" value="{{ note.version }}">
+      <section class="card stack">
+        {% for s in ('befund', 'behandlung', 'beurteilung', 'plan') %}
+        <div class="field"><label for="{{ s }}">{{ t('notes.sec.' ~ s) }}</label><textarea id="{{ s }}" name="{{ s }}" rows="3" data-autogrow>{{ note[s] }}</textarea></div>
+        {% endfor %}
+      </section>
+      <div class="form-actions">
+        <button class="btn outlined" type="submit">{{ t('notes.save_draft') }}</button>
+        <button class="btn" type="submit" name="approve" value="1">{{ icon('lock', 18) }}{{ t('notes.approve') }}</button>
+      </div>
+    </form>
+    <form method="post" action="{{ S }}/notizen/{{ note.id }}/verwerfen" data-confirm="{{ t('notes.discard_confirm') }}" data-confirm-yes="{{ t('notes.discard') }}" class="form-actions">
+      <input type="hidden" name="_csrf" value="{{ csrf }}"><button class="btn text" type="submit" style="color:var(--error)">{{ icon('delete', 18) }}{{ t('notes.discard') }}</button>
+    </form>
+    {% else %}
+    <section class="card">
+      {{ sec.show(note) }}
+      {% if note.status == 'approved' %}<p class="small muted" style="margin-top:12px">{{ icon('lock', 14) }} {{ t('notes.approved_by', name=note.approver_name or '', date=fmt_date(note.approved_at)) }}</p>{% endif %}
+    </section>
+    {% if can_write %}
+    {% if prefill %}<div class="banner warn" role="alert">{{ icon('warning') }}<span>{{ t('notes.became_approved') }}</span></div>{% endif %}
+    <details class="card" {% if request.query.get('nachtrag') or prefill %}open{% endif %}>
+      <summary class="btn text">{{ icon('edit_note', 18) }}{{ t('notes.addendum') }}</summary>
+      <form method="post" class="stack" style="margin-top:12px">
+        <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="base" value="{{ note.version }}">
+        <p class="small muted">{{ t('notes.addendum_hint') }}</p>
+        {% for s in ('befund', 'behandlung', 'beurteilung', 'plan') %}
+        <div class="field"><label for="a-{{ s }}">{{ t('notes.sec.' ~ s) }}</label><textarea id="a-{{ s }}" name="{{ s }}" rows="2" data-autogrow>{{ (prefill or note)[s] }}</textarea></div>
+        {% endfor %}
+        <div class="field"><label for="reason">{{ t('notes.reason') }} *</label><input id="reason" name="reason" required placeholder="{{ t('notes.reason_ph') }}"></div>
+        <div class="form-actions"><button class="btn tonal" type="submit">{{ t('notes.save_addendum') }}</button></div>
+      </form>
+    </details>
+    {% endif %}
+    {% endif %}
+  </div>
+  <section class="card">
+    <h2 style="margin-bottom:8px">{{ t('notes.versions') }}</h2>
+    <div class="list">
+      {% for v in versions | reverse %}
+      <div class="list-item"><span class="body"><span class="title">{{ t('notes.version', n=v.version) }}</span><br><span class="sub">{{ fmt_date(v.created_at) }} {{ fmt_time(v.created_at) }} · {{ v.editor_name or '' }}{% if v.reason %} · {{ v.reason }}{% endif %}</span></span></div>
+      {% endfor %}
+    </div>
+    <p class="small muted" style="margin-top:8px">{{ t('notes.versions_hint') }}</p>
+  </section>
+</div>
+{% endblock %}

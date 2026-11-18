@@ -1,0 +1,41 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/agenda/termine/{{ a.id }}" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('video.title') }} · {{ a.first_name }} {{ a.last_name }}{% endblock %}
+{% block subtitle %}{{ fmt_date(start, weekday=True) }} · {{ fmt_time(start) }} · {{ a.therapist_name }}{% endblock %}
+{% block content %}
+{% if not configured %}
+<section class="card"><p>{{ t('video.not_configured') }}</p></section>
+{% else %}
+<div class="grid-main-side">
+  <section class="card stack-s">
+    {% if not room %}
+    <p>{{ t('video.intro') }}</p>
+    <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="action" value="setup">
+      <button class="btn" type="submit">{{ icon('videocam', 18) }}{{ t('video.setup') }}</button></form>
+    {% else %}
+    <div class="kv" style="grid-template-columns:minmax(140px,35%) 1fr">
+      <div class="k">{{ t('video.status') }}</div><div><span class="pill-label {{ 'ok' if state == 'open' else '' }}">{{ t('video.state.' ~ state) }}</span></div>
+      <div class="k">{{ t('video.link') }}</div><div>{% if room.sms_sent_at %}{{ t('video.sms_at', when=fmt_date(room.sms_sent_at, weekday=True, year=False) ~ ' ' ~ fmt_time(room.sms_sent_at)) }}{% else %}{{ t('video.no_sms') }}{% endif %}</div>
+      <div class="k">{{ t('video.consent') }}</div><div>{{ t('video.consent_yes') if consent else t('video.consent_no') }}</div>
+      <div class="k">{{ t('video.joined') }}</div><div>{% if room.patient_joined_at %}{{ t('video.patient_in', time=fmt_time(room.patient_joined_at)) }}{% else %}–{% endif %}</div>
+    </div>
+    <div class="row" style="gap:8px">
+      {% if can_start %}
+      <a class="btn{{ '' if state == 'open' and configured else ' tonal' }}" href="{{ S }}/video/{{ a.id }}/start" target="_blank" rel="noopener"{% if state != 'open' or not configured %} aria-disabled="true"{% endif %}>{{ icon('play_arrow', 18) }}{{ t('video.start') }}</a>
+      {% endif %}
+      <form method="post"{% if room.sms_sent_at %} data-confirm="{{ t('video.sms_confirm') }}"{% endif %}><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="action" value="sms">
+        <button class="btn tonal" type="submit"{% if not phone %} disabled title="{{ t('video.no_phone') }}"{% endif %}>{{ icon('sms', 18) }}{{ t('video.sms_again') if room.sms_sent_at else t('video.sms') }}</button></form>
+    </div>
+    <p class="small muted">{{ t('video.window_hint') }}</p>
+    {% endif %}
+  </section>
+  <section class="card stack-s">
+    <h2>{{ t('video.privacy_title') }}</h2>
+    <ul class="small" style="padding-inline-start:18px;line-height:22px">
+      <li>{{ t('video.privacy.server') }}</li><li>{{ t('video.privacy.record') }}</li><li>{{ t('video.privacy.key') }}</li>
+      <li>{{ t('video.privacy.consent') }}</li><li>{{ t('video.privacy.billing') }}</li>
+    </ul>
+  </section>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "layouts/patient.html" %}
+{% block title %}{{ t('p.invite.title') }}{% endblock %}
+{% block content %}
+<section class="card"><p style="font-size:18px">{{ t('p.invite.invalid') }}</p><p class="muted" style="margin-top:8px">{{ t('p.invite.invalid_hint') }}</p></section>
+<a class="btn tonal block" href="/p/anmelden">{{ t('p.login.title') }}</a>
+{% endblock %}

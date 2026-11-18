@@ -1,0 +1,26 @@
+{# Eine Nachricht. viewer = 'staff' | 'patient' #}
+{% macro bubble(m, viewer, lang_name=None) %}
+{% set mine = (m.direction == 'out') if viewer == 'staff' else (m.direction == 'in') %}
+<div class="bubble{{ ' me' if mine else '' }}" style="font-size:16px;line-height:24px">
+  {% if m.kind == 'problem' %}<p class="small" style="font-weight:500;margin-bottom:4px">{{ icon('report', 16) }} {{ t('messages.problem') if viewer == 'staff' else t('p.msg.problem') }}{% if m.pain is not none %} · {{ m.pain }}/10{% endif %}</p>
+    {% if m.region %}<p class="small" style="margin-bottom:4px">{% for r in m.region.split(',') %}{{ t('common.region.' ~ (r if r == 'head' else r[:-2])) }}{% if r != 'head' %} {{ t('common.side.' ~ r[-1]) }}{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}{% endif %}
+  {% if viewer == 'staff' %}
+    {% if m.direction == 'in' and m.translation %}
+      <p dir="auto">{{ m.translation }}</p>
+      <p class="orig">{{ icon('translate', 12) }} {{ t('messages.auto_translated', language=(lang_name(m.lang) if lang_name else m.lang)) }}{% if m.translation_engine == 'demo' %} · {{ t('messages.demo_translation') }}{% endif %}{% if m.translation_warning %} · {{ t('messages.check_numbers') }}{% endif %}</p>
+      <details class="orig"><summary>{{ t('messages.show_original') }}</summary><p dir="auto" lang="{{ m.lang }}">{{ m.body }}</p></details>
+    {% else %}
+      <p dir="auto" lang="{{ m.lang }}">{{ m.body }}</p>
+      {% if m.direction == 'out' and m.translation %}<details class="orig"><summary>{{ t('messages.sent_as', language=(lang_name(m.translation_lang) if lang_name else m.translation_lang)) }}</summary><p dir="auto" lang="{{ m.translation_lang }}">{{ m.translation }}</p></details>{% endif %}
+    {% endif %}
+  {% else %}
+    {% if m.direction == 'out' and m.translation and m.translation_lang == lang %}
+      <p dir="auto">{{ m.translation }}</p>
+      <details class="orig"><summary>{{ t('p.msg.machine') }}</summary><p dir="auto" lang="{{ m.lang }}">{{ m.body }}</p></details>
+    {% else %}
+      <p dir="auto" lang="{{ m.lang }}">{{ m.body }}</p>
+    {% endif %}
+  {% endif %}
+  <p class="orig" style="border:0;padding:0;margin-top:4px">{{ fmt_date(m.created_at, weekday=True, year=False) }} {{ fmt_time(m.created_at) }}{% if viewer == 'staff' and m.author_name %} · {{ m.author_name }}{% endif %}</p>
+</div>
+{% endmacro %}

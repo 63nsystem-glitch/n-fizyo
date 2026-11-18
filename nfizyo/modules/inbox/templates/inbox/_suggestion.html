@@ -1,0 +1,32 @@
+{# Ein Vorschlag mit Übernehmen/Ablehnen. back = Rücksprung #}
+{% macro row(s, back, can_decide=True, compact=False) %}
+<div class="suggestion"{% if s.status != 'open' %} style="opacity:.6"{% endif %}>
+  <div class="what">
+    <span class="kind">{{ t('finding.' ~ s.kind) }}:</span> {{ s.text }}
+    {#- Angaben nur mit Trennpunkt dazwischen – nie am Zeilenanfang -#}
+    {% set meta = [] %}
+    {% if s.spine_levels %}{% set _ = meta.append(s.spine_levels | upper | replace(',', '/')) %}{% endif %}
+    {% if s.on_date %}{% set _ = meta.append(t('patients.date') ~ ' ' ~ fmt_date(s.on_date)) %}{% endif %}
+    {% if s.until %}{% set _ = meta.append(t('patients.until') ~ ' ' ~ fmt_date(s.until)) %}{% endif %}
+    {% if s.sessions %}{% set _ = meta.append(t('patients.sessions_n', n=s.sessions)) %}{% endif %}
+    {% if s.law %}{% set _ = meta.append(s.law) %}{% endif %}
+    {% set place = s.structure_id and module_on('anatomy') %}
+    {% if place or meta or not compact %}
+    <div class="small muted" style="margin-top:2px">
+      {%- if place %}<button type="button" class="term" data-sheet="{{ S }}/anatomie/{{ s.structure_id }}/blatt?side={{ s.side or '' }}">{{ anat.place_name(anat.get(s.structure_id), s.side, lang) or anat.name(anat.get(s.structure_id), lang) }}</button>{% endif %}
+      {%- if meta %}{% if place %} · {% endif %}{{ meta | join(' · ') }}{% endif %}
+      {%- if not compact %}{% if place or meta %} · {% endif %}<a href="#s{{ s.id }}">{{ t('inbox.see_quote') }}</a>{% endif %}
+    </div>
+    {% endif %}
+  </div>
+  {% if s.status == 'open' and can_decide %}
+  <form method="post" action="{{ S }}/posteingang/vorschlag/{{ s.id }}" class="row" style="flex-wrap:nowrap">
+    <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="back" value="{{ back }}">
+    <button class="btn outlined sm" type="submit" name="action" value="reject">{{ t('inbox.reject') }}</button>
+    <button class="btn sm" type="submit" name="action" value="accept">{{ t('inbox.accept') }}</button>
+  </form>
+  {% elif s.status != 'open' %}
+  <span class="pill-label {{ 'ok' if s.status == 'accepted' else '' }}">{{ t('inbox.sst.' ~ s.status) }}</span>
+  {% endif %}
+</div>
+{% endmacro %}

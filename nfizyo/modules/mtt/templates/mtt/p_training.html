@@ -1,0 +1,33 @@
+{% extends "layouts/patient.html" %}
+{% import "mtt/_localized.html" as loc with context %}
+{% block title %}{{ t('p.mtt.title') }}{% endblock %}
+{% block content %}
+{% if not plan %}
+<section class="card"><p>{{ t('p.mtt.none') }}</p></section>
+{% else %}
+{% if goal %}<div class="muted" style="display:flex;gap:6px;align-items:flex-start">{{ icon('flag', 16) }}<div>{{ loc.text(goal) }}</div></div>{% endif %}
+{% if sub %}<p class="small">{{ icon('card_membership', 16) }} {{ sub.label }}{% if sub.left is not none %} · {{ t('p.mtt.left', n=sub.left) }}{% endif %}</p>{% endif %}
+{% if not visit or visit.ended_at %}
+<form method="post" class="stack-s"><input type="hidden" name="_csrf" value="{{ csrf }}">
+  <button class="btn lg block" type="submit" name="action" value="start">{{ icon('play_arrow', 20) }}{{ t('p.mtt.start') if not visit else t('p.mtt.continue') }}</button>
+  <p class="small muted">{{ t('p.mtt.start_hint') }}</p>
+</form>
+{% else %}
+<p class="small muted">{{ t('p.mtt.qr_hint') }}</p>
+{% endif %}
+{% for it in items %}
+<a class="card" href="/p/training/{{ it.id }}" style="display:flex;gap:16px;align-items:center;text-decoration:none;color:inherit">
+  <span class="avatar" style="border-radius:14px;width:56px;height:52px;background:#262A33;color:#fff">{{ icon('directions_walk' if it.kind == 'cardio' else 'fitness_center', 26) }}</span>
+  <span class="grow"><span style="font-size:17px">{{ it.machine_name }}</span><br>
+    <span class="small muted">{% if it.kind == 'cardio' %}{{ t('p.mtt.minutes', n=it.minutes or '–') }}{% else %}{{ it.sets or '–' }} × {{ it.reps or '–' }}{% if it.load is not none %} · {{ it.load | num }} kg{% endif %}{% endif %}{% if it.setting %} · {{ it.setting }}{% endif %}</span></span>
+  {% set n = done.get(it.id, 0) %}
+  {% if n >= (it.sets or 1) %}<span class="pill-label ok">{{ icon('check', 16) }}</span>{% elif n %}<span class="pill-label info">{{ n }}/{{ it.sets or 1 }}</span>{% else %}{{ icon('chevron_right', 24, 'flip-rtl') }}{% endif %}
+</a>
+{% endfor %}
+{% if visit and not visit.ended_at %}
+<form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}">
+  <button class="btn {{ '' if all_done else 'outlined' }} block" type="submit" name="action" value="end">{{ icon('check', 20) }}{{ t('p.mtt.end') }}</button></form>
+{% endif %}
+{% endif %}
+<div class="emergency">{{ icon('emergency', 20) }}<span>{{ t('p.mtt.stop') }}</span></div>
+{% endblock %}

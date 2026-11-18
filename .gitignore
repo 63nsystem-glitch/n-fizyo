@@ -1,0 +1,45 @@
+# Nie ins Git: Geheimnisse, Daten, Patientendaten, Sicherungen
+# (Achtung: nfizyo/knowledge/data/ gehört INS Git – deshalb «/data/» nur im Projektordner)
+
+# Geheimnisse und Konfiguration
+.env
+*.env
+!.env.example
+*.key
+*.pem
+*.p12
+*.gpg
+rclone.conf
+
+# Laufzeitdaten (Standard NFIZYO_DATA_DIR=./data/runtime), Datenbanken, Sicherungen, Exporte
+/data/
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-wal
+*.db-shm
+backups/
+scan-eingang/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Werkzeuge und Betriebssystem
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

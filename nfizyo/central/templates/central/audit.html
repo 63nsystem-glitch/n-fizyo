@@ -1,0 +1,8 @@
+{% extends "central/layout.html" %}
+{% block content %}
+<h1 style="margin-bottom:16px">Protokoll</h1>
+<section class="card" style="padding:0;overflow:hidden"><div class="table-wrap"><table class="table">
+  <thead><tr><th>Zeit</th><th>Person</th><th>Aktion</th><th>Box</th><th>Details</th></tr></thead><tbody>
+  {% for r in rows %}<tr><td>{{ r.at[:16].replace('T', ' ') }}</td><td>{{ r.staff_name or '–' }}</td><td>{{ r.action }}</td><td class="mono small">{{ r.box_id or '' }}</td><td class="small mono">{{ r.detail or '' }}</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

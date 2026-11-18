@@ -1,0 +1,17 @@
+{% extends "layouts/auth.html" %}
+{% block title %}{{ t('screen.choose') }}{% endblock %}
+{% block content %}
+<h1 style="margin-bottom:4px">{{ t('screen.hello', name=user.name) }}</h1>
+<p class="muted" style="margin-bottom:24px">{{ t('screen.choose_hint') }}</p>
+<div class="stack-s">
+  {% for s in screens %}
+  <a class="screen-tile" href="/start?s={{ s.key }}">
+    <span class="lead avatar">{{ icon(s.icon, 24) }}</span>
+    <span class="body"><span class="title">{{ t(s.title_key) }}</span><br><span class="sub">{{ t(s.title_key ~ '_hint') }}</span></span>
+    {{ icon('chevron_right', 20, 'flip-rtl') }}
+  </a>
+  {% endfor %}
+</div>
+<form method="post" action="/logout" style="margin-top:24px;text-align:center"><input type="hidden" name="_csrf" value="{{ csrf }}">
+  <button class="btn text" type="submit">{{ icon('logout', 18) }}{{ t('account.logout') }}</button></form>
+{% endblock %}

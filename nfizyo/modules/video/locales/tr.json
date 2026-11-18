@@ -1,0 +1,28 @@
+{
+  "p": {
+    "sms": {
+      "video": "{practice}: {when} tarihindeki görüntülü randevunuz. 15 dakika önceden katılabilirsiniz: {url} – acil durumlar için değildir, acil durumda 144."
+    },
+    "video": {
+      "title": "Görüntülü randevu",
+      "card_title": "Görüntülü randevu",
+      "open_now": "şimdi açık",
+      "invalid": "Bu bağlantı geçersiz. Lütfen muayenehaneyi arayın.",
+      "cancelled": "Bu randevu iptal edildi.",
+      "over": "Bu görüntülü randevu sona erdi.",
+      "consent_title": "Katılmadan önce",
+      "c_server": "Görüntü, muayenehanenin İsviçre'deki sunucusu üzerinden gider.",
+      "c_record": "Hiçbir şey kaydedilmez.",
+      "c_place": "Lütfen kimsenin dinlemediği sessiz bir yer bulun.",
+      "c_agree": "Görüntülü görüşmeyi kabul ediyorum.",
+      "need_consent": "Lütfen önce onayınızı verin.",
+      "early": "Saat {time} itibarıyla katılabilirsiniz.",
+      "save_consent": "Onayımı kaydet",
+      "not_ready": "Görüntülü oda henüz hazır değil. Lütfen muayenehaneyi arayın.",
+      "camera_hint": "Bir sonraki adımda cihazınız kamera ve mikrofon izni ister – lütfen izin verin.",
+      "join": "Görüntülü randevuya katıl",
+      "call": "Sorun mu var? Bizi arayın:",
+      "emergency": "Görüntülü görüşme acil durumlar için değildir. Acil durumda 144'ü arayın."
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{% extends "patients/_file.html" %}
+{% block content %}
+<div class="grid-patient">
+  {% for column in ('left', 'center', 'right') %}
+  <div class="col">
+    {% for p in panels[column] %}{% with ctx = p.ctx %}{% include p.template %}{% endwith %}{% endfor %}
+  </div>
+  {% endfor %}
+</div>
+
+{# Befund hinzufügen (auch per Tipp auf die Körperkarte) #}
+<dialog class="dlg" id="dlg-finding">
+  <h2>{{ t('patients.finding_add') }}</h2>
+  <form method="post" action="{{ S }}/patienten/{{ patient.id }}/befunde" class="form">
+    <input type="hidden" name="_csrf" value="{{ csrf }}">
+    <input type="hidden" name="region" value="">
+    <input type="hidden" name="bone" value="">
+    <p class="muted" data-pick-label></p>
+    <div class="form-grid">
+      <div class="field"><label for="f-kind">{{ t('patients.finding_kind') }}</label>
+        <select id="f-kind" name="kind">{% for k in ('diagnosis', 'pain', 'finding', 'surgery', 'restriction', 'clearance', 'complication', 'goal') %}<option value="{{ k }}">{{ t('finding.' ~ k) }}</option>{% endfor %}</select></div>
+      <div class="field"><label for="f-side">{{ t('patients.side') }}</label>
+        <select id="f-side" name="side"><option value="">–</option><option value="r">{{ t('common.side.r') }}</option><option value="l">{{ t('common.side.l') }}</option><option value="b">{{ t('patients.both_sides') }}</option></select></div>
+    </div>
+    <div class="field"><label for="f-title">{{ t('patients.finding_title') }}</label><input id="f-title" name="title" required maxlength="300" placeholder="{{ t('patients.finding_title_ph') }}"></div>
+    <div class="field"><label for="f-structure">{{ t('patients.structure') }}</label>
+      <select id="f-structure" name="structure_id"><option value="">{{ t('patients.structure_none') }}</option>
+        {% for g, items in anat.STRUCTURES | groupby('group') %}<optgroup label="{{ t('anatomy.group.' ~ g) }}">{% for s in items %}<option value="{{ s.id }}">{{ anat.name(s, lang) }}{% if s.abbr %} ({{ s.abbr[0] }}){% endif %}</option>{% endfor %}</optgroup>{% endfor %}
+      </select></div>
+    <div class="form-grid">
+      <div class="field"><label for="f-severity">{{ t('patients.pain_0_10') }}</label><input id="f-severity" name="severity" type="number" min="0" max="10" inputmode="numeric"></div>
+      <div class="field"><label for="f-on">{{ t('patients.date') }}</label><input id="f-on" name="on_date" type="date"></div>
+      <div class="field"><label for="f-until">{{ t('patients.valid_until') }}</label><input id="f-until" name="until" type="date"></div>
+    </div>
+    <div class="field"><label for="f-detail">{{ t('patients.detail') }}</label><textarea id="f-detail" name="detail" rows="3" data-autogrow></textarea></div>
+    <div class="form-actions"><button type="button" class="btn text" data-close>{{ t('common.cancel') }}</button><button class="btn" type="submit">{{ t('common.save') }}</button></div>
+  </form>
+</dialog>
+
+<dialog class="dlg" id="dlg-measure">
+  <h2>{{ t('patients.measure_add') }}</h2>
+  <form method="post" action="{{ S }}/patienten/{{ patient.id }}/messwerte" class="form">
+    <input type="hidden" name="_csrf" value="{{ csrf }}">
+    <div class="form-grid">
+      <div class="field"><label for="m-kind">{{ t('patients.measure_kind') }}</label>
+        <select id="m-kind" name="kind">{% for k in ('flexion', 'extension', 'abduction', 'external_rotation', 'internal_rotation', 'elevation', 'pain_vas') %}<option value="{{ k }}">{{ t('measure.' ~ k) }}</option>{% endfor %}</select></div>
+      <div class="field"><label for="m-joint">{{ t('patients.joint') }}</label>
+        <select id="m-joint" name="joint"><option value="">–</option>{% for j in ('knee', 'shoulder', 'hip', 'elbow', 'ankle', 'wrist', 'cervical', 'lumbar') %}<option value="{{ j }}">{{ t('joint.' ~ j) }}</option>{% endfor %}</select></div>
+      <div class="field"><label for="m-side">{{ t('patients.side') }}</label>
+        <select id="m-side" name="side"><option value="">–</option><option value="r">{{ t('common.side.r') }}</option><option value="l">{{ t('common.side.l') }}</option></select></div>
+      <div class="field"><label for="m-value">{{ t('patients.value') }}</label><input id="m-value" name="value" inputmode="decimal" required></div>
+      <div class="field"><label for="m-goal">{{ t('patients.goal_value') }}</label><input id="m-goal" name="goal" inputmode="decimal"></div>
+      <div class="field"><label for="m-date">{{ t('patients.date') }}</label><input id="m-date" name="measured_on" type="date"></div>
+    </div>
+    <div class="form-actions"><button type="button" class="btn text" data-close>{{ t('common.cancel') }}</button><button class="btn" type="submit">{{ t('common.save') }}</button></div>
+  </form>
+</dialog>
+{% endblock %}

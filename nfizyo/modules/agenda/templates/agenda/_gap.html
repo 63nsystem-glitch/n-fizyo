@@ -1,0 +1,63 @@
+{# Lücke füllen: Kontext gap aus gapfill_views.card #}
+<section class="card{{ ' warn' if gap.is_open and not gap.taken else '' }}" aria-labelledby="h-gap">
+  <h2 id="h-gap" style="margin-bottom:8px">{{ icon('event_available', 20) }} {{ t('gap.title') }}</h2>
+  {% if gap.offer %}
+  {% set o = gap.offer %}
+  <div class="rx-line {{ 'info' if o.status == 'open' else ('soon' if o.status != 'taken' else '') }}" style="{{ 'background:var(--ok-container)' if o.status == 'taken' else '' }}">
+    {{ icon({'open': 'send', 'taken': 'check_circle', 'closed': 'block', 'expired': 'schedule'}[o.status], 18) }}
+    <span>{% if o.status == 'open' %}{{ t('gap.st.open', time=fmt_date(gap.expires, weekday=True, year=False) ~ ' ' ~ fmt_time(gap.expires)) }}
+      {% elif o.status == 'taken' and gap.accepted %}{{ t('gap.st.taken', name=gap.accepted.first_name ~ ' ' ~ gap.accepted.last_name) }}
+      {% else %}{{ t('gap.st.' ~ o.status) }}{% endif %}</span>
+  </div>
+  {% if o.status == 'taken' and o.booked_appointment_id %}<p style="margin-top:8px"><a class="btn tonal sm" href="{{ S }}/agenda/termine/{{ o.booked_appointment_id }}">{{ icon('event', 18) }}{{ t('gap.open_new') }}</a></p>{% endif %}
+  {% if gap.recipients %}
+  <div class="list" style="margin-top:8px">
+    {% for r in gap.recipients %}
+    <div class="list-item" style="min-height:44px"><span class="body"><span class="title">{{ r.first_name }} {{ r.last_name }}</span></span>
+      <span class="trail"><span class="pill-label {{ {'accepted': 'ok', 'declined': '', 'too_late': '', 'sent': 'info'}[r.status] }}">{{ t('gap.r.' ~ r.status) }}</span></span></div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if o.status == 'open' %}
+  <form method="post" action="{{ S }}/agenda/termine/{{ a.id }}/luecke" style="margin-top:8px"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="action" value="close">
+    <button class="btn text sm" type="submit">{{ icon('block', 18) }}{{ t('gap.close') }}</button></form>
+  {% endif %}
+  {% endif %}
+
+  {% if not gap.taken %}
+  {% if not gap.is_open %}
+  <p class="small muted" style="margin-top:8px">{{ t('gap.past') if gap.past else (t('gap.off') if gap.off else t('gap.gone')) }}</p>
+  {% elif gap.cands.sms %}
+  <p class="small muted" style="margin:8px 0">{{ t('gap.intro') }}</p>
+  <form method="post" action="{{ S }}/agenda/termine/{{ a.id }}/luecke" class="stack-s">
+    <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="action" value="send">
+    {% for c in gap.cands.sms %}
+    {% if loop.first and c.fits %}<h3 class="small" style="font-weight:500">{{ t('gap.fits') }}</h3>{% endif %}
+    {% if not c.fits and (loop.first or loop.previtem.fits) %}<h3 class="small" style="font-weight:500;margin-top:6px">{{ t('gap.maybe') }}</h3>{% endif %}
+    {% set w = c.entry %}
+    <label class="gap-cand">
+      <input type="checkbox" name="w" value="{{ w.id }}"{{ ' checked' if w.id in gap.preselect else '' }}>
+      <span class="grow"><strong style="font-weight:500">{{ w.first_name }} {{ w.last_name }}</strong>
+        <span class="small muted">{% if c.waiting_days %} · {{ t('gap.waiting', n=c.waiting_days) }}{% endif %}{% if w.preferred %} · «<span dir="auto">{{ w.preferred }}</span>»{% endif %}{% if w.wish %} · <span dir="auto">{{ w.wish }}</span>{% endif %}</span><br>
+        {% for r in c.reasons %}<span class="pill-label ok" style="margin-top:4px">{{ t('gap.reason.' ~ r, name=w.therapist_name or '') }}</span> {% endfor %}
+        {% for x in c.warnings %}<span class="pill-label warn" style="margin-top:4px">{{ t('gap.warn.' ~ x) }}</span> {% endfor %}
+      </span>
+    </label>
+    {% endfor %}
+    <details class="small"><summary class="muted">{{ t('gap.preview') }}</summary><p style="margin-top:6px">{{ gap.preview }}</p></details>
+    <div><button class="btn" type="submit">{{ icon('sms', 18) }}{{ t('gap.send_more') if gap.offer and gap.offer.status == 'open' else t('gap.send') }}</button></div>
+  </form>
+  {% elif not (gap.offer and gap.offer.status == 'open') %}
+  <p class="small muted" style="margin-top:8px">{{ t('gap.none') }}</p>
+  {% endif %}
+  {% if gap.is_open and gap.cands.call %}
+  <h3 class="small" style="font-weight:500;margin-top:12px">{{ t('gap.call_title') }}</h3>
+  <div class="list">
+    {% for c in gap.cands.call %}{% set w = c.entry %}
+    <div class="list-item" style="min-height:44px"><span class="body"><span class="title">{{ (w.first_name ~ ' ' ~ w.last_name) if w.patient_id else w.name }}</span><br><span class="sub">{{ w.preferred or '' }}</span></span>
+      {% if w.phone or w.patient_phone %}<span class="trail"><a class="btn text sm" href="tel:{{ (w.phone or w.patient_phone) | replace(' ', '') }}">{{ icon('call', 18) }}{{ (w.phone or w.patient_phone) | phone }}</a></span>{% endif %}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endif %}
+</section>

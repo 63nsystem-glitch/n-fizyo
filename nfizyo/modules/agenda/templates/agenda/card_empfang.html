@@ -1,0 +1,12 @@
+<section class="card" id="termine" aria-labelledby="h-r-appts">
+  <div class="card-head"><h2 id="h-r-appts">{{ t('agenda.upcoming') }}</h2><a class="btn text sm" href="{{ S }}/patienten/{{ ctx.patient.id }}/termine">{{ t('agenda.all') }}</a></div>
+  {% for u in ctx.upcoming %}
+  <a class="list-item" style="padding-inline:0" href="{{ S }}/agenda/termine/{{ u.a.id }}"><span class="lead">{{ icon('event', 20) }}</span>
+    <span class="body"><span class="title">{{ fmt_date(u.start, weekday=True) }} · {{ fmt_time(u.start) }}</span><br><span class="sub">{{ u.a.therapist_name }}{% if u.a.room_name %} · {{ u.a.room_name }}{% endif %}</span></span>
+    <span class="trail">{% if u.a.status == 'arrived' %}<span class="pill-label info">{{ t('agenda.st.arrived') }}</span>{% endif %}</span></a>
+  {% else %}<p class="muted small">{{ t('agenda.no_upcoming') }}</p>{% endfor %}
+  <div class="row" style="margin-top:12px">
+    <a class="btn tonal sm" href="{{ S }}/agenda/neu?patient={{ ctx.label | urlencode }}&back={{ (S ~ '/patienten/' ~ ctx.patient.id) | urlencode }}">{{ icon('add', 18) }}{{ t('agenda.book') }}</a>
+    <a class="btn text sm" href="{{ S }}/agenda/serie?patient={{ ctx.label | urlencode }}">{{ icon('event_repeat', 18) }}{{ t('agenda.series') }}</a>
+  </div>
+</section>

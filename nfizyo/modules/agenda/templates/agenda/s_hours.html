@@ -1,0 +1,42 @@
+{% extends "ui/settings.html" %}
+{% block settings %}
+<div class="grid-main-side">
+  <div class="col">
+    {% for person in hours | groupby('user_name') %}
+    <section class="card hours-week" aria-labelledby="hw-{{ loop.index }}">
+      <h2 id="hw-{{ loop.index }}">{{ person.grouper }}</h2>
+      <div class="hours-grid">
+        {% for i in range(7) %}{% set day = person.list | selectattr('weekday', 'equalto', i) | list %}
+        <div class="hours-day{{ ' none' if not day else '' }}">
+          <div class="hours-wd">{{ wd[i] }}</div>
+          {% for h in day %}
+          <div class="hours-slot">
+            <span class="mono">{{ h.start_time }}–{{ h.end_time }}</span>{% if h.location_name %}<span class="small muted">{{ h.location_name }}</span>{% endif %}
+            <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="remove"><input type="hidden" name="id" value="{{ h.id }}">
+              <button class="hours-del" type="submit" aria-label="{{ t('common.delete') }} · {{ person.grouper }} · {{ wd[i] }} {{ h.start_time }}–{{ h.end_time }}" title="{{ t('common.delete') }}">{{ icon('close', 16) }}</button></form>
+          </div>
+          {% else %}<span class="small muted">–</span>{% endfor %}
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% else %}
+    <section class="card"><p class="muted">{{ t('settings.no_hours') }}</p></section>
+    {% endfor %}
+  </div>
+  <section class="card">
+    <h2 style="margin-bottom:16px">{{ t('settings.add_hours') }}</h2>
+    <form method="post" class="form"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="add">
+      <div class="field"><label for="hu">{{ t('settings.person') }}</label><select id="hu" name="user_id">{% for u in therapists %}<option value="{{ u.id }}">{{ u.name }}</option>{% endfor %}</select></div>
+      <fieldset class="field" style="border:0;padding:0;margin:0"><legend class="small muted" style="margin-bottom:6px">{{ t('settings.weekday') }}</legend>
+        <div class="chips">{% for i in range(7) %}<label class="chip"><input type="checkbox" name="weekday" value="{{ i }}"{% if i < 5 %} checked{% endif %}> {{ wd[i] }}</label>{% endfor %}</div></fieldset>
+      <div class="row" style="gap:12px">
+        <div class="field grow"><label for="hs">{{ t('settings.from') }}</label><input id="hs" name="start" type="time" value="08:00" required></div>
+        <div class="field grow"><label for="he">{{ t('settings.to') }}</label><input id="he" name="end" type="time" value="12:00" required></div>
+      </div>
+      <div class="field"><label for="hl">{{ t('settings.location') }}</label><select id="hl" name="location_id"><option value="">–</option>{% for l in locations %}<option value="{{ l.id }}">{{ l.name }}</option>{% endfor %}</select></div>
+      <div class="form-actions"><button class="btn" type="submit">{{ icon('add', 18) }}{{ t('settings.add') }}</button></div>
+    </form>
+  </section>
+</div>
+{% endblock %}

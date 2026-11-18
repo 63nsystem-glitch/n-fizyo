@@ -1,0 +1,44 @@
+{% extends "layouts/patient.html" %}
+{% import "mtt/_localized.html" as loc with context %}
+{% block back %}<a class="icon-btn" href="/p/training" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ it.machine_name }}{% endblock %}
+{% block content %}
+<section class="card stack-s">
+  {% if it.kind == 'cardio' %}
+  <p style="font-size:22px" class="mono">{{ t('p.mtt.minutes', n=it.minutes or '–') }}</p>
+  {% else %}
+  <p style="font-size:22px" class="mono">{{ it.sets or '–' }} × {{ it.reps or '–' }}{% if it.load is not none %} · {{ dec(it.load) }} kg{% endif %}</p>
+  {% endif %}
+  {% if it.setting %}<p>{{ icon('tune', 18) }} {{ t('p.mtt.setting') }}: <strong style="font-weight:500">{{ it.setting }}</strong></p>{% endif %}
+  {% if note %}<div class="banner info">{{ icon('info') }}<div>{{ loc.text(note) }}</div></div>{% endif %}
+  {% if last %}<p class="small muted">{{ t('p.mtt.last_time', date=fmt_long_date(last.day)) }}: {% for s in last.sets %}{% if it.kind == 'cardio' %}{{ s.minutes or '–' }} min{% else %}{{ s.reps or '–' }} × {{ s.load | num if s.load is not none else '–' }}{% endif %}{{ ', ' if not loop.last else '' }}{% endfor %}</p>{% endif %}
+</section>
+{% if sets %}
+<section class="card">
+  <h2 style="margin-bottom:6px">{{ t('p.mtt.today') }}</h2>
+  {% for s in sets %}<div class="row-between small" style="padding:4px 0">{{ t('p.mtt.set_n', n=loop.index) }}<span class="mono">{% if it.kind == 'cardio' %}{{ s.minutes or '–' }} min{% else %}{{ s.reps or '–' }} × {{ s.load | num if s.load is not none else '–' }} kg{% endif %}</span></div>{% endfor %}
+</section>
+{% endif %}
+<form method="post" class="card stack-s">
+  <input type="hidden" name="_csrf" value="{{ csrf }}">
+  <h2>{{ t('p.mtt.log_set', n=next_no) if it.kind != 'cardio' else t('p.mtt.log_cardio') }}</h2>
+  {% if it.kind == 'cardio' %}
+  <div class="field"><label for="mins">{{ t('p.mtt.minutes_label') }}</label><input class="input" id="mins" name="minutes" inputmode="numeric" value="{{ it.minutes or '' }}"></div>
+  {% elif it.kind == 'free' %}
+  <div class="field"><label for="reps">{{ t('p.mtt.reps') }}</label><input class="input" id="reps" name="reps" inputmode="numeric" value="{{ it.reps or '' }}"></div>
+  {% else %}
+  <div class="form-grid">
+    <div class="field"><label for="reps">{{ t('p.mtt.reps') }}</label><input class="input" id="reps" name="reps" inputmode="numeric" value="{{ it.reps or '' }}"></div>
+    <div class="field"><label for="load">{{ t('p.mtt.load') }}</label><input class="input" id="load" name="load" inputmode="decimal" value="{{ it.load | num if it.load is not none else '' }}"></div>
+  </div>
+  {% endif %}
+  <fieldset class="stack-s"><legend>{{ t('p.mtt.effort_q') }}</legend>
+    <div class="optgrid compact">{% for v, k in ((3, 'light'), (5, 'medium'), (7, 'hard'), (9, 'very_hard'), (10, 'max')) %}<label class="opt"><input type="radio" name="effort" value="{{ v }}">{{ t('p.mtt.effort.' ~ k) }}</label>{% endfor %}</div>
+  </fieldset>
+  <fieldset class="stack-s"><legend>{{ t('p.mtt.pain_q') }}</legend>
+    <div class="faces">{% for value, ic, cls in faces %}<label class="{{ cls }}"><input type="radio" name="pain" value="{{ value }}">{{ icon(ic, 32) }}<span>{{ value }}</span></label>{% endfor %}</div>
+  </fieldset>
+  <button class="btn lg block" type="submit">{{ icon('check', 20) }}{{ t('p.mtt.save_set') }}</button>
+</form>
+<div class="emergency">{{ icon('emergency', 20) }}<span>{{ t('p.mtt.stop') }}</span></div>
+{% endblock %}

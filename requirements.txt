@@ -1,0 +1,10 @@
+aiohttp>=3.9
+aiohttp-jinja2>=1.6
+jinja2>=3.1
+pypdf>=6.21.4  # PDF-Text (BSD) – ab 6.21.4: bekannte DoS-Lücken (CVE) behoben
+segno>=1.6
+cryptography>=42  # Zwei-Schritt-Anmeldung (verschlüsselte Schlüssel), signierte NSystem-Befehle (Apache-2.0/BSD)
+lxml>=5  # XML-Rechnung 5.0 erzeugen und gegen das offizielle Schema prüfen (BSD)
+reportlab>=4  # Rechnungs-PDF mit QR-Zahlteil, Bericht als PDF für HIN (BSD)
+qrbill>=1.1  # Swiss QR-Code-Inhalt nach SIX-Vorgaben prüfen und erzeugen (MIT)
+openpyxl>=3.1  # Datenübernahme aus Excel (MIT)

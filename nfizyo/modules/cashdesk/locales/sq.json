@@ -1,0 +1,8 @@
+{
+  "p": {
+    "mail": {
+      "receipt_subject": "Kuitanca {number}",
+      "receipt_body": "Përshëndetje {name}\n\nNë shtojcë gjeni kuitancën {number}. Faleminderit shumë.\n\nMe respekt\n{practice}"
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{% extends "ui/settings.html" %}
+{% block settings %}
+<form method="post" class="grid-main-side">
+  <input type="hidden" name="_csrf" value="{{ csrf }}">
+  <div class="col stack">
+    <section class="card stack">
+      <h2>{{ t('booking.settings_title') }}</h2>
+      <label class="check"><input type="checkbox" name="enabled" value="1"{% if st.enabled %} checked{% endif %}>{{ t('booking.enabled') }}</label>
+      <div class="row" style="gap:12px;flex-wrap:wrap">
+        <div class="field" style="width:150px"><label for="da">{{ t('booking.days_ahead') }}</label><input id="da" name="days_ahead" type="number" min="1" max="90" value="{{ st.days_ahead }}"></div>
+        <div class="field" style="width:150px"><label for="lh">{{ t('booking.lead_hours') }}</label><input id="lh" name="lead_hours" type="number" min="0" max="168" value="{{ st.lead_hours }}"></div>
+        <div class="field" style="width:150px"><label for="ss">{{ t('booking.slot_step') }}</label><select id="ss" name="slot_step">{% for m in (5, 10, 15, 20, 30, 60) %}<option value="{{ m }}"{% if st.slot_step == m %} selected{% endif %}>{{ m }} min</option>{% endfor %}</select></div>
+      </div>
+      <label class="check"><input type="checkbox" name="show_therapists" value="1"{% if st.show_therapists %} checked{% endif %}>{{ t('booking.show_therapists') }}</label>
+      <div class="field"><label for="ide">{{ t('booking.intro_de') }}</label><textarea id="ide" name="intro_de" rows="2" maxlength="500">{{ st.intro_de or '' }}</textarea></div>
+      <div class="field"><label for="ifr">{{ t('booking.intro_fr') }}</label><textarea id="ifr" name="intro_fr" rows="2" maxlength="500">{{ st.intro_fr or '' }}</textarea></div>
+    </section>
+    <section class="card stack-s">
+      <h2>{{ t('booking.types') }}</h2>
+      {% for ty in types %}<label class="check"><input type="checkbox" name="types" value="{{ ty.id }}"{% if ty.id in type_ids %} checked{% endif %}>{{ ty.name_fr if lang == 'fr' else ty.name_de }} · {{ ty.minutes }} min</label>{% endfor %}
+    </section>
+    <section class="card stack-s">
+      <h2>{{ t('booking.therapists') }}</h2>
+      <p class="small muted">{{ t('booking.therapists_hint') }}</p>
+      {% for u in therapists %}<label class="check"><input type="checkbox" name="therapists" value="{{ u.id }}"{% if u.id in therapist_ids %} checked{% endif %}>{{ u.name }}</label>{% endfor %}
+    </section>
+  </div>
+  <div class="col stack grid-side">
+    <section class="card stack-s">
+      <h2>{{ t('booking.link') }}</h2>
+      <p class="mono small" style="user-select:all;word-break:break-all">{{ link }}</p>
+      {% if not public_ok %}<div class="banner warn">{{ icon('warning', 20) }}<span>{{ t('booking.not_public') }}</span></div>{% endif %}
+      <p class="small muted">{{ t('booking.link_hint') }}</p>
+      <a class="btn text" href="{{ link }}" target="_blank" rel="noopener">{{ icon('open_in_new', 18) }}{{ t('booking.preview') }}</a>
+    </section>
+    <section class="card stack-s">
+      <h2>{{ t('booking.how') }}</h2>
+      <p class="small">{{ t('booking.hint_flow') }}</p>
+      <p class="small muted">{{ t('booking.privacy') }}</p>
+    </section>
+  </div>
+  <div class="form-actions form-foot"><button class="btn" type="submit">{{ t('common.save') }}</button></div>
+</form>
+{% endblock %}

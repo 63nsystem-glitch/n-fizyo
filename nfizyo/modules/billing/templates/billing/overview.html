@@ -1,0 +1,136 @@
+{% extends "layouts/staff.html" %}
+{% block title %}{{ t('billing.title') }}{% endblock %}
+{% block subtitle %}{{ t('billing.subtitle') }}{% endblock %}
+{% block content %}
+<div class="stack">
+  {% for p in pay_problems if leitung %}<div class="banner warn">{{ icon('warning', 20) }}<div>{{ t('billing.problem.' ~ p) }} <a href="{{ S }}/einstellungen/zahlung">{{ t('billing.sec_payment') }}</a></div></div>{% endfor %}
+  {% if not kvg_value and leitung %}<div class="banner warn">{{ icon('warning', 20) }}<div>{{ t('billing.kvg_missing') }}</div></div>{% endif %}
+  <div class="row-between" style="flex-wrap:wrap;gap:12px">
+    <nav class="seg" aria-label="{{ t('billing.title') }}">
+      {% for key, label in (('bereit', 'billing.tab_ready'), ('entwuerfe', 'billing.tab_drafts'), ('abgeschlossen', 'billing.tab_done'), ('offen', 'billing.tab_open'), ('zahlungen', 'billing.tab_payments'), ('antworten', 'billing.tab_responses')) %}
+      <a href="{{ S }}/abrechnung?ansicht={{ key }}"{% if tab == key %} aria-current="page" class="selected"{% endif %}>{{ t(label) }} · {{ counts[key] }}</a>
+      {% endfor %}
+    </nav>
+  </div>
+  <div class="grid-main-side help-aside">
+    <section class="card">
+      {% if tab == 'bereit' %}
+      <div class="list">
+        {% for x in ready %}
+        <div class="list-item">
+          <span class="lead avatar">{{ (x.r.first_name[:1] ~ x.r.last_name[:1]) | upper }}</span>
+          <span class="body"><span class="title">{% if screen.key != 'leitung' %}<a href="{{ S }}/patienten/{{ x.r.patient_id }}" style="color:inherit">{{ x.r.first_name }} {{ x.r.last_name }}</a>{% else %}{{ x.r.first_name }} {{ x.r.last_name }}{% endif %}</span><br>
+            <span class="sub">{{ t('billing.n_sessions', n=x.r.n) }} · {{ date_range(x.r.first, x.r.last) }} · {{ t('billing.law.' ~ x.r.law) if x.r.law else '–' }}{% if x.r.insurer_name %} · {{ x.r.insurer_name }}{% endif %}</span></span>
+          <span class="trail">
+            {% if x.billable %}
+            <form method="post" class="row" style="gap:4px"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="create"><input type="hidden" name="patient_id" value="{{ x.r.patient_id }}">
+              {% if x.private_alt and has_prices %}<button class="btn text sm" type="submit" name="private" value="1" title="{{ t('billing.create_private_hint') }}">{{ t('billing.create_private') }}</button>{% endif %}
+              <button class="btn sm" type="submit">{{ icon('receipt_long', 18) }}{{ t('billing.create') }}{% if x.tariff == 'private' %} · {{ t('billing.private_short') }}{% endif %}</button></form>
+            {% else %}<span class="pill-label warn">{{ t('billing.no_tariff', law=t('billing.law.' ~ x.r.law) if x.r.law else '–') }}</span>{% endif %}
+          </span>
+        </div>
+        {% else %}<div class="empty">{{ icon('receipt_long', 40) }}<p>{{ t('billing.none_ready') }}</p></div>{% endfor %}
+      </div>
+      {% elif tab == 'offen' %}
+      <p class="small muted" style="margin-bottom:8px">{{ t('billing.open_sum', n=items|length, chf=chf(open_sum)) }}</p>
+      <div class="list">
+        {% for x in items %}
+        <a class="list-item" href="{{ S }}/rechnungen/{{ x.inv.id }}">
+          <span class="lead avatar">{{ icon('assignment_late' if x.b.state == 'overdue' else 'receipt_long', 20) }}</span>
+          <span class="body"><span class="title">{{ x.inv.first_name }} {{ x.inv.last_name }} · {{ x.inv.number }}</span><br>
+            <span class="sub">{{ t('billing.pay.due') }} {{ fmt_date(x.inv.due_on) if x.inv.due_on else '–' }}{% if x.level %} · {{ t('billing.rem.level_' ~ x.level) }}{% endif %}{% if x.next %} · <strong>{{ t('billing.rem.due_' ~ x.next) }}</strong>{% endif %}</span></span>
+          <span class="trail"><strong class="mono">{{ chf(x.b.open) }}</strong>
+            <span class="pill-label {{ {'overdue': 'error', 'partial': 'warn', 'open': 'info', 'paid': 'ok'}.get(x.b.state, '') }}">{{ t('billing.state.' ~ x.b.state) }}{% if x.b.overpaid %} +{{ x.b.overpaid | money }}{% endif %}</span></span>
+        </a>
+        {% else %}<div class="empty">{{ icon('task_alt', 40) }}<p>{{ t('billing.none_open') }}</p></div>{% endfor %}
+      </div>
+      {% elif tab == 'antworten' %}
+      <form method="post" action="{{ S }}/abrechnung/antworten" enctype="multipart/form-data" class="row" style="gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:8px">
+        <input type="hidden" name="_csrf" value="{{ csrf }}">
+        <div class="field grow"><label for="respf">{{ t('billing.resp.file') }}</label><input id="respf" name="file" type="file" accept=".xml,.zip,application/xml,text/xml,application/zip" required></div>
+        <button class="btn" type="submit">{{ icon('upload', 18) }}{{ t('billing.resp.import') }}</button>
+      </form>
+      <p class="small muted" style="margin-bottom:12px">{{ t('billing.resp.hint') }}</p>
+      <h3 class="small" style="margin:8px 0">{{ t('billing.resp.open') }}</h3>
+      {% for r in responses %}{% set show_invoice = True %}{% include "billing/_response.html" %}{% if not loop.last %}<hr style="border:0;border-top:1px solid var(--outline-variant);margin:4px 0">{% endif %}
+      {% else %}<p class="small muted">{{ t('billing.resp.none_open') }}</p>{% endfor %}
+      {% if handled %}<h3 class="small" style="margin:16px 0 8px">{{ t('billing.resp.done') }}</h3>
+      {% for r in handled %}{% set show_invoice = True %}{% include "billing/_response.html" %}{% endfor %}{% endif %}
+      {% elif tab == 'zahlungen' %}
+      <form method="post" action="{{ S }}/abrechnung/zahlungen" enctype="multipart/form-data" class="row" style="gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px">
+        <input type="hidden" name="_csrf" value="{{ csrf }}">
+        <div class="field grow"><label for="camt">{{ t('billing.pay.camt') }}</label><input id="camt" name="file" type="file" accept=".xml,application/xml,text/xml" required></div>
+        <button class="btn" type="submit">{{ icon('upload', 18) }}{{ t('billing.pay.import') }}</button>
+      </form>
+      <p class="small muted" style="margin-bottom:12px">{{ t('billing.pay.camt_hint') }}</p>
+      {% if imports %}
+      <h3 class="small" style="margin:8px 0">{{ t('billing.pay.imports') }}</h3>
+      {% for im in imports %}<p class="small">{{ fmt_date(im.created_at) }} {{ fmt_time(im.created_at) }} · {{ im.filename }} · {{ t('billing.pay.import_result', n=im.entries, m=im.matched) }}</p>{% endfor %}
+      {% endif %}
+      <h3 class="small" style="margin:16px 0 8px">{{ t('billing.pay.unmatched') }}</h3>
+      <div class="list">
+        {% for pm in unmatched %}
+        <div class="list-item" style="flex-wrap:wrap">
+          <span class="lead avatar">{{ icon('help', 20) }}</span>
+          <span class="body"><span class="title mono">{{ chf(pm.amount_chf) }} · {{ fmt_date(pm.booked_on) }}</span><br>
+            <span class="sub">{{ pm.debtor or '–' }}{% if pm.reference %} · {{ pm.reference }}{% endif %}</span>
+            {% if pm.message %}<br><span class="sub">{{ t('billing.pay.message') }}: «{{ pm.message }}»</span>{% endif %}
+            {% if pm.suggestion %}<br><span class="sub">{{ icon('lightbulb', 14) }} {{ t('billing.pay.suggested', number=pm.suggestion) }}</span>{% endif %}</span>
+          <form method="post" class="row trail" style="gap:6px"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="assign"><input type="hidden" name="payment_id" value="{{ pm.id }}">
+            <input name="number" value="{{ pm.suggestion or '' }}" placeholder="{{ t('billing.pay.number_ph') }}" aria-label="{{ t('billing.pay.number_ph') }}" style="width:120px" required>
+            <button class="btn tonal sm" type="submit">{{ t('billing.pay.assign') }}</button></form>
+          <details style="flex-basis:100%;margin-inline-start:56px"><summary class="disclose">{{ t('billing.pay.dismiss') }}</summary>
+            <form method="post" class="row" style="gap:6px;margin-top:6px;align-items:flex-end;flex-wrap:wrap"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="dismiss"><input type="hidden" name="payment_id" value="{{ pm.id }}">
+              <div class="field grow"><label for="dr{{ pm.id }}">{{ t('billing.pay.dismiss_reason') }}</label><input id="dr{{ pm.id }}" name="reason" required maxlength="200" placeholder="{{ t('billing.pay.dismiss_ph') }}"></div>
+              <button class="btn outlined sm" type="submit">{{ t('billing.pay.dismiss_btn') }}</button></form>
+            <p class="hint">{{ t('billing.pay.dismiss_hint') }}</p></details>
+        </div>
+        {% else %}<p class="small muted">{{ t('billing.pay.none_unmatched') }}</p>{% endfor %}
+      </div>
+      {% if dismissed %}
+      <h3 class="small" style="margin:16px 0 8px">{{ t('billing.pay.dismissed') }}</h3>
+      <div class="list">
+        {% for pm in dismissed %}
+        <div class="list-item" style="opacity:.8">
+          <span class="lead avatar">{{ icon('visibility_off', 20) }}</span>
+          <span class="body"><span class="title mono">{{ chf(pm.amount_chf) }} · {{ fmt_date(pm.booked_on) }}</span><br>
+            <span class="sub">{{ pm.debtor or '–' }}{% if pm.message %} · «{{ pm.message }}»{% endif %} · {{ t('billing.pay.dismissed_by', name=pm.dismissed_name or '–', date=fmt_date(pm.dismissed_at), reason=pm.dismiss_reason) }}</span></span>
+          <form method="post" class="trail"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="undismiss"><input type="hidden" name="payment_id" value="{{ pm.id }}">
+            <button class="btn text sm" type="submit">{{ icon('undo', 16) }}{{ t('billing.pay.undismiss') }}</button></form>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% else %}
+      <div class="list">
+        {% for i in invoices %}
+        <a class="list-item" href="{{ S }}/rechnungen/{{ i.id }}">
+          <span class="lead avatar">{{ icon('receipt_long', 20) }}</span>
+          <span class="body"><span class="title">{{ i.first_name }} {{ i.last_name }}{% if i.number %} · {{ i.number }}{% endif %}</span><br>
+            <span class="sub">{{ t('billing.law.' ~ i.law) }} · {{ i.insurer_name or '–' }} · {{ date_range(i.period_from, i.period_to) }}</span></span>
+          <span class="trail"><strong class="mono">{{ chf(i.total_chf) }}</strong>
+            {% if balances and i.id in balances and i.status == 'final' %}{% set st = balances[i.id].state %}
+            <span class="pill-label {{ {'paid': 'ok', 'overdue': 'error', 'partial': 'warn', 'open': 'info'}.get(st, '') }}">{{ t('billing.state.' ~ st) }}</span>
+            {% else %}<span class="pill-label {{ {'draft': 'warn', 'final': 'ok', 'cancelled': 'error'}[i.status] }}">{{ t('billing.status.' ~ i.status) }}</span>{% endif %}
+            {% if md_states and i.id in md_states %}{% set m = md_states[i.id] %}{% if m.status == 'unknown' %}<span class="pill-label warn">MediData: {{ t('billing.xml.st_unknown') }}</span>
+            {% elif m.status == 'failed' %}<span class="pill-label error">MediData: {{ t('billing.xml.st_failed') }}</span>
+            {% elif m.md_status %}<span class="pill-label {{ {'DONE': 'ok', 'ERROR': 'error'}.get(m.md_status, 'info') }}">{{ t('billing.md.md_status', status=t('billing.xml.md_' ~ m.md_status)) }}</span>{% endif %}{% endif %}</span>
+        </a>
+        {% else %}<div class="empty">{{ icon('receipt_long', 40) }}<p>{{ t('billing.none') }}</p></div>{% endfor %}
+      </div>
+      {% endif %}
+    </section>
+    <details class="card help-card" open data-help>
+      <summary><h2>{{ icon('info', 20) }}{{ t('billing.flow_title') }}</h2></summary>
+      <div class="stack-s">
+      <p class="small">{{ t('billing.flow_leitung') if leitung else t('billing.flow_empfang') }}</p>
+      <p class="small muted">{{ t('billing.tp_kvg') }}: {% if kvg_value %}{{ chf(kvg_value) }}{% else %}{{ t('billing.tp_missing') }}{% endif %}</p>
+      {% if leitung %}<a class="btn text" href="{{ S }}/einstellungen/tarife">{{ icon('tune', 18) }}{{ t('billing.sec_tariffs') }}</a>
+      <a class="btn text" href="{{ S }}/einstellungen/preise">{{ icon('sell', 18) }}{{ t('billing.sec_prices') }}</a>
+      <a class="btn text" href="{{ S }}/einstellungen/zahlung">{{ icon('account_balance', 18) }}{{ t('billing.sec_payment') }}</a>{% endif %}
+      <p class="small muted">{{ t('billing.source_note') }}</p>
+      </div>
+    </details>
+  </div>
+</div>
+{% endblock %}

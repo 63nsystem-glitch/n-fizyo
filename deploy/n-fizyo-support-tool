@@ -1,0 +1,145 @@
+#!/bin/bash
+# N-Fizyo Support-Werkzeug – das EINZIGE, was NSystem über den Supportzugang ausführen kann.
+#
+# Es ist zugleich die Anmelde-Shell des Benutzers nfizyo-support (keine bash) und wird von sshd immer erzwungen
+# (authorized_keys command=…, sshd «Match User … ForceCommand»). Kein Terminal (kein pty), kein Zeilen-Editor.
+# Nur feste Befehle; jeder Befehl und jeder abgelehnte Versuch wird protokolliert (journal «n-fizyo-support» → Runner →
+# Protokoll der Leitung):
+#   status                     Dienste, Laufzeit, Speicher, Arbeitsspeicher
+#   health                     Antwort von N-Fizyo (/health)
+#   logs <dienst> [zeilen]     technische Protokolle: n-fizyo | n-fizyo-runner | ollama | caddy | n-fizyo-backup | ssh (max. 2000)
+#   versions | check-ai | check-connections   Programm- und Modulversionen, KI-Zustand, Verbindungen (nur lesen)
+#   backups | backup-test <name> | offsite-test   Sicherungen auflisten, eine Sicherung prüfen (ändert nichts), externes Ziel prüfen
+#   disk | gpu | net           Speicherplatz, Grafikkarte, Netzwerk
+#   restart <n-fizyo|ollama|caddy>
+#   help | exit
+# Nicht möglich: Dateien/Datenbank lesen, Daten exportieren, Passwörter ändern, Konten anlegen, beliebige Befehle, Shell.
+# Root-Teile laufen über sudo nur mit «--root <befehl>» (sudoers: /etc/sudoers.d/n-fizyo-support); auch dort wird neu geprüft.
+set -uo pipefail
+set -f                      # keine Platzhalter-Erweiterung (*, ?) in Eingaben
+umask 077
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# Nie einen Pager oder Editor starten (aus less/vi heraus liesse sich sonst eine Shell öffnen)
+export PAGER=cat SYSTEMD_PAGER="" SYSTEMD_PAGERSECURE=1 LESSSECURE=1 EDITOR=/bin/false VISUAL=/bin/false
+unset BASH_ENV ENV
+APP_USER=nfizyo
+APP_DIR=/opt/n-fizyo
+ENV_FILE=/etc/n-fizyo/n-fizyo.env
+BACKUP_DIR=/var/backups/n-fizyo
+SELF=/usr/local/sbin/n-fizyo-support-tool
+UNITS_LOG="n-fizyo n-fizyo-runner ollama caddy n-fizyo-backup ssh"
+UNITS_RESTART="n-fizyo ollama caddy"
+
+in_list() { local w; for w in $2; do [[ "$1" == "$w" ]] && return 0; done; return 1; }
+log() { logger -t n-fizyo-support "cmd=$1" 2>/dev/null || true; }
+
+# Abgelehnter Versuch: nur das erste Wort, auf harmlose Zeichen gekürzt (keine beliebigen Texte im Protokoll)
+log_denied() {
+  local w=${1:-}
+  w=${w,,}; w=${w//[^a-z0-9._-]/}; w=${w:0:30}
+  log "denied${w:+ $w}"
+}
+
+usage() {
+  cat <<'HELP'
+status                     Dienste, Laufzeit, Speicher, Arbeitsspeicher
+health                     Antwort von N-Fizyo (/health)
+logs <dienst> [zeilen]     technische Protokolle: n-fizyo | n-fizyo-runner | ollama | caddy | n-fizyo-backup | ssh (max. 2000)
+versions | check-ai | check-connections   Programm- und Modulversionen, KI-Zustand, Verbindungen (nur lesen)
+backups | backup-test <name> | offsite-test   Sicherungen auflisten, eine Sicherung prüfen (ändert nichts), externes Ziel prüfen
+disk | gpu | net           Speicherplatz, Grafikkarte, Netzwerk
+restart <n-fizyo|ollama|caddy>
+help | exit
+HELP
+}
+
+# Prüft einen Befehl (Wörter) – gleiche Regeln für den Benutzer- und den root-Teil. Ausgabe: normalisierter Befehl.
+check() {
+  local c=${1:-} a=${2:-} b=${3:-}
+  [[ $# -le 3 ]] || return 1
+  case "$c" in
+    help|status|health|versions|check-ai|check-connections|backups|offsite-test|disk|gpu|net|exit|quit) [[ -z "$a" ]] || return 1; echo "$c" ;;
+    logs)
+      in_list "$a" "$UNITS_LOG" || return 1
+      [[ -z "$b" || ( "$b" =~ ^[0-9]{1,4}$ && "$b" -ge 1 && "$b" -le 2000 ) ]] || return 1
+      echo "logs $a ${b:-200}" ;;
+    restart) in_list "$a" "$UNITS_RESTART" && [[ -z "$b" ]] || return 1; echo "restart $a" ;;
+    backup-test) [[ "$a" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{4}$ && -z "$b" ]] || return 1; echo "backup-test $a" ;;
+    *) return 1 ;;
+  esac
+}
+
+as_app() { sudo -u "$APP_USER" env HOME=/var/lib/n-fizyo "$APP_DIR/venv/bin/python" -m nfizyo --env "$ENV_FILE" "$@"; }
+
+run_root() {  # nur über sudo
+  # shellcheck disable=SC2086
+  set -- $1
+  case "$1" in
+    logs) journalctl -u "$2" -n "$3" --no-pager -o short-iso ;;
+    restart) systemctl restart "$2" && systemctl is-active "$2" ;;
+    versions) (cd "$APP_DIR/app" && as_app versions) ;;
+    check-ai) (cd "$APP_DIR/app" && as_app check-ai) ;;
+    check-connections) (cd "$APP_DIR/app" && as_app check-connections) ;;
+    backups) bash "$APP_DIR/app/deploy/restore.sh" --list ;;
+    backup-test) bash "$APP_DIR/app/deploy/restore.sh" --test "$BACKUP_DIR/$2" ;;
+    offsite-test) /usr/local/sbin/n-fizyo-backup --offsite-test ;;
+    disk) df -h / /var/lib/n-fizyo "$BACKUP_DIR" 2>/dev/null; du -sh /var/lib/n-fizyo/* 2>/dev/null | sed 's|/var/lib/n-fizyo/||' ;;
+    *) echo "Nicht erlaubt." >&2; return 1 ;;
+  esac
+}
+
+run() {
+  local cmd=$1
+  log "$cmd"
+  # shellcheck disable=SC2086
+  set -- $cmd
+  case "$1" in
+    help) usage ;;
+    status)
+      for u in n-fizyo n-fizyo-runner ollama caddy n-fizyo-backup.timer; do printf '%-22s %s\n' "$u" "$(systemctl is-active "$u" 2>/dev/null)"; done
+      uptime; free -h | head -2; df -h / | tail -1 ;;
+    health) curl -fsS --max-time 5 http://127.0.0.1:8080/health; echo ;;
+    gpu) command -v nvidia-smi >/dev/null && nvidia-smi || echo "keine NVIDIA-Grafikkarte" ;;
+    net) ip -brief address; ip route ;;
+    exit|quit) exit 0 ;;
+    *) sudo -n "$SELF" --root "$cmd" </dev/null ;;
+  esac
+}
+
+one() {  # one <Befehlszeile> – ein einzelner Befehl (ssh box <befehl>)
+  local line=${1:0:400} norm
+  # shellcheck disable=SC2086
+  norm=$(check $line) || { log_denied $line; echo "Nicht erlaubt: ${line} (help zeigt die Liste)" >&2; return 1; }
+  run "$norm"
+}
+
+case "${1:-}" in
+  --root)
+    [[ $EUID -eq 0 && "${SUDO_USER:-}" == "nfizyo-support" && $# -eq 2 ]] || { echo "Nicht erlaubt." >&2; exit 1; }
+    # shellcheck disable=SC2086
+    norm=$(check $2) || { echo "Nicht erlaubt." >&2; exit 1; }
+    run_root "$norm"
+    exit $? ;;
+  -c)
+    # Als Anmelde-Shell: sshd ruft «<shell> -c <Befehl>» auf. Erzwungener Befehl (= dieses Werkzeug) → der gewünschte Befehl
+    # steht in SSH_ORIGINAL_COMMAND; sonst ist das Argument selbst der Wunsch – beides geht nur durch check().
+    REQ="${SSH_ORIGINAL_COMMAND:-}"
+    [[ -z "$REQ" && "${2:-}" != "$SELF" ]] && REQ="${2:-}"
+    if [[ -n "$REQ" ]]; then one "$REQ"; exit $?; fi ;;
+  "") if [[ -n "${SSH_ORIGINAL_COMMAND:-}" ]]; then one "$SSH_ORIGINAL_COMMAND"; exit $?; fi ;;
+  *) log_denied "$1"; echo "Nicht erlaubt." >&2; exit 1 ;;
+esac
+
+# Sitzung ohne Befehl: einfache Zeilen lesen – bewusst OHNE «read -e» (Readline könnte mit Ctrl-X Ctrl-E einen Editor starten
+# und dessen Inhalt als Shell-Befehl ausführen).
+echo "N-Fizyo Supportzugang – feste Befehle (help). Jede Eingabe wird protokolliert und ist für die Praxis sichtbar."
+log "session"
+while printf 'support> ' >&2 && IFS= read -r line; do
+  line=${line%$'\r'}
+  line=${line:0:400}
+  [[ -n "${line//[[:space:]]/}" ]] || continue
+  # shellcheck disable=SC2086
+  norm=$(check $line) || { log_denied $line; echo "Nicht erlaubt (help zeigt die Liste)."; continue; }
+  run "$norm"
+done
+echo

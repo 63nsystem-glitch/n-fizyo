@@ -1,0 +1,61 @@
+{
+  "p": {
+    "info": {
+      "title": "Info von Ihrer Therapie",
+      "intro": "Das hat Ihre Therapeutin / Ihr Therapeut für Sie aufgeschrieben.",
+      "new": "neu",
+      "home": "Was Sie zu Hause tun können",
+      "contact": "Wann Sie sich melden sollten",
+      "original": "Original",
+      "translation_soon": "Die Übersetzung folgt in Kürze.",
+      "none": "Noch keine Information.",
+      "card": "Info von Ihrer Therapie",
+      "card_hint": "Zum Lesen oder Vorlesen lassen",
+      "not_translated": "Dieser Text ist nicht übersetzt. Wenn etwas unklar ist, fragen Sie bei Ihrem nächsten Termin nach."
+    },
+    "nav": {
+      "info": "Info"
+    }
+  },
+  "patientinfo": {
+    "title": "Information für Patient/in",
+    "tab": "Info",
+    "last": "Letzte Info an Patient/in",
+    "all": "Alle Infos",
+    "review_hint": "Vorschlag aus dem Diktat – bitte prüfen. Nach der Freigabe wird er auf {language} übersetzt und in der App angezeigt.",
+    "preparing": "Vorschlag wird vorbereitet …",
+    "home": "Was Sie zu Hause tun können",
+    "contact": "Wann Sie sich melden sollten",
+    "home_ph": "z. B. Die Übungen 2× täglich machen. Das Knie nach der Belastung 15 Minuten kühlen.",
+    "contact_ph": "z. B. Melden Sie sich, wenn das Knie stark anschwillt oder heiss wird.",
+    "contact_default": "Melden Sie sich bei uns, wenn die Schmerzen deutlich stärker werden, Sie Fieber bekommen oder die Stelle rot und heiss wird. Im Notfall rufen Sie 144 an.",
+    "insert_default": "Standardtext einfügen",
+    "send": "Mit der Notiz freigeben und an die Patienten-App senden ({language})",
+    "no_advice": "Die KI schlägt nur vor, was Sie diktiert haben – sie erfindet nichts. Sie entscheiden, was die Patientin / der Patient liest.",
+    "read": "gelesen",
+    "not_read": "noch nicht gelesen",
+    "translating": "Übersetzung läuft …",
+    "check_translation": "Maschinelle Übersetzung – bei wichtigen Punkten bitte mündlich bestätigen.",
+    "none": "Noch keine Information gesendet.",
+    "write": "Information schreiben",
+    "write_hint": "Ohne Diktat: kurz und einfach schreiben. Wird auf {language} übersetzt und in der App angezeigt.",
+    "no_translator": "Die automatische Übersetzung ist noch nicht eingerichtet – die Info erscheint nicht übersetzt, in Ihrer Sprache.",
+    "send_now": "An Patienten-App senden",
+    "sent": "Information gesendet",
+    "empty": "Bitte mindestens einen Teil ausfüllen.",
+    "st": {
+      "generating": "wird vorbereitet",
+      "draft": "Entwurf",
+      "discarded": "verworfen"
+    },
+    "nothing_found": "Im Diktat wurde nichts für zu Hause gefunden – bitte selbst ergänzen oder weglassen.",
+    "llm_invalid": "Vorschlag der KI war unbrauchbar – Sätze direkt aus dem Diktat übernommen.",
+    "llm_numbers_rejected": "Die KI hat Zahlen ergänzt, die nicht diktiert wurden – Vorschlag verworfen, Sätze direkt aus dem Diktat übernommen.",
+    "llm_unavailable": "Sprachmodell nicht erreichbar – Sätze direkt aus dem Diktat übernommen.",
+    "description": "Information für Patient/innen aus dem Diktat – übersetzt und vorlesbar in der App",
+    "write_hint_same": "Ohne Diktat: kurz und einfach schreiben. Wird in der App angezeigt.",
+    "review_hint_same": "Vorschlag aus dem Diktat – bitte prüfen. Nach der Freigabe erscheint er in der App.",
+    "review_hint_no_translator": "Vorschlag aus dem Diktat – bitte prüfen. Liest {language}. Die Info wird nicht automatisch übersetzt – die automatische Übersetzung ist noch nicht eingerichtet. Bitte kurz und einfach schreiben.",
+    "not_translated": "Nicht übersetzt – die Patientin / der Patient sieht den Originaltext."
+  }
+}

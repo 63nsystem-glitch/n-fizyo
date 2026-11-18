@@ -1,0 +1,33 @@
+{
+  "p": {
+    "progress": {
+      "title": "İlerlemeniz",
+      "hint": "Fizyoterapistiniz tarafından paylaşıldı. Sorularınızı bir sonraki randevuda konuşun.",
+      "from_to": "{first_on}: {first} → {last_on}: {last}",
+      "goal": "Hedef {goal}",
+      "kind": {
+        "flexion": "Bükme",
+        "extension": "Düzleştirme",
+        "abduction": "Yana kaldırma",
+        "external_rotation": "Dışa çevirme",
+        "internal_rotation": "İçe çevirme",
+        "elevation": "Kolu yukarı kaldırma",
+        "pain_vas": "Ağrı (0–10)"
+      },
+      "joint": {
+        "knee": "diz",
+        "shoulder": "omuz",
+        "hip": "kalça",
+        "elbow": "dirsek",
+        "ankle": "ayak bileği",
+        "wrist": "el bileği",
+        "cervical": "boyun",
+        "lumbar": "bel"
+      },
+      "side": {
+        "l": "sol",
+        "r": "sağ"
+      }
+    }
+  }
+}

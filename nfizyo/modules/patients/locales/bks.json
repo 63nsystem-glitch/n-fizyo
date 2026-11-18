@@ -1,0 +1,33 @@
+{
+  "p": {
+    "progress": {
+      "title": "Vaš napredak",
+      "hint": "Podijelio/la Vaš fizioterapeut. Ako imate pitanja, razgovarajte o tome na sljedećem terminu.",
+      "from_to": "{first} dana {first_on} → {last} dana {last_on}",
+      "goal": "Cilj {goal}",
+      "kind": {
+        "flexion": "Savijanje",
+        "extension": "Ispružanje",
+        "abduction": "Podizanje u stranu",
+        "external_rotation": "Okretanje prema van",
+        "internal_rotation": "Okretanje prema unutra",
+        "elevation": "Podizanje ruke",
+        "pain_vas": "Bol (0–10)"
+      },
+      "joint": {
+        "knee": "koljeno",
+        "shoulder": "rame",
+        "hip": "kuk",
+        "elbow": "lakat",
+        "ankle": "skočni zglob",
+        "wrist": "ručni zglob",
+        "cervical": "vrat",
+        "lumbar": "donji dio leđa"
+      },
+      "side": {
+        "l": "lijevo",
+        "r": "desno"
+      }
+    }
+  }
+}

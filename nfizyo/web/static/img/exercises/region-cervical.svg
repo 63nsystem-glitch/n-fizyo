@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <title>Nacken</title>
+  <g id="fig" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <g opacity="0.5">
+      <circle cx="160" cy="28" r="12" fill="currentColor" stroke="none"/>
+      <path d="M160 40 L160 50" stroke-width="10"/>
+      <path d="M136 58 Q136 50 146 49 L174 49 Q184 50 184 58 L177 112 L143 112 Z" stroke-width="10"/>
+      <path d="M131 56 L125 90 L123 122" stroke-width="10"/>
+      <path d="M151 116 L149 149 L148 180" stroke-width="10"/>
+      <path d="M148 180 L139 182" stroke-width="8"/>
+      <path d="M189 56 L195 90 L197 122" stroke-width="10"/>
+      <path d="M169 116 L171 149 L172 180" stroke-width="10"/>
+      <path d="M172 180 L181 182" stroke-width="8"/>
+    </g>
+    <path d="M160 38 L160 54" stroke-width="11" style="stroke:var(--ex-accent, #D9661F)"/>
+  </g>
+</svg>

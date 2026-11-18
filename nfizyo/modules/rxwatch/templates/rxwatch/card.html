@@ -1,0 +1,7 @@
+{% import "rxwatch/_block.html" as rx with context %}
+{% set s = ctx.s %}
+<section class="card" aria-labelledby="h-rx">
+  <div class="card-head"><h2 id="h-rx">{{ icon('assignment', 20) }} {{ t('rx.card_title') }}</h2>
+    {% if s.level == 'act' %}<span class="pill-label error">{{ t('rx.level.act') }}</span>{% elif s.level == 'soon' %}<span class="pill-label warn">{{ t('rx.level.soon') }}</span>{% elif s.level == 'ok' %}<span class="pill-label ok">{{ t('rx.level.ok') }}</span>{% endif %}</div>
+  {{ rx.rx_block(s, ctx.medical, ctx.back, ctx.vias) }}
+</section>

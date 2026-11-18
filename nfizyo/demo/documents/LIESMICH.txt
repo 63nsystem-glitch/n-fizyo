@@ -1,0 +1,4 @@
+Beispieldateien für die Demo (fiktiv).
+"zum_hochladen_*" im Posteingang hochladen oder in den Scan-Ordner legen:
+N-Fizyo erkennt die Patientin (Name + Geburtsdatum), liest Diagnosen, Einschränkungen und Komplikationen
+und markiert sie am Skelett. Übernommen wird erst nach Bestätigung.

@@ -1,0 +1,15 @@
+{% extends "layouts/auth.html" %}
+{% block title %}{{ t('mfa.codes_title') }}{% endblock %}
+{% block content %}
+<h1 style="margin-bottom:4px">{{ t('mfa.codes_title') }}</h1>
+{% if first %}<div class="banner ok" style="margin-bottom:12px">{{ icon('check_circle') }}<span>{{ t('mfa.enabled_now') }}</span></div>{% endif %}
+<p class="muted" style="margin-bottom:16px">{{ t('mfa.codes_intro') }}</p>
+<ol class="mono" style="columns:2;font-size:17px;line-height:1.9;padding-inline-start:28px;margin-bottom:16px;user-select:all">
+  {% for c in codes %}<li>{{ c }}</li>{% endfor %}
+</ol>
+<div class="banner warn" style="margin-bottom:16px">{{ icon('warning', 20) }}<span>{{ t('mfa.codes_once') }}</span></div>
+<div class="row" style="gap:8px">
+  <button class="btn outlined" type="button" data-print>{{ icon('print', 18) }}{{ t('mfa.print') }}</button>
+  <a class="btn grow" href="{{ continue_url }}">{{ t('mfa.codes_done') }}</a>
+</div>
+{% endblock %}

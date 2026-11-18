@@ -1,0 +1,13 @@
+<div class="field"><label>{{ t('settings.name') }}</label><input name="name" value="{{ p.name or '' }}" required maxlength="120"></div>
+<div class="row" style="gap:12px;flex-wrap:wrap">
+  <div class="field"><label>{{ t('settings.ins_law') }}</label><select name="law">{% for l in ('KVG', 'UVG', 'IVG', 'MVG', 'VVG') %}<option value="{{ l }}"{% if p.law == l %} selected{% endif %}>{{ l | law }}</option>{% endfor %}</select></div>
+  <div class="field"><label>{{ t('settings.ins_tiers') }}</label><select name="tiers">{% for v in ('garant', 'payant') %}<option value="{{ v }}"{% if p.tiers == v %} selected{% endif %}>{{ t('billing_tiers.' ~ v) }}</option>{% endfor %}</select></div>
+  <div class="field grow"><label>GLN</label><input name="gln" value="{{ p.gln or '' }}" maxlength="13" inputmode="numeric" pattern="[0-9]{13}"></div>
+</div>
+<div class="row" style="gap:12px;flex-wrap:wrap">
+  <div class="field grow"><label>{{ t('settings.street') }}</label><input name="street" value="{{ p.street or '' }}" maxlength="120"></div>
+  <div class="field"><label>{{ t('settings.zip') }}</label><input name="zip" value="{{ p.zip or '' }}" maxlength="9" style="width:100px"></div>
+  <div class="field grow"><label>{{ t('settings.city') }}</label><input name="city" value="{{ p.city or '' }}" maxlength="80"></div>
+</div>
+<div class="field"><label>{{ t('settings.tp_group') }}</label><select name="tp_group"><option value="">{{ t('settings.tpg.none') }}</option>{% for g in tp_groups %}<option value="{{ g }}"{% if p.tp_group == g %} selected{% endif %}>{{ t('settings.tpg.' ~ g) }}</option>{% endfor %}</select>
+  <span class="hint">{{ t('settings.tp_group_hint') }}</span></div>

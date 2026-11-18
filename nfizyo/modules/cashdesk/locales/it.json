@@ -1,0 +1,8 @@
+{
+  "p": {
+    "mail": {
+      "receipt_subject": "Ricevuta {number}",
+      "receipt_body": "Buongiorno {name}\n\nIn allegato trova la ricevuta {number}. Grazie mille.\n\nCordiali saluti\n{practice}"
+    }
+  }
+}

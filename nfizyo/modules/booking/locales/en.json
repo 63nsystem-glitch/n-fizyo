@@ -1,0 +1,61 @@
+{
+  "p": {
+    "booking": {
+      "title": "Request an appointment",
+      "closed": "Online booking is not available at the moment. Please call us.",
+      "choose_type": "What would you like an appointment for?",
+      "minutes": "{n} minutes",
+      "other_type": "Other treatment",
+      "choose_slot": "Choose a free time. The practice will then confirm the appointment by text message.",
+      "no_slots": "Nothing free left this week.",
+      "earlier": "Earlier",
+      "later": "Later",
+      "other_slot": "Choose another time",
+      "err_fields": "Please check the highlighted fields.",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "birthdate": "Date of birth",
+      "phone": "Mobile phone",
+      "phone_hint": "You will receive a code by text message.",
+      "email": "E-mail (optional)",
+      "email_ok": "Also receive the confirmation and reminders by e-mail (e-mail is not encrypted).",
+      "insurance": "Insurance",
+      "ins_KVG": "Basic health insurance (illness)",
+      "ins_UVG": "Accident insurance",
+      "ins_IVG": "Disability insurance",
+      "ins_VVG": "Supplementary insurance",
+      "ins_privat": "Self-paying",
+      "prescription": "I have a doctor’s prescription for physiotherapy.",
+      "note": "Comment (optional)",
+      "note_hint": "Please do not include detailed health information – we will discuss it at the practice.",
+      "consent": "I agree that {practice} stores my details to arrange the appointment.",
+      "send_code": "Send code by text message",
+      "code_intro": "We have sent you a code by text message. Enter it here.",
+      "confirm": "Send request",
+      "sent_title": "Request received",
+      "sent_text": "{practice} will check your request and confirm the appointment by text message. Only then is the appointment fixed.",
+      "err_slot": "This time is no longer valid. Please choose again.",
+      "err_taken": "This time has just been taken. Please choose another one.",
+      "err_blocked": "Too many attempts. Please try again later or call us.",
+      "err_phone": "Please enter a Swiss or Liechtenstein mobile number (e.g. 079 123 45 67).",
+      "err_sms_limit": "Several codes have already been sent to this number. Please try again in an hour or call us.",
+      "err_code": "The code is not correct.",
+      "err_expired": "The request has expired. Please start again.",
+      "all_places": "All locations",
+      "closure": "The practice is closed: {dates}.",
+      "original": "Show original",
+      "err_busy": "We cannot send any more codes right now. Please try again later or call us."
+    },
+    "sms": {
+      "booking_code": "{practice}: your code for the appointment request: {code}",
+      "booking_confirmed": "{practice}: your appointment on {when} is confirmed ({place}). Please cancel at least 24 hours before: {phone}",
+      "booking_declined": "{practice}: unfortunately we cannot confirm the appointment on {when}. Please call us: {phone}"
+    },
+    "mail": {
+      "booking_confirmed_subject": "Appointment confirmed: {when}",
+      "booking_confirmed_body": "Hello {name}\n\nYour appointment on {when} is confirmed ({place}).\nPlease cancel at least 24 hours before: {phone}\n\nKind regards\n{practice}",
+      "booking_declined_subject": "Your appointment request",
+      "booking_declined_body": "Hello {name}\n\nUnfortunately we cannot confirm the appointment on {when}. Please call us: {phone}\n\nKind regards\n{practice}"
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "p": {
+    "mtt": {
+      "title": "Training (MTT)",
+      "none": "No training plan approved yet.",
+      "running": "in progress",
+      "card_hint": "{n} machines – scan the QR code on the machine.",
+      "left": "{n} visits left",
+      "start": "Start training",
+      "continue": "Continue training",
+      "start_hint": "Or scan the QR code on the first machine. With a subscription this counts as one visit.",
+      "qr_hint": "Scan the QR code on the machine or tap a machine.",
+      "minutes": "{n} minutes",
+      "end": "Finish training",
+      "stop": "Stop if you have strong pain and tell the supervisor. In an emergency, call 144.",
+      "setting": "Setting",
+      "last_time": "Last time {date}",
+      "today": "Today",
+      "set_n": "Set {n}",
+      "log_set": "Enter set {n}",
+      "log_cardio": "Enter",
+      "minutes_label": "Minutes",
+      "reps": "Repetitions",
+      "load": "Weight (kg)",
+      "effort_q": "How hard was it?",
+      "effort": {
+        "light": "light",
+        "medium": "medium",
+        "hard": "hard",
+        "very_hard": "very hard",
+        "max": "maximum"
+      },
+      "pain_q": "Any pain?",
+      "save_set": "Save",
+      "saved": "Saved",
+      "started": "Training started – good luck!",
+      "ended": "Training finished – well done!",
+      "qr_unknown": "This QR code is unknown.",
+      "qr_no_plan": "You do not have an approved training plan yet.",
+      "qr_not_in_plan": "This machine is not in your plan. Ask the supervisor.",
+      "to_plan": "To my plan"
+    }
+  }
+}

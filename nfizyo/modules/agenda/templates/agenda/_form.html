@@ -1,0 +1,2 @@
+<input type="hidden" name="_csrf" value="{{ csrf }}">
+<datalist id="patients-dl">{% for p in patients %}<option value="{{ p.last_name }}, {{ p.first_name }} · {{ fmt_date(p.birthdate) if p.birthdate else '' }} · {{ p.number }}"></option>{% endfor %}</datalist>

@@ -1,0 +1,91 @@
+{
+  "intake": {
+    "title": "Meine Beschwerden",
+    "hello": "Guten Tag, {name}",
+    "intro": "Beschreiben Sie Ihre Beschwerden – in Ihrer Sprache. Ihre Therapeutin oder Ihr Therapeut liest es vor der Behandlung.",
+    "where": "Wo haben Sie Beschwerden?",
+    "where_hint": "Tippen Sie auf die Stellen am Körper (mehrere möglich). Mit «Vorne/Hinten» wechseln.",
+    "list_instead": "Liste statt Bild",
+    "none_selected": "Noch keine Stelle gewählt",
+    "pain": "Wie stark sind die Schmerzen?",
+    "pain_0": "keine",
+    "pain_2": "leicht",
+    "pain_4": "mässig",
+    "pain_6": "stark",
+    "pain_8": "sehr stark",
+    "pain_10": "unerträglich",
+    "since": "Seit wann?",
+    "since_opt": {
+      "days": "weniger als 1 Woche",
+      "weeks": "1 bis 6 Wochen",
+      "months": "länger als 6 Wochen",
+      "years": "länger als 1 Jahr"
+    },
+    "worse": "Wann ist es schlimmer?",
+    "worse_opt": {
+      "move": "bei Bewegung",
+      "rest": "in Ruhe",
+      "night": "nachts",
+      "sitting": "im Sitzen",
+      "standing": "im Stehen",
+      "walking": "beim Gehen",
+      "stairs": "beim Treppensteigen",
+      "lifting": "beim Heben",
+      "morning": "am Morgen"
+    },
+    "goals": "Was möchten Sie wieder können?",
+    "goal_opt": {
+      "sleep": "ohne Schmerzen schlafen",
+      "walk": "gehen / spazieren",
+      "stairs": "Treppen steigen",
+      "work": "arbeiten",
+      "sport": "Sport treiben",
+      "lift": "heben und tragen",
+      "overhead": "Arm über den Kopf heben",
+      "household": "Haushalt",
+      "drive": "Auto fahren"
+    },
+    "text": "In Ihren eigenen Worten",
+    "text_hint": "Schreiben oder sprechen Sie in Ihrer Sprache. Es wird für die Praxis übersetzt.",
+    "text_ph": "Was ist passiert? Was macht es schlimmer oder besser?",
+    "voice": "Sprechen statt schreiben",
+    "voice_stop": "Aufnahme beenden",
+    "voice_busy": "Wird erkannt …",
+    "emergency": "Bei starken oder plötzlich neuen Beschwerden wenden Sie sich an Ihre Ärztin oder Ihren Arzt. Im Notfall rufen Sie 144 an.",
+    "privacy": "Ihre Angaben bleiben auf dem Server der Praxis.",
+    "send": "Senden",
+    "sent_flash": "Danke! Die Praxis hat Ihre Angaben erhalten.",
+    "text_hint_same": "Beschreiben Sie in eigenen Worten, was Sie beschäftigt. Sie können schreiben oder sprechen."
+  },
+  "intake_staff": {
+    "panel_title": "Anliegen der Patientin / des Patienten",
+    "seen": "Gesehen",
+    "take": "Als Befund übernehmen",
+    "taken": "Als Schmerz-Befund in die Akte übernommen",
+    "marked_seen": "Als gesehen markiert",
+    "list_title": "Anliegen",
+    "list_hint": "Was Patientinnen und Patienten selbst beschreiben – in ihrer Sprache, für Sie übersetzt.",
+    "f_new": "Neu",
+    "f_all": "Alle",
+    "none": "Keine neuen Anliegen.",
+    "st": {
+      "new": "neu",
+      "seen": "gesehen",
+      "taken": "übernommen"
+    },
+    "ch": {
+      "app": "aus der App",
+      "kiosk": "am Praxis-Tablet",
+      "staff": "erfasst"
+    },
+    "where_short": "Wo",
+    "pain_short": "Schmerz",
+    "worse_short": "Schlimmer",
+    "goals_short": "Ziele",
+    "translation_pending": "Übersetzung läuft …",
+    "pain_at": "Schmerz {place} (Angabe Patient/in)",
+    "unspecified": "ohne Ortsangabe",
+    "description": "Anliegen der Patient/innen in ihrer eigenen Sprache (Patienten-App), für Sie übersetzt",
+    "since_short": "Seit"
+  }
+}

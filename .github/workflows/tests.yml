@@ -1,0 +1,61 @@
+# N-Fizyo – Tests bei jedem Push / Pull Request (eigenes privates Repository, getrennt von N-Gastro).
+# Keine Secrets nötig: Tests laufen mit Demo-Daten in temporären Ordnern, ohne Netz-Dienste.
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 5 * * 1"   # montags: neue bekannte Lücken in den festen Paketversionen (pip-audit)
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Python ${{ matrix.python }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.12", "3.13"]   # 3.12 = Ubuntu 24.04 der Praxis-Boxen
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.lock
+            requirements-dev.txt
+
+      - name: Systemprogramme für die Sicherungstests (sqlite3, gpg, rsync)
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q sqlite3 gnupg rsync
+
+      - name: Pakete genau nach requirements.lock (Prüfsummen) + Test-Werkzeuge
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --require-hashes -r requirements.lock
+          python -m pip install -r requirements-dev.txt ruff pip-audit
+
+      - name: Lint (ruff F, E9)
+        run: ruff check --select F,E9 nfizyo tests tools
+
+      - name: Tests
+        run: python -m pytest -q
+
+      - name: Bekannte Lücken (pip-audit gegen requirements.lock)
+        if: matrix.python == '3.12'
+        run: bash tools/deps.sh audit

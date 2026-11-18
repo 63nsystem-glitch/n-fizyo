@@ -1,0 +1,7 @@
+<section class="card" aria-labelledby="h-mtt">
+  <div class="card-head"><h2 id="h-mtt">{{ t('mtt.title') }}</h2>
+    {% if ctx.plan.status == 'active' %}<span class="meta">{{ t('mtt.visits_4w', n=ctx.visits_4w) }}</span>{% else %}<span class="pill-label warn">{{ t('mtt.st.draft') }}</span>{% endif %}</div>
+  <p class="small">{{ t('mtt.n_items', n=ctx.n_items) }}{% if ctx.last %} · {{ t('mtt.last_visit', date=fmt_date(ctx.last.day, weekday=True, year=False)) }}{% endif %}</p>
+  {% if ctx.n_sugg %}<div class="rx-line info">{{ icon('trending_up', 18) }}<span>{{ t('mtt.n_sugg', n=ctx.n_sugg) }}</span></div>{% endif %}
+  <div class="row" style="justify-content:flex-end;margin-top:8px"><a class="btn text" href="{{ S }}/patienten/{{ ctx.patient.id }}/mtt">{{ t('mtt.open_plan') }}</a></div>
+</section>

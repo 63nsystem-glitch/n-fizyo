@@ -1,0 +1,77 @@
+{
+  "_review": "Maschinennahe Erstübersetzung durch NSystem – vor Einsatz von Muttersprachler/in prüfen lassen.",
+  "common": {
+    "demo_ribbon": "Demo · të dhëna fiktive",
+    "save": "Ruaj",
+    "saved": "U ruajt",
+    "cancel": "Anulo",
+    "close": "Mbyll",
+    "back": "Kthehu",
+    "yes": "Po",
+    "no": "Jo",
+    "next": "Vazhdo",
+    "done": "Gati",
+    "send": "Dërgo",
+    "edit": "Ndrysho",
+    "delete": "Fshi",
+    "loading": "Duke u ngarkuar …",
+    "offline": "Pa lidhje – do të dërgohet më vonë",
+    "retry": "Provo përsëri",
+    "today": "Sot",
+    "tomorrow": "Nesër",
+    "yesterday": "Dje",
+    "region": {
+      "head": "Koka",
+      "neck": "Qafa",
+      "trapezius": "Qafa / supi",
+      "chest": "Gjoksi",
+      "abs": "Barku",
+      "obliques": "Ana e trupit",
+      "front_deltoids": "Supi (para)",
+      "back_deltoids": "Supi (prapa)",
+      "biceps": "Krahu (para)",
+      "triceps": "Krahu (prapa)",
+      "forearm": "Parakrahu / dora",
+      "upper_back": "Pjesa e sipërme e shpinës",
+      "lower_back": "Pjesa e poshtme e shpinës",
+      "gluteal": "Vithet / ijët",
+      "abductors": "Ijët / ana e brendshme e kofshës",
+      "quadriceps": "Kofsha (para)",
+      "hamstring": "Kofsha (prapa)",
+      "knees": "Gjuri",
+      "calves": "Kërciri / këmba",
+      "soleus": "Pulpa / thembra"
+    },
+    "side": {
+      "l": "(majtas)",
+      "r": "(djathtas)"
+    },
+    "hold_s": "mbani {n} s",
+    "per_day": "{n}× në ditë",
+    "search": "Kërko"
+  },
+  "p": {
+    "mail": {
+      "footer": "Ky mesazh u dërgua automatikisht nga {practice}. Në rast urgjence telefononi 144."
+    },
+    "error": {
+      "title_403": "Nuk keni qasje",
+      "text_403": "Nuk mund ta hapni këtë faqe.",
+      "title_404": "Nuk u gjet",
+      "text_404": "Kjo faqe nuk ekziston (më).",
+      "title_500": "Diçka shkoi keq",
+      "text_500": "Ju lutemi provoni përsëri më vonë. Për pyetje telefononi praktikën.",
+      "home": "Te faqja kryesore"
+    },
+    "body": {
+      "view": "Pamja",
+      "front": "Para",
+      "back": "Prapa",
+      "figure": "Trupi",
+      "right_short": "D",
+      "left_short": "M",
+      "zoom": "Zmadho"
+    },
+    "listen": "Lexoje me zë"
+  }
+}

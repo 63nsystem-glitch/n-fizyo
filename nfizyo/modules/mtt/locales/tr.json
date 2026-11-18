@@ -1,0 +1,44 @@
+{
+  "p": {
+    "mtt": {
+      "title": "Antrenman (MTT)",
+      "none": "Henüz onaylanmış bir antrenman planı yok.",
+      "running": "devam ediyor",
+      "card_hint": "{n} alet – aletin üzerindeki QR kodu okutun.",
+      "left": "{n} giriş kaldı",
+      "start": "Antrenmana başla",
+      "continue": "Antrenmana devam et",
+      "start_hint": "Ya da ilk aletteki QR kodu okutun. Abonmanınız varsa bu bir giriş sayılır.",
+      "qr_hint": "Aletteki QR kodu okutun veya bir alete dokunun.",
+      "minutes": "{n} dakika",
+      "end": "Antrenmanı bitir",
+      "stop": "Şiddetli ağrı olursa durun ve gözetmene haber verin. Acil durumda 144'ü arayın.",
+      "setting": "Ayar",
+      "last_time": "Geçen sefer {date}",
+      "today": "Bugün",
+      "set_n": "Set {n}",
+      "log_set": "{n}. seti kaydet",
+      "log_cardio": "Kaydet",
+      "minutes_label": "Dakika",
+      "reps": "Tekrar",
+      "load": "Ağırlık (kg)",
+      "effort_q": "Ne kadar zorladı?",
+      "effort": {
+        "light": "hafif",
+        "medium": "orta",
+        "hard": "zor",
+        "very_hard": "çok zor",
+        "max": "en zor"
+      },
+      "pain_q": "Ağrı var mıydı?",
+      "save_set": "Kaydet",
+      "saved": "Kaydedildi",
+      "started": "Antrenman başladı – kolay gelsin!",
+      "ended": "Antrenman bitti – aferin!",
+      "qr_unknown": "Bu QR kod tanınmıyor.",
+      "qr_no_plan": "Henüz onaylanmış bir antrenman planınız yok.",
+      "qr_not_in_plan": "Bu alet planınızda yok. Gözetmene sorun.",
+      "to_plan": "Planıma git"
+    }
+  }
+}

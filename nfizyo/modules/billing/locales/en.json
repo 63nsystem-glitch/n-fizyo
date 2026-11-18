@@ -1,0 +1,8 @@
+{
+  "p": {
+    "mail": {
+      "invoice_subject": "Invoice {number}",
+      "invoice_body": "Hello {name}\n\nPlease find attached invoice {number} for CHF {amount}. Please pay with the QR payment slip by {due}.\n\nKind regards\n{practice}"
+    }
+  }
+}

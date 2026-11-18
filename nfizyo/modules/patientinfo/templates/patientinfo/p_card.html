@@ -1,0 +1,5 @@
+<a class="card{{ ' info' if ctx.unread else '' }}" href="/p/info" style="display:block;text-decoration:none;color:inherit">
+  <div class="row-between"><h2>{{ icon('info', 20) }} {{ t('p.info.card') }}</h2>{% if ctx.unread %}<span class="pill-label error">{{ t('p.info.new') }}</span>{% endif %}</div>
+  <p class="small" style="margin-top:6px" dir="auto">{{ (ctx.info.home_translated or ctx.info.home or ctx.info.contact_translated or ctx.info.contact or '') | truncate(110) }}</p>
+  <p class="ai-note" style="margin-top:4px">{{ icon('volume_up', 14) }}{{ t('p.info.card_hint') }}</p>
+</a>

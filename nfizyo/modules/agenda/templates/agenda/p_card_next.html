@@ -1,0 +1,5 @@
+<section class="card info">
+  <p class="small">{{ t('p.home.next') }}</p>
+  <p style="font-size:22px;line-height:28px;margin-top:4px">{{ fmt_long_date(ctx.start.date()) }}{{ '، ' if lang == 'ar' else ', ' }}<bdi>{{ fmt_time(ctx.start) }}</bdi></p>
+  <p class="small" style="margin-top:4px">{{ ctx.a.location_name or '' }}{% if ctx.a.room_name %} · {{ ctx.a.room_name }}{% endif %} · {{ ctx.a.therapist_name }}</p>
+</section>

@@ -1,0 +1,8 @@
+{
+  "p": {
+    "mail": {
+      "receipt_subject": "Makbuz {number}",
+      "receipt_body": "Merhaba {name}\n\n{number} numaralı makbuzunuz ektedir. Teşekkür ederiz.\n\nSaygılarımızla\n{practice}"
+    }
+  }
+}

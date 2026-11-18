@@ -1,0 +1,76 @@
+{
+  "p": {
+    "ex": {
+      "title": "Vježbe",
+      "intro": "Vaš program iz prakse. Dodirnite vježbu.",
+      "none": "Još nema odobrenog programa vježbi.",
+      "not_translated": "Ovo uputstvo još nije dostupno na vašem jeziku.",
+      "stop_if_pain": "Prestanite ako bol jako poraste i javite se praksi.",
+      "pain_after": "Koliko je jaka bila bol?",
+      "done": "Urađeno",
+      "done_again": "Ponovo urađeno",
+      "logged": "Sačuvano – bravo!",
+      "answer": {
+        "forgot": "To se dešava. Pomaže stalno vrijeme, na primjer nakon pranja zuba. Sutra je novi dan.",
+        "unclear": "Hvala. Ordinacija će to vidjeti prije Vašeg sljedećeg termina i ponovo Vam pokazati vježbu.",
+        "no_time": "Razumljivo. I jedna vježba je bolja nego nijedna.",
+        "no_time_star": "Razumljivo. Kada nemate puno vremena: radite samo vježbe sa zvjezdicom.",
+        "pain": "Ne nastavljajte vježbu dok jako boli i javite se ordinaciji. U hitnom slučaju nazovite 144.",
+        "app": "Hvala. Pitajte na recepciji pri sljedećoj posjeti – rado ćemo Vam pomoći s aplikacijom.",
+        "no_benefit": "Hvala na iskrenosti. Spomenite to na sljedećem terminu – zajedno ćete pogledati Vaš cilj."
+      },
+      "write_practice": "Pišite ordinaciji",
+      "star_hint": "Kada nemate puno vremena: prvo vježbe sa zvjezdicom.",
+      "star_one": "Kada nemate puno vremena: prvo ovu vježbu.",
+      "skip_q": "Danas niste uspjeli?",
+      "skip_saved": "Spremljeno: {reason}. Možete promijeniti odgovor.",
+      "skip_intro": "Dobrovoljno. Ordinacija vidi Vaš odgovor prije sljedećeg termina.",
+      "skip": {
+        "forgot": "Zaboravio/la sam",
+        "unclear": "Vježba nije bila jasna",
+        "no_time": "Nisam imao/la vremena",
+        "pain": "Previše bolova",
+        "app": "Problem s aplikacijom",
+        "no_benefit": "Ne vidim korist"
+      },
+      "skip_note": "Želite li nešto dodati? (dobrovoljno)",
+      "skip_send": "Pošalji",
+      "skip_choose": "Molimo izaberite razlog.",
+      "own_video": "Vaš vlastiti video – snimljen u ordinaciji",
+      "video_delete_hint": "Svoj video možete izbrisati u bilo kojem trenutku. Tada se briše i u ordinaciji.",
+      "video_delete": "Izbriši moj video",
+      "video_deleted": "Video izbrisan",
+      "dose": {
+        "sets": {
+          "one": "{n} serija",
+          "few": "{n} serije",
+          "many": "{n} serija",
+          "other": "{n} serija"
+        },
+        "reps": {
+          "one": "{n} ponavljanje",
+          "few": "{n} ponavljanja",
+          "many": "{n} ponavljanja",
+          "other": "{n} ponavljanja"
+        },
+        "hold": {
+          "one": "držati {n} s",
+          "other": "držati {n} s"
+        },
+        "minutes": {
+          "one": "{n} minuta",
+          "few": "{n} minute",
+          "many": "{n} minuta",
+          "other": "{n} minuta"
+        },
+        "per_day": {
+          "one": "{n} put dnevno",
+          "few": "{n} puta dnevno",
+          "many": "{n} puta dnevno",
+          "other": "{n} puta dnevno"
+        },
+        "sets_reps": "{sets} po {reps}"
+      }
+    }
+  }
+}

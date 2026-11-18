@@ -1,0 +1,26 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/uebersicht" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('stats.open.notes_draft') if art == 'entwuerfe' else t('stats.open.done_without_note') }}{% endblock %}
+{% block subtitle %}{{ t('notes.open_hint_' ~ ('drafts' if art == 'entwuerfe' else 'missing')) }}{% endblock %}
+{% block content %}
+<div class="chips" style="margin-bottom:12px">
+  <a class="chip{% if art == 'entwuerfe' %} selected{% endif %}" href="{{ S }}/offene-notizen?art=entwuerfe">{{ t('stats.open.notes_draft') }}</a>
+  <a class="chip{% if art == 'ohne-notiz' %} selected{% endif %}" href="{{ S }}/offene-notizen?art=ohne-notiz">{{ t('stats.open.done_without_note') }}</a>
+</div>
+<div class="grid-main-side">
+  <section class="card flush">
+    {% if rows %}
+    <div class="table-wrap"><table class="table">
+      <thead><tr><th>{{ t('notes.open_date') }}</th><th>{{ t('notes.open_patient') }}</th><th>{{ t('notes.open_therapist') }}</th></tr></thead>
+      <tbody>{% for r in rows %}<tr><td>{{ fmt_date(r.start or r.at, weekday=True) }}{% if r.start %} {{ fmt_time(r.start) }}{% endif %}</td>
+        <td>{% if r.patient %}{{ r.patient.first_name }} {{ r.patient.last_name }}{% else %}–{% endif %}</td><td>{{ r.therapist }}</td></tr>{% endfor %}</tbody>
+    </table></div>
+    {% else %}<div class="empty">{{ icon('task_alt', 40) }}<p>{{ t('stats.nothing_open') }}</p></div>{% endif %}
+  </section>
+  <section class="card stack-s">
+    <h2>{{ t('notes.open_per_person') }}</h2>
+    <dl class="facts">{% for name, n in per %}<dt>{{ name }}</dt><dd>{{ n }}</dd>{% else %}<dt>–</dt><dd></dd>{% endfor %}</dl>
+    <p class="small muted">{{ t('notes.open_privacy') }}</p>
+  </section>
+</div>
+{% endblock %}

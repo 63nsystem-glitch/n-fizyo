@@ -1,0 +1,16 @@
+{% extends "layouts/staff.html" %}
+{% block title %}{{ t('reports.list_title') }}{% endblock %}
+{% block content %}
+<section class="card">
+  <div class="list">
+    {% for r in drafts %}
+    <a class="list-item" href="{{ S }}/berichte/{{ r.id }}">
+      <span class="lead avatar">{{ icon('description', 20) }}</span>
+      <span class="body"><span class="title">{{ r.first_name }} {{ r.last_name }} · {{ t('reports.kind.' ~ r.kind) }}</span><br>
+        <span class="sub">{{ r.referrer_name or t('reports.no_referrer') }} · {{ fmt_date(r.updated_at) }}</span></span>
+      <span class="trail"><span class="pill-label warn">{{ t('reports.status.draft') }}</span>{{ icon('chevron_right', 20, 'flip-rtl') }}</span>
+    </a>
+    {% else %}<div class="empty">{{ icon('description', 40) }}<p>{{ t('reports.no_drafts') }}</p></div>{% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "ui/settings.html" %}
+{% macro person(p, links, side) %}
+<section class="card stack-s">
+  <h2>{{ t('patients.dup.' ~ side) }}</h2>
+  <p><strong>{{ p.first_name }} {{ p.last_name }}</strong>{% if p.archived %} <span class="pill-label">{{ t('patients.archived_label') }}</span>{% endif %}<br>
+    <span class="small muted">{{ p.number }} · {{ fmt_date(p.birthdate) if p.birthdate else '–' }}</span></p>
+  <dl class="facts">
+    <dt>{{ t('patients.dup.f_phone') }}</dt><dd>{{ p.phone or '–' }}</dd>
+    <dt>{{ t('patients.dup.f_email') }}</dt><dd>{{ p.email or '–' }}</dd>
+    <dt>{{ t('patients.dup.f_address') }}</dt><dd>{{ p.address or '–' }}{% if p.zip or p.city %}, {{ p.zip or '' }} {{ p.city or '' }}{% endif %}</dd>
+    <dt>{{ t('patients.dup.f_insurance') }}</dt><dd>{{ (p.law | law) or '–' }} {{ p.insurer_name or '' }}</dd>
+    <dt>{{ t('patients.dup.f_created') }}</dt><dd>{{ fmt_date(p.created_at) }}</dd>
+  </dl>
+  <h3 class="small" style="margin-top:8px">{{ t('patients.dup.data') }}</h3>
+  {% if links %}
+  <ul class="small" style="margin:0 0 0 18px">{% for table, n in links | dictsort %}<li>{{ t('patients.link.' ~ table) }}: {{ n }}</li>{% endfor %}</ul>
+  {% else %}<p class="small muted">{{ t('patients.dup.no_data') }}</p>{% endif %}
+</section>
+{% endmacro %}
+{% block settings %}
+<div class="stack">
+  <div class="banner info">{{ icon('info', 20) }}<div>{{ t('patients.dup.intro') }}</div></div>
+  <section class="card stack-s">
+    <form method="get" class="row" style="gap:8px;align-items:flex-end;flex-wrap:wrap">
+      {% if keep %}<input type="hidden" name="behalten" value="{{ keep.id }}">{% endif %}{% if drop %}<input type="hidden" name="doppelt" value="{{ drop.id }}">{% endif %}
+      <div class="field grow"><label for="dq">{{ t('patients.dup.search') }}</label><input id="dq" name="q" value="{{ q }}" autocomplete="off" placeholder="{{ t('patients.dup.search_ph') }}"></div>
+      <button class="btn tonal" type="submit">{{ icon('search', 18) }}{{ t('common.search') }}</button>
+      {% if keep or drop %}<a class="btn text" href="{{ S }}/einstellungen/duplikate">{{ t('patients.dup.reset') }}</a>{% endif %}
+    </form>
+    {% for p in found %}
+    <div class="list-item" style="padding-inline:0"><span class="lead avatar">{{ (p.first_name[:1] ~ p.last_name[:1]) | upper }}</span>
+      <span class="body"><span class="title">{{ p.first_name }} {{ p.last_name }}</span><br><span class="sub">{{ p.number }} · {{ fmt_date(p.birthdate) if p.birthdate else '–' }}{% if p.archived %} · {{ t('patients.archived_label') }}{% endif %}</span></span>
+      <span class="trail row" style="gap:4px">
+        <a class="btn text sm" href="{{ S }}/einstellungen/duplikate?behalten={{ p.id }}{% if drop %}&amp;doppelt={{ drop.id }}{% endif %}">{{ t('patients.dup.as_keep') }}</a>
+        <a class="btn text sm" href="{{ S }}/einstellungen/duplikate?doppelt={{ p.id }}{% if keep %}&amp;behalten={{ keep.id }}{% endif %}">{{ t('patients.dup.as_drop') }}</a></span></div>
+    {% else %}{% if q %}<p class="small muted">{{ t('patients.dup.none_found') }}</p>{% endif %}{% endfor %}
+  </section>
+
+  {% if candidates %}
+  <section class="card stack-s">
+    <h2>{{ t('patients.dup.candidates') }}</h2>
+    {% for a, b in candidates %}
+    <div class="list-item" style="padding-inline:0">
+      <span class="body"><span class="title">{{ a.first_name }} {{ a.last_name }} ↔ {{ b.first_name }} {{ b.last_name }}</span><br>
+        <span class="sub">{{ a.number }} · {{ fmt_date(a.birthdate) if a.birthdate else '–' }} / {{ b.number }} · {{ fmt_date(b.birthdate) if b.birthdate else '–' }}</span></span>
+      <span class="trail"><a class="btn tonal sm" href="{{ S }}/einstellungen/duplikate?behalten={{ a.id }}&amp;doppelt={{ b.id }}">{{ t('patients.dup.compare') }}</a></span>
+    </div>
+    {% endfor %}
+  </section>
+  {% elif not (keep or drop or q) %}<p class="small muted">{{ t('patients.dup.no_candidates') }}</p>{% endif %}
+
+  {% if keep or drop %}
+  <div class="grid-main-side">
+    {% if keep %}{{ person(keep, keep_links, 'keep') }}{% else %}<section class="card"><p class="small muted">{{ t('patients.dup.pick_keep') }}</p></section>{% endif %}
+    {% if drop %}{{ person(drop, drop_links, 'drop') }}{% else %}<section class="card"><p class="small muted">{{ t('patients.dup.pick_drop') }}</p></section>{% endif %}
+  </div>
+  {% if keep and drop and keep.id != drop.id %}
+  <section class="card stack-s">
+    <h2>{{ t('patients.dup.merge_title') }}</h2>
+    <p>{{ t('patients.dup.merge_text', drop=drop.number, keep=keep.number) }}</p>
+    {% if fill %}<p class="small">{{ t('patients.dup.fill') }} {% for k in fill %}{{ t('patients.dup.f_' ~ k) }}{% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+    <div class="banner warn">{{ icon('warning', 20) }}<div>{{ t('patients.dup.irreversible') }}</div></div>
+    <form method="post" class="form" data-confirm="{{ t('patients.dup.merge_confirm', drop=drop.number, keep=keep.number) }}" data-confirm-yes="{{ t('patients.dup.merge_btn') }}">
+      <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="merge">
+      <input type="hidden" name="keep_id" value="{{ keep.id }}"><input type="hidden" name="drop_id" value="{{ drop.id }}">
+      <label class="check"><input type="checkbox" name="confirm" value="1" required>{{ t('patients.dup.confirm_same') }}</label>
+      <div class="row" style="gap:8px;flex-wrap:wrap">
+        <button class="btn" type="submit">{{ icon('group', 18) }}{{ t('patients.dup.merge_btn') }}</button>
+        <a class="btn text" href="{{ S }}/einstellungen/duplikate?behalten={{ drop.id }}&amp;doppelt={{ keep.id }}">{{ icon('swap_horiz', 18) }}{{ t('patients.dup.swap') }}</a>
+      </div>
+    </form>
+  </section>
+  {% endif %}
+  {% if drop and not drop_links %}
+  <section class="card stack-s">
+    <h2>{{ t('patients.dup.delete_title') }}</h2>
+    <p class="small">{{ t('patients.dup.delete_text', number=drop.number) }}</p>
+    <form method="post" class="form" data-confirm="{{ t('patients.dup.delete_confirm', number=drop.number) }}" data-confirm-yes="{{ t('patients.dup.delete_btn') }}">
+      <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="delete"><input type="hidden" name="patient_id" value="{{ drop.id }}">
+      <label class="check"><input type="checkbox" name="confirm" value="1" required>{{ t('patients.dup.confirm_delete') }}</label>
+      <div class="form-actions"><button class="btn outlined" type="submit" style="color:var(--error)">{{ icon('delete', 18) }}{{ t('patients.dup.delete_btn') }}</button></div>
+    </form>
+  </section>
+  {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

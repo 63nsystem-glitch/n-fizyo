@@ -1,0 +1,9 @@
+{% extends "patients/_file.html" %}
+{% block content %}
+<section class="card">
+  <div class="card-head"><h2>{{ t('agenda.appointments') }}</h2>
+    <a class="btn text" href="{{ S }}/agenda/neu?patient={{ label | urlencode }}&back={{ (S ~ '/patienten/' ~ patient.id ~ '/termine') | urlencode }}">{{ icon('add', 18) }}{{ t('agenda.book') }}</a></div>
+  {% if n_beyond %}<div class="banner warn" role="status" style="margin-bottom:12px" data-beyond>{{ icon('warning') }}<span>{{ t('agenda.beyond_rx_list', n=n_beyond) }}</span></div>{% endif %}
+  {% include "agenda/_appt_table.html" %}
+</section>
+{% endblock %}

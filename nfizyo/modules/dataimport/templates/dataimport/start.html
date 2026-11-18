@@ -1,0 +1,47 @@
+{% extends "layouts/staff.html" %}
+{% block title %}{{ t('dataimport.title') }}{% endblock %}
+{% block subtitle %}{{ t('dataimport.subtitle') }}{% endblock %}
+{% block content %}
+<div class="grid-main-side">
+  <div class="col stack">
+    <section class="card">
+      <h2 style="margin-bottom:4px">{{ t('dataimport.upload') }}</h2>
+      <p class="small muted" style="margin-bottom:16px">{{ t('dataimport.upload_hint') }}</p>
+      <form method="post" enctype="multipart/form-data" class="form">
+        <input type="hidden" name="_csrf" value="{{ csrf }}">
+        <fieldset class="field" style="border:0;padding:0;margin:0"><legend class="small muted" style="margin-bottom:6px">{{ t('dataimport.what') }}</legend>
+          <div class="chips">{% for k in kinds %}<label class="chip"><input type="radio" name="kind" value="{{ k }}"{% if loop.first %} checked{% endif %}{% if (k == 'appointments' and not agenda_on) or (k == 'balances' and not billing_on) %} disabled{% endif %}> {{ t('dataimport.kind.' ~ k) }}</label>{% endfor %}</div></fieldset>
+        <div class="field"><label for="file">{{ t('dataimport.file') }}</label><input id="file" name="file" type="file" accept=".csv,.txt,.xlsx" required></div>
+        <div class="form-actions"><button class="btn" type="submit">{{ icon('upload', 18) }}{{ t('dataimport.next') }}</button></div>
+      </form>
+    </section>
+    <section class="card flush">
+      <h2 style="padding:16px 16px 8px">{{ t('dataimport.history') }}</h2>
+      <div class="list">
+        {% for j in jobs %}
+        <a class="list-item" href="{{ S }}/import/{{ j.id }}">
+          <span class="lead avatar">{{ icon('table_view', 20) }}</span>
+          <span class="body"><span class="title">{{ t('dataimport.kind.' ~ j.kind) }} · {{ j.filename }}</span><br>
+            <span class="sub">{{ fmt_date(j.created_at) }} {{ fmt_time(j.created_at) }} · {{ j.user_name or '–' }} · {{ t('dataimport.n_rows', n=j.rows) }}{% if j.status == 'done' %} · {{ t('dataimport.n_created', n=j.res.created or 0) }}{% endif %}</span></span>
+          <span class="trail"><span class="pill-label {{ {'done': 'ok', 'draft': 'warn', 'discarded': ''}[j.status] }}">{{ t('dataimport.status.' ~ j.status) }}</span></span>
+        </a>
+        {% else %}<p class="muted" style="padding:0 16px 16px">{{ t('dataimport.none') }}</p>{% endfor %}
+      </div>
+    </section>
+  </div>
+  <div class="col stack">
+    <section class="card stack-s">
+      <h2>{{ t('dataimport.how_title') }}</h2>
+      <ol class="small stack-s" style="padding-inline-start:18px">
+        <li>{{ t('dataimport.how1') }}</li><li>{{ t('dataimport.how2') }}</li><li>{{ t('dataimport.how3') }}</li><li>{{ t('dataimport.how4') }}</li>
+      </ol>
+      <p class="small muted">{{ t('dataimport.order') }}</p>
+      <p class="small muted">{{ t('dataimport.balances_hint') }}</p>
+    </section>
+    <section class="card stack-s">
+      <h2>{{ t('dataimport.privacy_title') }}</h2>
+      <p class="small">{{ t('dataimport.privacy') }}</p>
+    </section>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,98 @@
+{
+  "p": {
+    "app_name": "Moja fizioterapija",
+    "nav": {
+      "main": "Navigacija",
+      "today": "Danas",
+      "exercises": "Vježbe",
+      "appointments": "Termini",
+      "messages": "Poruke",
+      "today_short": "Danas",
+      "appointments_short": "Termini",
+      "messages_short": "Poruke"
+    },
+    "emergency": "U hitnom slučaju nazovite 144. Aplikacija nije namijenjena za hitne slučajeve.",
+    "machine_translated": "mašinski prevedeno",
+    "home": {
+      "hello": "Dobar dan, {name}",
+      "next": "Vaš sljedeći termin",
+      "exercises": "Moje vježbe danas",
+      "exercises_hint": "Označite urađene vježbe – praksa vidi vaš napredak.",
+      "describe": "Opisati tegobe",
+      "report": "Prijaviti problem",
+      "messages": "Poruke",
+      "appointment": "Termini",
+      "call": "Pitanja? Nazovite nas:"
+    },
+    "profile": {
+      "title": "Profil",
+      "language": "Jezik",
+      "language_hint": "Po potrebi se tekstovi prakse mašinski prevode na vaš jezik.",
+      "privacy": "Zaštita podataka",
+      "privacy_text": "Vaši podaci ostaju na serveru vaše prakse u Švicarskoj. Prevođenje i prepoznavanje govora rade tamo – ništa se ne šalje vanjskim servisima.",
+      "privacy_text_remote": "Vaši podaci ostaju na serveru vaše prakse u Švicarskoj. Prevođenje i prepoznavanje govora rade na serveru NSystema u Švicarskoj koji ništa ne sprema.",
+      "logout": "Odjaviti se",
+      "revoke": "Završiti pristup aplikaciji",
+      "revoke_confirm": "Zaista završiti pristup? Kasnije možete dobiti novu pozivnicu."
+    },
+    "login": {
+      "title": "Prijava",
+      "intro": "Unesite broj mobitela i datum rođenja. Dobit ćete kod putem SMS-a.",
+      "phone": "Broj mobitela",
+      "birthdate": "Datum rođenja",
+      "send_code": "Poslati kod",
+      "code_intro": "Unesite 6-cifreni kod iz SMS-a.",
+      "code": "Kod",
+      "submit": "Prijaviti se",
+      "demo_code": "Demo: SMS se ne šalje. Vaš kod je {code}.",
+      "wrong_code": "Kod nije tačan ili je istekao.",
+      "blocked": "Previše pokušaja. Pokušajte ponovo kasnije.",
+      "too_many_codes": "Na ovaj broj je već poslano nekoliko kodova. Pričekajte sat vremena ili nas nazovite."
+    },
+    "invite": {
+      "title": "Dobro došli",
+      "hello": "Dobar dan, {name}. {practice} vas poziva da koristite aplikaciju.",
+      "what": "U aplikaciji vidite svoje vježbe i termine, opisujete tegobe na svom jeziku i pišete praksi.",
+      "code": "Kod iz prakse",
+      "code_hint": "6-cifreni kod ste dobili u praksi ili putem SMS-a.",
+      "privacy_title": "Vaši podaci",
+      "privacy_text": "Vaši podaci ostaju na serveru vaše prakse u Švicarskoj. Vaša terapeutkinja ili vaš terapeut vidi šta unesete. Pristup možete završiti u svakom trenutku.",
+      "consent": "Slažem se da koristim aplikaciju.",
+      "consent_translation": "Moji tekstovi smiju biti mašinski prevedeni na serveru prakse.",
+      "consent_translation_remote": "Moji tekstovi smiju biti mašinski prevedeni – na AI serveru u Švicarskoj (šalju se šifrovano, tamo se ništa ne čuva).",
+      "start": "Pokrenuti aplikaciju",
+      "need_consent": "Molimo potvrdite svoju saglasnost.",
+      "wrong_code": "Kod nije tačan.",
+      "invalid": "Ova pozivnica je istekla ili je već iskorištena.",
+      "invalid_hint": "Zatražite od prakse novu pozivnicu ili se prijavite brojem mobitela."
+    },
+    "sms": {
+      "invite": "Dobar dan {name}, vaša aplikacija za fizioterapiju: {url} – kod: {code}",
+      "login": "Vaš kod za prijavu: {code} (vrijedi 15 minuta)"
+    },
+    "privacy": {
+      "title": "Zaštita podataka",
+      "link": "Izjava o zaštiti podataka",
+      "controller_title": "Odgovorni",
+      "controller_generic": "Odgovorna je ordinacija koja Vas je pozvala u aplikaciju. Njene kontakt podatke naći ćete u aplikaciji pod «Profil».",
+      "data_title": "Koji podaci",
+      "data": "Vaši lični i kontakt podaci, podaci o osiguranju, ljekarski recepti i izvještaji, bilješke o liječenju i mjerenja, kao i ono što unosite u aplikaciju (vježbe, bolovi, poruke, zahtjevi, serije treninga). Zdravstveni podaci su posebno osjetljivi.",
+      "purpose_title": "Za šta",
+      "purpose": "Za Vaše liječenje, planiranje termina, obračun s Vašim osiguranjem i saradnju s Vašim ljekarom – ne za reklamu.",
+      "where_title": "Gdje su podaci",
+      "where": "Na serveru ordinacije u Švicarskoj. Vaši podaci se ne šalju u inostranstvo. Video sesije idu preko vlastitog video servera ordinacije u Švicarskoj i ne snimaju se.",
+      "who_title": "Ko ih vidi",
+      "who": "Samo stručne osobe Vašeg tima za liječenje i, za termine i račune, recepcija. Izvještaji ljekarima šalju se šifrovano preko HIN-a, računi Vašem osiguranju. SMS poruke šalje pružalac usluga u Švicarskoj; e-mailovi samo uz Vašu saglasnost. Svi podliježu profesionalnoj tajni.",
+      "processor_title": "Softver i tehnika",
+      "processor": "Softver N-Fizyo je od NSystem GmbH, Biel/Bienne. NSystem vodi tehniku po nalogu ordinacije, obavezan je na čuvanje tajne i u normalnom radu ne vidi podatke pacijenata. Prevođenje i prepoznavanje govora rade na serveru ordinacije ili na serveru NSystema u Švicarskoj koji ništa ne sprema.",
+      "consent_title": "Vaša saglasnost",
+      "consent": "Za aplikaciju, e-mailove, Vaše vlastite video snimke vježbi i video sesije tražimo Vašu saglasnost. Možete je povući u bilo kojem trenutku – u aplikaciji pod «Profil» ili u ordinaciji.",
+      "retention_title": "Koliko dugo",
+      "retention": "Ordinacija čuva dokumentaciju liječenja onoliko dugo koliko zakon zahtijeva. Svoje video snimke vježbi možete izbrisati u bilo kojem trenutku. Kodovi za prijavu i linkovi brzo ističu.",
+      "rights_title": "Vaša prava",
+      "rights": "Možete zatražiti informacije o svojim podacima, ispraviti netačne podatke i usprotiviti se obradi, osim ako je zakon zahtijeva. Obratite se ordinaciji. Za pitanja o zaštiti podataka možete se obratiti i Saveznom povjereniku za zaštitu podataka i transparentnost (EDÖB).",
+      "version": "Stanje: novembar 2026"
+    }
+  },
+  "_review": "Erstübersetzung NSystem – vor Einsatz von Muttersprachler/in prüfen lassen."
+}

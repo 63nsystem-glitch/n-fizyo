@@ -1,0 +1,27 @@
+{% extends "central/layout.html" %}
+{% block content %}
+<h1 style="margin-bottom:16px">Boxen</h1>
+{% if backup.known and backup.problem %}<div class="banner warn" style="margin-bottom:12px">{{ icon('warning', 20) }}<span>{{ backup.problem }}{% if backup.age_h is not none %} · letzte Sicherung vor {{ backup.age_h | round(0) | int }} h{% endif %}</span></div>
+{% elif backup.known %}<p class="small muted" style="margin-bottom:12px">Sicherung des Panels: vor {{ backup.age_h | round(0) | int }} h · extern {{ backup.offsite or '–' }}</p>
+{% else %}<p class="small muted" style="margin-bottom:12px">Sicherung des Panels: noch kein Ergebnis (n-fizyo-central-backup.timer, docs/MERKEZ.md)</p>{% endif %}
+<section class="card" style="padding:0;overflow:hidden">
+  <div class="table-wrap"><table class="table">
+    <thead><tr><th></th><th>Box</th><th>Version</th><th>Letzte Meldung</th><th>Sicherung</th><th>Speicher</th><th>KI</th><th>Checkliste</th><th>Support</th><th>Warnungen</th></tr></thead>
+    <tbody>
+    {% for r in rows %}{% set rep = r.rep %}
+    <tr>
+      <td><span class="dot {{ r.state }}" title="{{ r.state }}"></span></td>
+      <td><a href="/box/{{ r.box.id }}"><strong>{{ r.box.name }}</strong></a><br><span class="small muted mono">{{ r.box.id }}</span></td>
+      <td class="mono">{{ r.box.last_version or '–' }}</td>
+      <td>{% if r.age is none %}nie{% elif r.age < 60 %}vor {{ r.age }} min{% else %}vor {{ (r.age / 60) | round(1) }} h{% endif %}</td>
+      <td>{% set b = (rep.get('runner') or {}).get('backup_age_h') %}{{ '–' if b is none else (b | round(0) | int) ~ ' h' }}</td>
+      <td>{{ (rep.get('disk') or {}).get('used_pct', '–') }} %</td>
+      <td>{% for k, v in (rep.get('ai') or {}).items() if k in ('stt', 'llm', 'translate') %}<span class="pill-label {{ 'ok' if v else 'error' }}">{{ k }}</span> {% endfor %}</td>
+      <td>{{ r.check_done }}/{{ r.check_total }}</td>
+      <td>{% if r.support.open %}<span class="pill-label warn">Support offen bis {{ local(r.support.until)[11:] }}</span>{% else %}<span class="small muted">–</span>{% endif %}</td>
+      <td class="small">{% for a in r.alerts %}{{ a.message }}{% if not loop.last %}<br>{% endif %}{% else %}–{% endfor %}</td>
+    </tr>
+    {% else %}<tr><td colspan="10" class="muted">Noch keine Box. Anlegen auf dem Server: <span class="mono">python -m nfizyo.central --env … add-box --name "Praxis"</span></td></tr>{% endfor %}
+    </tbody></table></div>
+</section>
+{% endblock %}

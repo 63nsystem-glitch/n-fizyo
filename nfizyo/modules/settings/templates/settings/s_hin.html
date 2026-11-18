@@ -1,0 +1,46 @@
+{% extends "ui/settings.html" %}
+{% block settings %}
+<div class="grid-main-side">
+  <div class="col stack">
+    <section class="card stack-s">
+      <h2>{{ t('hin.title') }}</h2>
+      {% if owns %}
+      <p class="row" style="gap:8px">{{ icon('verified_user', 20) }}<span>{{ t('hin.connected', address=address) }}</span></p>
+      <div class="list">
+        <div class="list-item" style="padding-inline:0"><span class="lead avatar">{{ icon('outgoing_mail', 20) }}</span>
+          <span class="body"><span class="title">{{ t('hin.send') }}</span></span>
+          <span class="trail"><span class="pill-label ok">{{ t('hin.on') }}</span></span></div>
+        <div class="list-item" style="padding-inline:0"><span class="lead avatar">{{ icon('move_to_inbox', 20) }}</span>
+          <span class="body"><span class="title">{{ t('hin.receive') }}</span><br><span class="sub">{% if receive %}{{ t('hin.every', n=poll) }}{% else %}{{ t('hin.receive_off') }}{% endif %}</span></span>
+          <span class="trail"><span class="pill-label {{ 'ok' if receive else 'warn' }}">{{ t('hin.on') if receive else t('hin.off') }}</span></span></div>
+      </div>
+      <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}">
+        <button class="btn tonal" type="submit">{{ icon('sync', 18) }}{{ t('hin.test') }}</button></form>
+      {% if test %}
+      <div class="banner {{ 'ok' if test.ok else 'error' }}">{{ icon('check_circle' if test.ok else 'error', 20) }}
+        <span>{{ t('hin.test_ok') if test.ok else t('hin.test_fail', error=test.error) }}</span></div>
+      {% endif %}
+      {% else %}
+      <div class="banner info">{{ icon('info', 20) }}<span>{{ t('hin.not_configured') }}</span></div>
+      {% endif %}
+      {% if missing_hin %}<p class="small muted">{{ t('hin.missing', n=missing_hin) }}</p>{% endif %}
+    </section>
+    <section class="card flush">
+      <h2 style="padding:16px 16px 8px">{{ t('hin.recent') }}</h2>
+      {% if sent %}
+      <div class="table-wrap"><table class="table"><thead><tr><th>{{ t('sms.when') }}</th><th>{{ t('sms.to') }}</th><th>{{ t('hin.what') }}</th><th>{{ t('sms.status') }}</th></tr></thead><tbody>
+      {% for m in sent %}<tr><td>{{ fmt_date(m.created_at, year=False) }} {{ fmt_time(m.created_at) }}</td><td>{{ m.recipient }}</td><td>{{ m.body }}</td>
+        <td><span class="pill-label {{ 'ok' if m.status == 'sent' else 'error' }}">{{ t('sms.st.' ~ m.status) }}</span>{% if m.error %}<br><span class="small muted">{{ m.error }}</span>{% endif %}</td></tr>{% endfor %}
+      </tbody></table></div>
+      {% else %}<p class="muted" style="padding:0 16px 16px">{{ t('hin.none') }}</p>{% endif %}
+    </section>
+  </div>
+  <div class="col stack">
+    <section class="card stack-s">
+      <h2>{{ t('hin.how_title') }}</h2>
+      <p class="small">{{ t('hin.how') }}</p>
+      <p class="small muted">{{ t('hin.secrets') }}</p>
+    </section>
+  </div>
+</div>
+{% endblock %}

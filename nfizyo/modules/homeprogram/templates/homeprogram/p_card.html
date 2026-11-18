@@ -1,0 +1,5 @@
+<a class="card" href="/p/uebungen" style="display:block;text-decoration:none;color:inherit">
+  <div class="row-between"><h2>{{ icon('fitness_center', 20) }} {{ t('p.home.exercises') }}</h2><span class="pill-label {{ 'ok' if ctx.done_today >= ctx.total else 'info' }}">{{ ctx.done_today }}/{{ ctx.total }}</span></div>
+  <p class="small muted" style="margin-top:6px">{{ t('p.home.exercises_hint') }}</p>
+  <div class="progress" style="margin-top:10px"><span style="width:{{ (100 * ctx.done_today / (ctx.total or 1)) | round(0) }}%"></span></div>
+</a>

@@ -1,0 +1,64 @@
+{% extends "layouts/staff.html" %}
+{% block title %}{{ t('nav.team') }}{% endblock %}
+{% block subtitle %}{{ t('settings.team_hint') }}{% endblock %}
+{% block content %}
+{% if new_password %}
+<div class="banner warn" style="margin-bottom:16px" role="alert">{{ icon('key', 20) }}
+  <div><strong>{{ t('settings.temp_pw_title', name=new_password.name) }}</strong><br>
+    {{ new_password.email }} · <span class="mono" style="font-size:18px;user-select:all">{{ new_password.password }}</span><br>
+    <span class="small">{{ t('settings.temp_pw_hint') }}</span></div></div>
+{% endif %}
+<div class="grid-main-side">
+  <section class="card flush">
+    <div class="list">
+      {% for u in users %}
+      <details class="list-item-details"{% if not u.active %} style="opacity:.6"{% endif %}>
+        <summary class="list-item">
+          <span class="lead avatar">{{ u.initials }}</span>
+          <span class="body"><span class="title">{{ u.name }}{% if u.id == user.id %} · {{ t('settings.you') }}{% endif %}</span><br><span class="sub">{{ u.email }}{% if u.gln %} · GLN {{ u.gln }}{% endif %}</span></span>
+          <span class="trail">{% for r in roles if r in u.role_set %}<span class="pill-label{{ ' info' if r == 'owner' else '' }}">{{ t('settings.role.' ~ r) }}</span>{% endfor %}{% if u.totp_enabled_at %}<span class="pill-label ok">{{ t('mfa.team_on') }}</span>{% else %}<span class="pill-label warn">{{ t('mfa.team_off') }}</span>{% endif %}{% if not u.active %}<span class="pill-label error">{{ t('settings.inactive') }}</span>{% endif %}{{ icon('keyboard_arrow_down', 20) }}</span>
+        </summary>
+        <div class="stack-s" style="padding:0 16px 16px 76px">
+          <form method="post" class="row" style="gap:8px;flex-wrap:wrap;align-items:flex-end">
+            <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="update"><input type="hidden" name="user_id" value="{{ u.id }}">
+            <fieldset class="field" style="border:0;padding:0;margin:0"><legend class="small muted" style="margin-bottom:6px">{{ t('settings.roles_label') }}</legend>
+              <div class="chips">{% for r in roles %}<label class="chip"><input type="checkbox" name="role" value="{{ r }}"{% if r in u.role_set %} checked{% endif %}> {{ t('settings.role.' ~ r) }}</label>{% endfor %}</div></fieldset>
+            <div class="field"><label for="g{{ u.id }}">GLN</label><input id="g{{ u.id }}" name="gln" value="{{ u.gln or '' }}" maxlength="13" inputmode="numeric" style="width:160px"></div>
+            <div class="field"><label for="z{{ u.id }}">ZSR</label><input id="z{{ u.id }}" name="zsr" value="{{ u.zsr or '' }}" maxlength="20" style="width:120px"></div>
+            <button class="btn" type="submit">{{ t('common.save') }}</button>
+          </form>
+          {% if u.id != user.id %}
+          <div class="row" style="gap:8px;flex-wrap:wrap">
+            <form method="post" data-confirm="{{ t('settings.reset_confirm', name=u.name) }}" data-confirm-yes="{{ t('settings.reset_pw') }}"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="reset"><input type="hidden" name="user_id" value="{{ u.id }}">
+              <button class="btn text sm" type="submit">{{ icon('lock_reset', 18) }}{{ t('settings.reset_pw') }}</button></form>
+            {% if u.totp_enabled_at %}
+            <form method="post" data-confirm="{{ t('mfa.reset_confirm', name=u.name) }}" data-confirm-yes="{{ t('mfa.reset') }}"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="mfa_reset"><input type="hidden" name="user_id" value="{{ u.id }}">
+              <button class="btn text sm" type="submit">{{ icon('security', 18) }}{{ t('mfa.reset') }}</button></form>
+            {% endif %}
+            <form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="{{ 'deactivate' if u.active else 'activate' }}"><input type="hidden" name="user_id" value="{{ u.id }}">
+              <button class="btn text sm" type="submit"{% if u.active %} style="color:var(--error)"{% endif %}>{{ t('settings.deactivate') if u.active else t('settings.activate') }}</button></form>
+          </div>
+          {% endif %}
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+  <section class="card">
+    <h2 style="margin-bottom:4px">{{ t('settings.add_user') }}</h2>
+    <p class="small muted" style="margin-bottom:16px">{{ t('settings.add_user_hint') }}</p>
+    <form method="post" class="form">
+      <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="add">
+      <div class="field"><label for="nu_name">{{ t('settings.name') }}</label><input id="nu_name" name="name" required maxlength="120"></div>
+      <div class="field"><label for="nu_email">{{ t('settings.email') }}</label><input id="nu_email" name="email" type="email" required></div>
+      <div class="row" style="gap:12px;flex-wrap:wrap">
+        <fieldset class="field grow" style="border:0;padding:0;margin:0"><legend class="small muted" style="margin-bottom:6px">{{ t('settings.roles_label') }}</legend>
+          <div class="chips">{% for r in roles %}<label class="chip"><input type="checkbox" name="role" value="{{ r }}"{% if r == 'therapist' %} checked{% endif %}> {{ t('settings.role.' ~ r) }}</label>{% endfor %}</div></fieldset>
+        <div class="field"><label for="nu_lang">{{ t('settings.ui_lang') }}</label><select id="nu_lang" name="lang"><option value="de">Deutsch</option><option value="fr">Français</option></select></div>
+      </div>
+      <div class="field"><label for="nu_gln">GLN</label><input id="nu_gln" name="gln" maxlength="13" inputmode="numeric"></div>
+      <div class="form-actions"><button class="btn" type="submit">{{ icon('add', 18) }}{{ t('settings.add_user') }}</button></div>
+    </form>
+  </section>
+</div>
+{% endblock %}

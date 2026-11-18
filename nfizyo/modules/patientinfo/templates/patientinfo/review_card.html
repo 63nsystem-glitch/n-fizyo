@@ -1,0 +1,20 @@
+{# Liegt im Freigabe-Formular des Diktats: wird zusammen mit der Notiz freigegeben. #}
+<section class="card stack-s" id="pi-card" aria-labelledby="h-pi">
+  <div class="card-head"><h2 id="h-pi">{{ icon('info', 20) }} {{ t('patientinfo.title') }}</h2>
+    {% if ctx.foreign %}<span class="chip info">{{ icon('translate', 16) }}{{ ctx.target_name }}</span>{% endif %}</div>
+  {% if ctx.foreign and not ctx.translate_on %}
+  <div class="banner warn" role="note">{{ icon('translate') }}<span>{{ t('patientinfo.review_hint_no_translator', language=ctx.target_name) }}</span></div>
+  {% else %}
+  <p class="small muted">{{ t('patientinfo.review_hint', language=ctx.target_name) if ctx.foreign else t('patientinfo.review_hint_same') }}</p>
+  {% endif %}
+  {% if ctx.pending %}<p class="small" data-pi-wait="{{ S }}/patienteninfo/{{ ctx.info.id }}/status">{{ icon('hourglass_top', 16) }} {{ t('patientinfo.preparing') }}</p>{% endif %}
+  {% for w in ctx.warnings %}<p class="small muted">{{ icon('info', 14) }} {{ t(w) }}</p>{% endfor %}
+  <div class="field"><label for="pi_home">{{ t('patientinfo.home') }}</label>
+    <textarea id="pi_home" name="pi_home" rows="3" data-autogrow maxlength="1500" placeholder="{{ t('patientinfo.home_ph') }}">{{ ctx.info.home or '' }}</textarea></div>
+  <div class="field"><label for="pi_contact">{{ t('patientinfo.contact') }}</label>
+    <textarea id="pi_contact" name="pi_contact" rows="2" data-autogrow maxlength="1500" placeholder="{{ t('patientinfo.contact_ph') }}">{{ ctx.info.contact or '' }}</textarea>
+    <button type="button" class="btn text sm" data-pi-default="{{ t('patientinfo.contact_default') }}" style="align-self:flex-start">{{ icon('add', 16) }}{{ t('patientinfo.insert_default') }}</button></div>
+  <label class="check"><input type="checkbox" name="pi_send" value="1"{% if ctx.info.home or ctx.info.contact or ctx.pending %} checked{% endif %}> {{ t('patientinfo.send', language=ctx.target_name) }}</label>
+  <p class="ai-note">{{ icon('lock', 14) }}{{ t('patientinfo.no_advice') }}</p>
+</section>
+<script src="{{ static('js/patientinfo.js') }}" defer></script>

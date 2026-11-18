@@ -1,0 +1,95 @@
+{% extends "layouts/staff.html" %}
+{% block title %}{{ t('stats.overview') }}{% endblock %}
+{% block subtitle %}{{ t('stats.subtitle') }}{% endblock %}
+{% block content %}
+<div class="stack">
+  <div class="tiles">
+    {% for x in tiles %}
+    <{{ 'a' if x.href else 'div' }} class="tile"{% if x.href %} href="{{ x.href }}" style="text-decoration:none;color:inherit"{% endif %}><span class="tile-label">{{ t(x.label_key) }}</span><span class="tile-value">{{ x.value }}</span>
+      {% if x.sub_key %}<span class="tile-sub">{{ t(x.sub_key, **(x.sub_args or {})) }}</span>{% endif %}</{{ 'a' if x.href else 'div' }}>
+    {% endfor %}
+  </div>
+
+  <div class="grid-main-side">
+    <div class="col">
+    <section class="card">
+      <div class="card-head"><h2>{{ t('stats.sessions_per_week') }}</h2><span class="meta">{{ t('stats.done_only') }}</span></div>
+      <figure class="chart" style="margin:0">
+        <svg viewBox="0 -14 {{ chart.w }} {{ chart.h + 14 }}" role="img" aria-label="{{ t('stats.sessions_per_week') }}" style="width:100%;height:auto;display:block">
+          {% for tk in chart.ticks %}
+          <line x1="{{ chart.left }}" x2="{{ chart.w }}" y1="{{ tk.y }}" y2="{{ tk.y }}" class="grid{{ ' base' if tk.v == 0 else '' }}"/>
+          <text x="{{ chart.left - 6 }}" y="{{ tk.y + 4 }}" class="tick" text-anchor="end">{{ tk.v }}</text>
+          {% endfor %}
+          {% for b in chart.bars %}
+          <g class="bar-g">
+            <rect x="{{ b.x - 4 }}" y="0" width="{{ b.w + 8 }}" height="{{ chart.base }}" class="hit"><title>{{ t('stats.week_of', date=b.label) }}: {{ t('stats.n_done', n=b.r.done) }}{% if b.r.no_show %} · {{ t('stats.n_no_show', n=b.r.no_show) }}{% endif %}</title></rect>
+            {% if b.h %}<path d="M{{ b.x }},{{ chart.base }} V{{ b.y + 4 }} Q{{ b.x }},{{ b.y }} {{ b.x + 4 }},{{ b.y }} H{{ b.x + b.w - 4 }} Q{{ b.x + b.w }},{{ b.y }} {{ b.x + b.w }},{{ b.y + 4 }} V{{ chart.base }} Z" class="bar{{ ' running' if loop.last else '' }}"/>{% endif %}
+            {% if b.r.done %}<text x="{{ b.x + b.w / 2 }}" y="{{ b.y - 6 }}" class="val{{ ' running' if loop.last else '' }}" text-anchor="middle">{{ b.r.done }}</text>{% endif %}
+            <text x="{{ b.x + b.w / 2 }}" y="{{ chart.h - 6 }}" class="tick" text-anchor="middle">{{ b.label }}</text>
+          </g>
+          {% endfor %}
+        </svg>
+        <figcaption class="chart-note"><i class="sw running" aria-hidden="true"></i>{{ t('stats.week_running') }}</figcaption>
+        <details class="small" style="margin-top:8px"><summary class="muted">{{ t('stats.as_table') }}</summary>
+          <table class="table" style="margin-top:8px"><thead><tr><th>{{ t('stats.week') }}</th><th class="num">{{ t('stats.done') }}</th><th class="num">{{ t('stats.no_show_short') }}</th></tr></thead>
+            <tbody>{% for r in weeks %}<tr><td>{{ fmt_date(r.week) }}</td><td class="num">{{ r.done }}</td><td class="num">{{ r.no_show }}</td></tr>{% endfor %}</tbody></table>
+        </details>
+      </figure>
+    </section>
+    <section class="card stack-s">
+      <h2>{{ t('stats.utilisation') }}</h2>
+      <p class="small muted">{{ t('stats.utilisation_hint') }}</p>
+      {% for u in util %}
+      <div class="meter-row">
+        <span class="meter-name">{{ u.name }}</span>
+        <span class="meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ u.pct }}" aria-label="{{ u.name }}"><span style="width:{{ u.pct }}%"></span></span>
+        <span class="meter-val mono">{{ pct(u.pct, 0) }}</span>
+        <span class="meter-sub small muted">{{ t('stats.hours', booked=u.booked_h | round(1) | num, avail=u.avail_h | round(1) | num) }}</span>
+      </div>
+      {% else %}<p class="muted small">{{ t('stats.no_hours') }}</p>{% endfor %}
+    </section>
+    {#- Karten anderer Module (z. B. Einrichtung der Praxis) unter dem Diagramm – keine Lücke neben der rechten Spalte -#}
+    {% for c in cards %}{% with ctx = c.ctx %}{% include c.template %}{% endwith %}{% endfor %}
+    </div>
+    <div class="col">
+    <section class="card stack-s">
+      <h2>{{ t('stats.open_work') }}</h2>
+      <div class="list">
+        {% for w in work %}
+        <{{ 'a' if w.href else 'div' }} class="list-item"{% if w.href %} href="{{ w.href }}"{% endif %} style="padding-inline:0">
+          <span class="lead avatar">{{ icon(w.icon or 'pending_actions', 20) }}</span>
+          <span class="body"><span class="title">{{ t(w.label_key) }}</span>{% if w.hint_key %}<br><span class="sub">{{ t(w.hint_key) }}</span>{% endif %}</span>
+          <span class="trail"><strong class="mono" style="font-size:18px">{{ w.n }}</strong>{% if w.href %}{{ icon('chevron_right', 20, 'flip-rtl') }}{% endif %}</span>
+        </{{ 'a' if w.href else 'div' }}>
+        {% else %}<p class="muted small">{{ t('stats.nothing_open') }}</p>{% endfor %}
+      </div>
+    </section>
+    <section class="card stack-s">
+      <h2>{{ t('stats.languages') }}</h2>
+      <p class="small muted">{{ t('stats.languages_hint', n=foreign, total=total_patients) }}</p>
+      {% for l in lang_rows %}
+      <div class="meter-row">
+        <span class="meter-name">{{ l.name }}</span>
+        <span class="meter" aria-hidden="true"><span style="width:{{ l.pct }}%"></span></span>
+        <span class="meter-val mono">{{ l.n }}</span>
+      </div>
+      {% endfor %}
+      <h2 style="margin-top:16px">{{ t('stats.app_title') }}</h2>
+      <dl class="facts">
+        {% for u in usage %}<dt>{{ t(u.label_key) }}</dt><dd>{{ u.n }}</dd>{% else %}<dt>–</dt><dd></dd>{% endfor %}
+      </dl>
+      <h2 style="margin-top:16px">{{ t('stats.ai_title') }}</h2>
+      {% if ai_perf and ai_perf.n %}
+      <dl class="facts">
+        <dt>{{ t('stats.ai_jobs') }}</dt><dd>{{ ai_perf.n }}</dd>
+        <dt>{{ t('stats.ai_wait') }}</dt><dd>{{ t('stats.seconds', n=ai_perf.wait_avg | round(0) | int) }} · max. {{ t('stats.seconds', n=ai_perf.wait_max | round(0) | int) }}</dd>
+        <dt>{{ t('stats.ai_work') }}</dt><dd>{{ t('stats.seconds', n=ai_perf.work_avg | round(0) | int) }}</dd>
+        <dt>{{ t('stats.ai_sum') }}</dt><dd>{{ t('stats.minutes', n=(ai_perf.work_sum / 60) | round(0) | int) }}</dd>
+      </dl>
+      <p class="small muted">{{ t('stats.ai_hint') }}</p>
+      {% else %}<p class="small muted">{{ t('stats.ai_none') }}</p>{% endif %}
+    </section>
+    </div>
+  </div>
+</div>
+{% endblock %}

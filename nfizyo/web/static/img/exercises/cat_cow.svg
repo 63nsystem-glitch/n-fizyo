@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <title>Katze und Kuh</title>
+  <g id="fig" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 186 L300 186" stroke-width="3" opacity="0.3"/>
+    <path d="M116.0 132.7 Q144.1 156.7 172.2 120.7" stroke-width="13" opacity="0.2"/>
+    <path d="M172.2 120.7 L187.2 108.1" stroke-width="10" opacity="0.2"/>
+    <circle cx="187.2" cy="108.1" r="12.6" fill="currentColor" stroke="none" opacity="0.2"/>
+    <path d="M116 132.7 Q144.1 86.7 172.2 120.7" stroke-width="13" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M172.2 120.7 L179.6 138.8" stroke-width="10" style="stroke:var(--ex-accent, #D9661F)"/>
+    <circle cx="179.6" cy="138.8" r="12.6" stroke="none" style="fill:var(--ex-accent, #D9661F)"/>
+    <path d="M116 132.7 L116 181 L70 181" stroke-width="10"/>
+    <path d="M70 181 L55.5 182" stroke-width="8"/>
+    <path d="M172.2 120.7 L173.2 150.8 L174.2 181" stroke-width="10"/>
+    <path d="M144.1 91.2 L144.1 72.2" stroke-width="4" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M144.1 66.7 L148.7 75.6 L139.5 75.6 Z" stroke-width="2.5" style="fill:var(--ex-accent, #D9661F);stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M144.1 96.7 L139.5 87.8 L148.7 87.8 Z" stroke-width="2.5" style="fill:var(--ex-accent, #D9661F);stroke:var(--ex-accent, #D9661F)"/>
+  </g>
+</svg>

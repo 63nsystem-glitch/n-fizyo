@@ -1,0 +1,32 @@
+{# Eine Antwort des Versicherers: r = Antwort, labels = {record_id: Zeilentext} (optional), show_invoice = Rechnung verlinken #}
+{% set pill = {'rejected': 'error', 'pending': 'info', 'notification': 'warn', 'accepted': 'ok'}[r.kind] %}
+<div class="stack-s" style="padding:8px 0">
+  <div class="row" style="gap:8px;flex-wrap:wrap;align-items:center">
+    <span class="pill-label {{ pill }}">{{ t('billing.resp.kind_' ~ r.kind) }}</span>
+    {% if r.modus == 'test' %}<span class="pill-label">Test</span>{% endif %}
+    {% if show_invoice %}{% if r.invoice_id %}<a href="{{ S }}/rechnungen/{{ r.invoice_id }}"><strong>{{ r.number }}</strong></a> · {{ r.first_name }} {{ r.last_name }}{% else %}<strong>{{ r.request_id }}</strong> · <span class="muted">{{ t('billing.resp.unmatched') }}</span>{% endif %}{% endif %}
+    <span class="small muted">{{ r.insurer_name or ('GLN ' ~ r.insurer_gln if r.insurer_gln else '') }}{% if r.response_at %} · {{ fmt_date(r.response_at) }}{% endif %}{% if r.request_type == 'reminder' %} · {{ t('billing.resp.for_reminder', n=r.reminder_level or 1) }}{% endif %}</span>
+  </div>
+  {% if r.encrypted %}<p class="small">{{ t('billing.resp.encrypted') }}</p>{% endif %}
+  {% if r.explanation %}<p class="small">{{ r.explanation }}</p>{% endif %}
+  {% if r.notices %}
+  <ul class="small" style="margin:0 0 0 18px">
+    {% for n in r.notices %}<li><span class="mono">{{ n.code }}</span> {{ n.text }}{% if n.record_id %} · {{ t('billing.resp.line', n=n.record_id) }}{% if labels and n.record_id in labels %} ({{ labels[n.record_id] }}){% endif %}{% endif %}{% if n.error_value or n.valid_value %} · {{ t('billing.resp.values', bad=n.error_value or '–', good=n.valid_value or '–') }}{% endif %}</li>{% endfor %}
+  </ul>
+  {% endif %}
+  {% if r.kind == 'accepted' and r.amount_due is not none %}<p class="small">{{ t('billing.resp.amount_due', chf=chf(r.amount_due)) }}</p>{% endif %}
+  {% if r.handled_at %}<p class="small muted">{{ icon('task_alt', 14) }} {{ t('billing.resp.handled_by', name=r.handler_name or '–', date=fmt_date(r.handled_at)) }}{% if r.handled_note %} · {{ r.handled_note }}{% endif %}</p>
+  {% else %}
+  <div class="row" style="gap:8px;flex-wrap:wrap">
+    {% if show_invoice and not r.invoice_id %}
+    <form method="post" action="{{ S }}/abrechnung" class="row" style="gap:6px"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="resp_assign"><input type="hidden" name="response_id" value="{{ r.id }}">
+      <input name="number" class="select-sm" style="width:120px" placeholder="{{ t('billing.pay.number_ph') }}" aria-label="{{ t('billing.pay.number_ph') }}" required>
+      <button class="btn tonal sm" type="submit">{{ t('billing.pay.assign') }}</button></form>
+    {% endif %}
+    <form method="post" action="{{ S ~ '/abrechnung' if show_invoice else '' }}" class="row" style="gap:6px"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="do" value="resp_handled"><input type="hidden" name="response_id" value="{{ r.id }}">
+      <input name="note" class="select-sm" style="width:200px" maxlength="300" placeholder="{{ t('billing.resp.note_ph') }}" aria-label="{{ t('billing.resp.note_ph') }}">
+      <button class="btn text sm" type="submit">{{ icon('task_alt', 16) }}{{ t('billing.resp.mark_handled') }}</button></form>
+    <a class="btn text sm" href="{{ S }}/abrechnung/antworten/{{ r.id }}/xml">{{ icon('download', 16) }}XML</a>
+  </div>
+  {% endif %}
+</div>

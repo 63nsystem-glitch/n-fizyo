@@ -1,0 +1,24 @@
+{% extends "layouts/staff.html" %}
+{% block back %}<a class="icon-btn" href="{{ S }}/patienten/{{ patient.id }}" aria-label="{{ t('common.back') }}">{{ icon('arrow_back', 24, 'flip-rtl') }}</a>{% endblock %}
+{% block title %}{{ t('patients.archive_title') }}{% endblock %}
+{% block subtitle %}{{ patient.first_name }} {{ patient.last_name }} · {{ patient.number }}{% endblock %}
+{% block content %}
+<section class="card stack-s" style="max-width:720px" data-archive-future>
+  <div class="banner warn" role="status">{{ icon('event', 20) }}<span>{{ t('patients.archive_future', n=future | length) }}</span></div>
+  <div class="list">
+    {% for a in future %}
+    <div class="list-item" style="padding-inline:0"><span class="lead avatar">{{ icon('event', 20) }}</span>
+      <span class="body"><span class="title">{{ fmt_date(a.starts_at, weekday=True) }} {{ fmt_time(a.starts_at) }}</span><br>
+        <span class="sub">{{ a.therapist_name }}{% if a.type_de %} · {{ a.type_fr if lang == 'fr' and a.type_fr else a.type_de }}{% endif %}{% if a.location_name %} · {{ a.location_name }}{% endif %}</span></span></div>
+    {% endfor %}
+  </div>
+  <form method="post" action="{{ S }}/patienten/{{ patient.id }}/archivieren" class="stack-s">
+    <input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="archive" value="1"><input type="hidden" name="confirm" value="1">
+    <label class="check"><input type="checkbox" name="cancel_future" value="1" checked>{{ t('patients.archive_cancel', n=future | length) }}</label>
+    <label class="check"><input type="checkbox" name="notify" value="1"{% if not can_sms %} disabled{% endif %}>{{ t('patients.archive_notify') }}{% if not can_sms %} <span class="small muted">({{ t('patients.archive_no_phone') }})</span>{% endif %}</label>
+    <p class="small muted">{{ t('patients.archive_confirm') }}</p>
+    <div class="form-actions"><a class="btn text" href="{{ S }}/patienten/{{ patient.id }}">{{ t('common.cancel') }}</a>
+      <button class="btn" type="submit">{{ icon('folder_open', 18) }}{{ t('patients.to_archive') }}</button></div>
+  </form>
+</section>
+{% endblock %}

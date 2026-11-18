@@ -1,0 +1,14 @@
+{
+  "p": {
+    "notify": {
+      "message": "{practice} size yeni bir mesaj gönderdi. Açmak için: {url}",
+      "info": "{practice} sizin için yeni bir bilgi paylaştı. Açmak için: {url}",
+      "appointment": "{practice} ile yeni bir randevunuz var. Ayrıntılar: {url}",
+      "several": "Uygulamanızda {practice} tarafından yenilikler var. Açmak için: {url}",
+      "mail_subject": "{practice}: yenilikler",
+      "mail_hello": "Merhaba",
+      "mail_privacy": "Verilerinizi korumak için içerik sadece uygulamada yer alır. Okumak için lütfen uygulamaya giriş yapın.",
+      "mail_bye": "Saygılarımızla\n{practice}"
+    }
+  }
+}

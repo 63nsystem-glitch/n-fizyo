@@ -1,0 +1,30 @@
+{
+  "p": {
+    "msg": {
+      "title": "Mesazhet",
+      "empty": "Ende nuk ka mesazhe.",
+      "write": "Mesazhi juaj",
+      "write_ph": "Shkruani në gjuhën tuaj.",
+      "reply_time": "Praktika zakonisht përgjigjet brenda një dite pune. Jo urgjenca përmes aplikacionit.",
+      "too_many": "Keni dërguar shumë mesazhe në pak kohë. Ju lutemi provoni përsëri më vonë ose telefononi praktikën.",
+      "sent": "Mesazhi u dërgua.",
+      "report_sent": "Njoftimi u dërgua. Praktika do ta shohë herën tjetër që hap.",
+      "problem": "Problem i njoftuar",
+      "machine": "Shfaq origjinalin (përkthim automatik)",
+      "reply": {
+        "same_day": "Praktika zakonisht përgjigjet në të njëjtën ditë pune.",
+        "next_day": "Praktika zakonisht përgjigjet deri në ditën tjetër të punës.",
+        "two_days": "Praktika zakonisht përgjigjet brenda dy ditëve të punës.",
+        "three_days": "Praktika zakonisht përgjigjet brenda tri ditëve të punës.",
+        "week": "Praktika zakonisht përgjigjet brenda një jave."
+      },
+      "no_emergency": "Jo urgjenca përmes aplikacionit."
+    },
+    "report": {
+      "title": "Njoftoni një problem",
+      "what": "Çfarë ndodhi?",
+      "what_ph": "p.sh. gjuri i fryrë pas shkallëve",
+      "send": "Dërgo"
+    }
+  }
+}

@@ -1,0 +1,4 @@
+<a class="card{{ ' info' if ctx.open else '' }}" href="/p/video/termin/{{ ctx.a.id }}" style="display:block;text-decoration:none;color:inherit">
+  <div class="row-between"><h2>{{ icon('videocam', 20) }} {{ t('p.video.card_title') }}</h2>{% if ctx.open %}<span class="pill-label ok">{{ t('p.video.open_now') }}</span>{% endif %}</div>
+  <p style="margin-top:6px">{{ fmt_long_date(ctx.start.date()) }}{{ '، ' if lang == 'ar' else ', ' }}<bdi>{{ fmt_time(ctx.start) }}</bdi> · <bdi>{{ ctx.a.therapist_name }}</bdi></p>
+</a>

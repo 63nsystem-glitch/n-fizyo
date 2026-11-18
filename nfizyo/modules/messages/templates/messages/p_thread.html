@@ -1,0 +1,12 @@
+{% extends "layouts/patient.html" %}
+{% import "messages/_bubble.html" as b with context %}
+{% block title %}{{ t('p.msg.title') }}{% endblock %}
+{% block content %}
+<div class="interp-log">{% for m in msgs %}{{ b.bubble(m, 'patient') }}{% else %}<p class="muted">{{ t('p.msg.empty') }}</p>{% endfor %}</div>
+<form method="post" class="card stack-s"><input type="hidden" name="_csrf" value="{{ csrf }}">
+  <div class="field"><label for="body">{{ t('p.msg.write') }}</label><textarea id="body" name="body" rows="3" dir="auto" data-autogrow required placeholder="{{ t('p.msg.write_ph') }}"></textarea></div>
+  <p class="small muted">{{ reply_time }}</p>
+  <button class="btn block" type="submit">{{ icon('send', 18) }}{{ t('common.send') }}</button>
+</form>
+<div class="emergency">{{ icon('emergency', 20) }}<span>{{ t('p.emergency') }}</span></div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{
+  "p": {
+    "mtt": {
+      "title": "Treino (MTT)",
+      "none": "Ainda não há plano de treino aprovado.",
+      "running": "a decorrer",
+      "card_hint": "{n} aparelhos – leia o código QR no aparelho.",
+      "left": "ainda {n} entradas",
+      "start": "Começar o treino",
+      "continue": "Continuar o treino",
+      "start_hint": "Ou leia o código QR no primeiro aparelho. Com uma assinatura, conta como uma entrada.",
+      "qr_hint": "Leia o código QR no aparelho ou toque num aparelho.",
+      "minutes": "{n} minutos",
+      "end": "Terminar o treino",
+      "stop": "Pare se tiver dores fortes e avise quem está a supervisionar. Em caso de emergência, ligue para o 144.",
+      "setting": "Regulação",
+      "last_time": "Última vez {date}",
+      "today": "Hoje",
+      "set_n": "Série {n}",
+      "log_set": "Registar a série {n}",
+      "log_cardio": "Registar",
+      "minutes_label": "Minutos",
+      "reps": "Repetições",
+      "load": "Peso (kg)",
+      "effort_q": "Foi difícil?",
+      "effort": {
+        "light": "leve",
+        "medium": "médio",
+        "hard": "pesado",
+        "very_hard": "muito pesado",
+        "max": "máximo"
+      },
+      "pain_q": "Dores?",
+      "save_set": "Guardar",
+      "saved": "Guardado",
+      "started": "Treino começado – bom treino!",
+      "ended": "Treino terminado – muito bem!",
+      "qr_unknown": "Este código QR é desconhecido.",
+      "qr_no_plan": "Ainda não tem um plano de treino aprovado.",
+      "qr_not_in_plan": "Este aparelho não está no seu plano. Pergunte a quem está a supervisionar.",
+      "to_plan": "Para o meu plano"
+    }
+  }
+}

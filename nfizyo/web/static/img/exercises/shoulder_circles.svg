@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <title>Schulterkreisen</title>
+  <g id="fig" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 186 L300 186" stroke-width="3" opacity="0.3"/>
+    <path d="M94.8 137 L159.8 137" stroke-width="5" opacity="0.45"/>
+    <path d="M100.8 137 L96.8 186" stroke-width="4" opacity="0.45"/>
+    <path d="M153.8 137 L157.8 186" stroke-width="4" opacity="0.45"/>
+    <path d="M126 129 L126 64" stroke-width="13"/>
+    <path d="M126 64 L126 41.9" stroke-width="10"/>
+    <circle cx="126" cy="41.9" r="14.3" fill="currentColor" stroke="none"/>
+    <path d="M126 129 L180.6 129 L180.6 181" stroke-width="10"/>
+    <path d="M180.6 181 L198.8 182" stroke-width="8"/>
+    <path d="M126 77 L127.5 118.6 L162.4 132.7" stroke-width="10"/>
+    <circle cx="126" cy="77" r="7.5" stroke="none" style="fill:var(--ex-accent, #D9661F)"/>
+    <path d="M140.6 86.6 L141.6 85.6 L142.5 84.5 L143.2 83.3 L143.9 82.1 L144.4 80.9 L144.7 79.6 L144.9 78.3 L145 77 L144.9 75.7 L144.7 74.4 L144.4 73.1 L143.9 71.9 L143.2 70.7 L142.5 69.5 L141.6 68.4 L140.6 67.4 L139.4 66.4 L138.2 65.5 L136.9 64.7 L135.5 64 L134 63.4 L132.5 62.9 L130.9 62.5 L129.3 62.2 L127.7 62.1 L126 62 L124.3 62.1 L122.7 62.2 L121.1 62.5 L119.5 62.9 L118 63.4 L116.5 64 L115.1 64.7 L113.8 65.5 L112.6 66.4 L111.4 67.4 L110.4 68.4 L109.5 69.5 L108.8 70.7 L108.1 71.9 L107.6 73.1 L107.3 74.4 L107.1 75.7 L107 77 L107.1 78.3 L107.3 79.6 L107.6 80.9 L108.1 82.1 L108.8 83.3 L109.5 84.5 L110.4 85.6 L111.4 86.6 L112.6 87.6 L113.8 88.5 L115.1 89.3 L116.5 90 L118 90.6 L119.5 91.1 L121.1 91.5 L122.2 91.7" stroke-width="4" style="stroke:var(--ex-accent, #D9661F)"/>
+    <path d="M127.7 91.9 L118.8 96.6 L118.8 87.3 Z" stroke-width="2.5" style="fill:var(--ex-accent, #D9661F);stroke:var(--ex-accent, #D9661F)"/>
+  </g>
+</svg>

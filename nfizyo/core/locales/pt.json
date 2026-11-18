@@ -1,0 +1,77 @@
+{
+  "_review": "Maschinennahe Erstübersetzung durch NSystem – vor Einsatz von Muttersprachler/in prüfen lassen.",
+  "common": {
+    "demo_ribbon": "Demo · dados fictícios",
+    "save": "Guardar",
+    "saved": "Guardado",
+    "cancel": "Cancelar",
+    "close": "Fechar",
+    "back": "Voltar",
+    "yes": "Sim",
+    "no": "Não",
+    "next": "Seguinte",
+    "done": "Concluído",
+    "send": "Enviar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "loading": "A carregar …",
+    "offline": "Sem ligação – será enviado mais tarde",
+    "retry": "Tentar novamente",
+    "today": "Hoje",
+    "tomorrow": "Amanhã",
+    "yesterday": "Ontem",
+    "region": {
+      "head": "Cabeça",
+      "neck": "Pescoço / nuca",
+      "trapezius": "Nuca / ombro",
+      "chest": "Peito",
+      "abs": "Barriga",
+      "obliques": "Lado do corpo",
+      "front_deltoids": "Ombro (frente)",
+      "back_deltoids": "Ombro (trás)",
+      "biceps": "Braço (frente)",
+      "triceps": "Braço (trás)",
+      "forearm": "Antebraço / mão",
+      "upper_back": "Parte superior das costas",
+      "lower_back": "Parte inferior das costas",
+      "gluteal": "Nádega / anca",
+      "abductors": "Virilha / parte interna da coxa",
+      "quadriceps": "Coxa (frente)",
+      "hamstring": "Coxa (trás)",
+      "knees": "Joelho",
+      "calves": "Perna / pé",
+      "soleus": "Barriga da perna / calcanhar"
+    },
+    "side": {
+      "l": "(lado esquerdo)",
+      "r": "(lado direito)"
+    },
+    "hold_s": "manter {n} s",
+    "per_day": "{n}× por dia",
+    "search": "Pesquisar"
+  },
+  "p": {
+    "mail": {
+      "footer": "Esta mensagem foi enviada automaticamente por {practice}. Em caso de emergência, ligue 144."
+    },
+    "error": {
+      "title_403": "Sem acesso",
+      "text_403": "Não pode abrir esta página.",
+      "title_404": "Página não encontrada",
+      "text_404": "Esta página não existe (ou já não existe).",
+      "title_500": "Algo correu mal",
+      "text_500": "Tente novamente mais tarde. Em caso de dúvida, ligue para o consultório.",
+      "home": "Ir para a página inicial"
+    },
+    "body": {
+      "view": "Vista",
+      "front": "Frente",
+      "back": "Costas",
+      "figure": "Corpo",
+      "right_short": "D",
+      "left_short": "E",
+      "zoom": "Ampliar"
+    },
+    "listen": "Ouvir"
+  }
+}

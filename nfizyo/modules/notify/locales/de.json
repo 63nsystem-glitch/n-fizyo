@@ -1,0 +1,66 @@
+{
+  "notify": {
+    "title": "Benachrichtigungen",
+    "sec": "Benachrichtigungen",
+    "description": "Hinweis an Patient/innen bei neuer Nachricht, Information oder neuem Termin (E-Mail mit Einverständnis oder SMS)",
+    "how": "Wie erfahren Patient/innen von Neuem in der App?",
+    "how_hint": "Antwortet die Praxis auf eine Nachricht oder gibt die Therapie eine Information frei, erhält die Patientin / der Patient einen kurzen Hinweis mit Link in die App – ohne Inhalt.",
+    "default": "empfohlen",
+    "mode": {
+      "email_or_sms": "E-Mail mit Einverständnis, sonst SMS",
+      "email_or_sms_hint": "E-Mail an Personen mit E-Mail-Einverständnis (Stammblatt), alle anderen per SMS.",
+      "email": "Nur E-Mail",
+      "email_hint": "Nur Personen mit E-Mail-Einverständnis. Keine SMS-Kosten.",
+      "sms": "Nur SMS",
+      "sms_hint": "An die Handynummer im Stammblatt.",
+      "off": "Aus",
+      "off_hint": "Keine Benachrichtigungen. Patient/innen sehen Neues erst, wenn sie die App öffnen."
+    },
+    "appointments": "Auch bei neuen Terminen benachrichtigen",
+    "appointments_hint": "Nur für Termine, die mehr als einen Tag entfernt sind – sonst kommt ohnehin die Termin-Erinnerung. Nicht bei Personen, die keine Erinnerungen wünschen.",
+    "example": "So sieht die Benachrichtigung aus",
+    "example_hint": "Immer in der Sprache der App der Patientin / des Patienten (11 Sprachen).",
+    "test_mode": "Testmodus: Benachrichtigungen landen nur im Postausgang (siehe Einstellungen › SMS).",
+    "last30": "Letzte 30 Tage",
+    "sent_sms": "Benachrichtigt per SMS",
+    "sent_email": "Benachrichtigt per E-Mail",
+    "waiting": "Geplant",
+    "not_sent": "Nicht benachrichtigt, weil …",
+    "rules_title": "Regeln",
+    "rule_content": "Nie Inhalte oder Gesundheitsdaten – nur «neue Nachricht», «neue Information» oder «neuer Termin», der Name der Praxis und der Link in die App.",
+    "rule_app": "Nur an Personen, die die Patienten-App verbunden haben.",
+    "rule_bundle": "Höchstens eine Benachrichtigung pro Person in 15 Minuten – was dazukommt, geht gebündelt mit.",
+    "rule_night": "Keine SMS zwischen 20 und 8 Uhr – sie geht am Morgen um 8 Uhr. E-Mails gehen sofort.",
+    "rule_read": "Was die Person in der App schon gelesen hat, löst keine Benachrichtigung aus.",
+    "ch": {
+      "sms": "SMS",
+      "email": "E-Mail"
+    },
+    "st": {
+      "sent": "Patient/in benachrichtigt ({channel}, {when})",
+      "pending": "Benachrichtigung geplant ({channel}, {when})",
+      "skipped": "Nicht benachrichtigt: {reason}"
+    },
+    "reason": {
+      "off": "Benachrichtigungen aus",
+      "no_app": "nutzt die App nicht",
+      "no_consent": "kein E-Mail-Einverständnis",
+      "no_phone": "keine Handynummer",
+      "no_contact": "weder E-Mail-Einverständnis noch Handynummer",
+      "read": "schon in der App gelesen",
+      "reminder": "Termin-Erinnerung kommt ohnehin"
+    }
+  },
+  "p": {
+    "notify": {
+      "message": "Sie haben eine neue Nachricht von {practice}. Öffnen: {url}",
+      "info": "Sie haben eine neue Information von {practice}. Öffnen: {url}",
+      "appointment": "Sie haben einen neuen Termin bei {practice}. Details: {url}",
+      "several": "Es gibt Neuigkeiten von {practice} in Ihrer App. Öffnen: {url}",
+      "mail_subject": "Neuigkeiten von {practice}",
+      "mail_hello": "Guten Tag",
+      "mail_privacy": "Zum Schutz Ihrer Daten steht der Inhalt nur in der App. Bitte melden Sie sich dort an.",
+      "mail_bye": "Freundliche Grüsse\n{practice}"
+    }
+  }
+}

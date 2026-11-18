@@ -1,0 +1,39 @@
+{% extends "layouts/patient.html" %}
+{% block title %}{{ t('p.video.title') }}{% endblock %}
+{% block content %}
+{% if state == 'invalid' %}
+<section class="card"><p>{{ t('p.video.invalid') }}</p></section>
+{% else %}
+<section class="card stack-s">
+  <p class="small muted">{{ practice.name }}</p>
+  <p style="font-size:22px;line-height:30px">{{ fmt_long_date(start.date()) }}{{ '، ' if lang == 'ar' else ', ' }}<strong style="font-weight:500">{{ fmt_time(start) }}</strong></p>
+  <p>{{ icon('person', 18) }} {{ therapist }}</p>
+</section>
+{% if state == 'cancelled' %}
+<div class="banner" role="status">{{ icon('info') }}<p>{{ t('p.video.cancelled') }}</p></div>
+{% elif state == 'over' %}
+<div class="banner" role="status">{{ icon('info') }}<p>{{ t('p.video.over') }}</p></div>
+{% else %}
+<form method="post" class="card stack-s">
+  <input type="hidden" name="_csrf" value="{{ csrf }}">
+  {% if not consent %}
+  <h2>{{ t('p.video.consent_title') }}</h2>
+  <ul class="small" style="padding-inline-start:18px;line-height:22px"><li>{{ t('p.video.c_server') }}</li><li>{{ t('p.video.c_record') }}</li><li>{{ t('p.video.c_place') }}</li></ul>
+  <label class="check"><input type="checkbox" name="consent" value="1" required><span>{{ t('p.video.c_agree') }}</span></label>
+  {% endif %}
+  {% if state == 'early' %}
+  <p class="muted">{{ t('p.video.early', time=fmt_time(opens)) }}</p>
+  {% if not consent %}<button class="btn tonal block" type="submit">{{ t('p.video.save_consent') }}</button>{% endif %}
+  {% elif not configured %}
+  <p class="muted">{{ t('p.video.not_ready') }}</p>
+  {% else %}
+  <p class="small muted">{{ t('p.video.camera_hint') }}</p>
+  <button class="btn lg block" type="submit">{{ icon('videocam', 20) }}{{ t('p.video.join') }}</button>
+  {% endif %}
+</form>
+{% endif %}
+{% if practice.phone %}<p class="small">{{ icon('call', 16) }} {{ t('p.video.call') }} <a href="tel:{{ practice.phone | replace(' ', '') }}">{{ practice.phone | phone }}</a></p>{% endif %}
+{% endif %}
+<div class="emergency">{{ icon('emergency', 20) }}<span>{{ t('p.video.emergency') }}</span></div>
+<p class="small" style="text-align:center"><a href="/p/datenschutz{{ '?praxis=' ~ practice_slug if practice_slug is defined and practice_slug else '' }}">{{ t('p.privacy.link') }}</a></p>
+{% endblock %}

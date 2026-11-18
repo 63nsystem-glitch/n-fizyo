@@ -1,0 +1,30 @@
+{
+  "p": {
+    "msg": {
+      "title": "Messaggi",
+      "empty": "Ancora nessun messaggio.",
+      "write": "Il suo messaggio",
+      "write_ph": "Scriva nella sua lingua.",
+      "reply_time": "Lo studio risponde di solito entro un giorno lavorativo. Nessuna emergenza tramite l'app.",
+      "too_many": "Ha inviato molti messaggi in poco tempo. Riprovi più tardi o chiami lo studio.",
+      "sent": "Messaggio inviato.",
+      "report_sent": "Segnalazione inviata. Lo studio la vedrà alla prossima apertura.",
+      "problem": "Problema segnalato",
+      "machine": "Mostra l'originale (traduzione automatica)",
+      "reply": {
+        "same_day": "Lo studio risponde di solito nello stesso giorno lavorativo.",
+        "next_day": "Lo studio risponde di solito entro il giorno lavorativo successivo.",
+        "two_days": "Lo studio risponde di solito entro due giorni lavorativi.",
+        "three_days": "Lo studio risponde di solito entro tre giorni lavorativi.",
+        "week": "Lo studio risponde di solito entro una settimana."
+      },
+      "no_emergency": "Nessuna emergenza tramite l'app."
+    },
+    "report": {
+      "title": "Segnalare un problema",
+      "what": "Che cosa è successo?",
+      "what_ph": "p. es. ginocchio gonfio dopo le scale",
+      "send": "Inviare"
+    }
+  }
+}
