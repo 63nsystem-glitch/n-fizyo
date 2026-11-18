@@ -345,8 +345,13 @@ systemctl daemon-reload
 systemctl enable --now n-fizyo.service n-fizyo-backup.timer n-fizyo-runner.service
 systemctl restart n-fizyo.service n-fizyo-runner.service
 systemctl reload caddy || systemctl restart caddy
-sleep 2
-if curl -fsS http://127.0.0.1:8080/health >/dev/null; then echo "N-Fizyo läuft."; else echo "N-Fizyo antwortet nicht – siehe: journalctl -u n-fizyo -n 50" >&2; fi
+# erster Start kann dauern (Datenbank anlegen, Demo-Daten) – bis 90 s warten
+UP=0
+for _ in $(seq 1 45); do
+  if curl -fsS --max-time 3 http://127.0.0.1:8080/health >/dev/null 2>&1; then UP=1; break; fi
+  sleep 2
+done
+if [[ "$UP" == 1 ]]; then echo "N-Fizyo läuft."; else echo "N-Fizyo antwortet nicht – siehe: journalctl -u n-fizyo -n 50" >&2; fi
 (cd "$APP_DIR/app" && sudo -u "$APP_USER" env HOME="$DATA_DIR" LD_LIBRARY_PATH="$CUDA_LIBS" "$APP_DIR/venv/bin/python" -m nfizyo --env "$ENV_FILE" check-ai) \
   || echo "Hinweis: KI-Prüfung meldet Probleme (siehe oben)." >&2
 

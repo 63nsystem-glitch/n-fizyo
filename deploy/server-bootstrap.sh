@@ -107,7 +107,8 @@ else
 fi
 # alte Arbeitsordner aufräumen (die letzten 3 bleiben)
 ls -1dt "$WORKROOT"/src-* 2>/dev/null | tail -n +4 | xargs -r rm -rf
-curl -fsS --max-time 10 http://127.0.0.1:8080/health && echo
+for _ in $(seq 1 45); do curl -fsS --max-time 3 http://127.0.0.1:8080/health 2>/dev/null && { echo; exit 0; }; sleep 2; done
+echo "N-Fizyo antwortet nicht – siehe: journalctl -u n-fizyo -n 50" >&2; exit 1
 DEPLOY
 chmod 755 /usr/local/sbin/n-fizyo-deploy
 chown root:root /usr/local/sbin/n-fizyo-deploy
